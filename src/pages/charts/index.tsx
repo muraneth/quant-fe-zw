@@ -1,7 +1,16 @@
-import styles from './index.module.scss';
+import { useCommonStore } from "@/store/common";
+import styles from "./index.module.scss";
 
 const Charts = () => {
-  return <div className={styles.charts}>charts</div>;
+  const setUserName = useCommonStore((store) => store.setUserName);
+  return (
+    <div
+      className={styles.charts}
+      onClick={() => setUserName("charts 页面注入的状态")}
+    >
+      charts
+    </div>
+  );
 };
 
 export default Charts;

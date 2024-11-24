@@ -1,7 +1,11 @@
+import { useImmer } from 'use-immer';
+import { useCommonStore } from '@/store/common';
 import styles from "./index.module.scss";
 
 const Home = () => {
-  return <div className={styles.home}>home</div>;
+  const [state, setState] = useImmer(0);
+  const userName = useCommonStore(store => store.userName)
+  return <div className={styles.home} onClick={() => setState(999)}>home: {userName}{state}</div>;
 }
 
 export default Home;
