@@ -1,18 +1,37 @@
+import { useImmer } from "use-immer";
 import { Link } from "react-router-dom";
-import { menuItems } from './constant';
+import { menuItems, MenuKey } from "./constant";
+import classNames from "classnames";
 import styles from "./index.module.scss";
+import React from "react";
 
+interface MenuProps {
+  menuFold: boolean;
+}
 
-const Menu = () => {
+const Menu: React.FC<MenuProps> = ({ menuFold }) => {
+  const [curMenu, setCurMenu] = useImmer<MenuKey>(MenuKey.HOME);
+
+  const changeMenu = (menuKey: MenuKey) => {
+    setCurMenu(menuKey);
+  };
+
   return (
     <div className={styles.menu}>
-      {menuItems.map((item, index) => {
-        // 选中某一个之后，添加 active 的类名，然后 icon 命中 activeIcon, title color 变为对应的蓝色
+      {menuItems.map((item) => {
+        const active = item.key === curMenu;
         return (
-          <Link key={index} to={item.path}>
-            <div className={styles.menuItem}>
-              {item.icon}
-              <span className={styles.menuLabel}>{item.label}</span>
+          <Link key={item.key} to={item.path}>
+            <div
+              className={classNames(styles.menuItem, {
+                [styles.menuActive]: active,
+              })}
+              onClick={() => changeMenu(item.key)}
+            >
+              <div className={styles.menuIcon}>{active ? item.activeIcon : item.icon}</div>
+              {menuFold ? null : (
+                <span className={styles.menuLabel}>{item.label}</span>
+              )}
             </div>
           </Link>
         );

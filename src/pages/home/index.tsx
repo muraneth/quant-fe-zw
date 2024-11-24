@@ -1,10 +1,7 @@
-// import { Button } from "antd";
-import styles from './index.module.scss';
+import styles from "./index.module.scss";
 
-export default function HomePage() {
-  return (
-    <section className={styles.home}>
-      {/* <Button type="primary">按钮</Button> */}
-    </section>
-  );
+const Home = () => {
+  return <div className={styles.home}>home</div>;
 }
+
+export default Home;
