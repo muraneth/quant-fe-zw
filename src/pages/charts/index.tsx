@@ -1,14 +1,15 @@
-import { useCommonStore } from "@/store/common";
+import Header from './components/header'
 import styles from "./index.module.scss";
 
 const Charts = () => {
-  const setUserName = useCommonStore((store) => store.setUserName);
+
   return (
     <div
       className={styles.charts}
-      onClick={() => setUserName("charts 页面注入的状态")}
     >
-      charts
+      <Header />
+      <div className={styles.content}>
+      </div>
     </div>
   );
 };

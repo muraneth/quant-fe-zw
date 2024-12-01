@@ -1,0 +1,62 @@
+.header {
+  height: 60px;
+  display: flex;
+  align-items: center;
+  background: var(--primary-theme-color);
+  position: relative;
+
+  .coinsDisplay {
+    flex: 1;
+    height: 32px;
+    display: flex;
+    overflow-y: scroll;
+
+    .coinItem {
+      display: flex;
+      align-items: center;
+      padding: 8px 16px;
+      gap: 10px;
+      width: 103px;
+      height: 32px;
+      background: #2e2f30;
+      border-radius: 38px;
+      margin-right: 12px;
+      flex-shrink: 0;
+    }
+
+    @mixin commonLinear {
+      content: "";
+      position: absolute;
+      width: 82px;
+      height: 60px;
+      top: 0;
+    }
+
+    &::before {
+      @include commonLinear;
+      left: 0;
+      background: linear-gradient(
+        92.18deg,
+        #1c1d1e 1.49%,
+        #1c1d1e 16.16%,
+        rgba(28, 29, 30, 0) 97.85%
+      );
+    }
+
+    &::after {
+      @include commonLinear;
+      right: 234px;
+      background: linear-gradient(
+        -92.18deg,
+        #1c1d1e 1.49%,
+        #1c1d1e 16.16%,
+        rgba(28, 29, 30, 0) 97.85%
+      );
+    }
+  }
+
+  .search {
+    width: 234px;
+    height: 32px;
+  }
+}
