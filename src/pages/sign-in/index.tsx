@@ -7,7 +7,7 @@ import { signInSuccessAction } from "@/utils/common";
 import styles from "./index.module.scss";
 
 const SignIn = () => {
-  const { run } = useRequest(signInService, {
+  const { run, loading } = useRequest(signInService, {
     manual: true,
     onSuccess: (res) => {
       signInSuccessAction(res);
@@ -57,6 +57,7 @@ const SignIn = () => {
               className={styles.signInFormSubmit}
               type="primary"
               htmlType="submit"
+              loading={loading}
             >
               Sign In
             </Button>

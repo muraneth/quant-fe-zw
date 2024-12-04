@@ -5,7 +5,7 @@ import { serverUrl } from '@/constants/common';
 interface IFetchParams {
   url: string;
   method: "GET" | "POST";
-  body: Record<string, any>;
+  body?: Record<string, any>;
 }
 
 enum ResponseCode {
@@ -21,7 +21,7 @@ enum ResponseCode {
 
 const envMode = import.meta.env.MODE;
 
-const request = ({ url, method, body }: IFetchParams) => {
+const request = ({ url, method, body = {} }: IFetchParams) => {
   const fetchUrl = `${serverUrl[envMode]}${url}`;
 
   const fetchBody =

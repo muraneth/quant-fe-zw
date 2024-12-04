@@ -15,9 +15,18 @@ function App() {
       theme={{
         token: {
           colorPrimary: "#2255FF",
-          borderRadius: 38
         },
         algorithm: [theme.darkAlgorithm, theme.compactAlgorithm],
+        components: {
+          Button: {
+            colorPrimary: '#2255FF',
+            borderRadius: 38,
+          },
+          Input: {
+            colorPrimary: '#2255FF',
+            borderRadius: 38,
+          },
+        },
       }}
     >
       <Routes>
