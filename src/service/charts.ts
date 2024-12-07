@@ -1,5 +1,108 @@
 // import { request } from "@/utils/request";
 
+interface TokenListReqDto {
+  key: string;
+}
+
+interface TokenListItem {
+  symbol: string;
+  name: string;
+  contract_address: string;
+  icon_url: string;
+  chain: string;
+  total_supply: number;
+  create_time: string;
+}
+
+type TokenListResDto = Array<TokenListItem>;
+
+export function getTokenList(
+  params: TokenListReqDto
+): Promise<TokenListResDto> {
+  return Promise.resolve([
+    {
+      symbol: "DOG1",
+      name: "The Doge NFT1",
+      contract_address: "0xbaac2b4491727d78d2b78815144570b9f2fe8899",
+      icon_url:
+        "https://assets.coingecko.com/coins/images/18111/large/Doge.png?1696517615",
+      chain: "ethereum",
+      total_supply: 16969696969,
+      create_time: "2021-08-31T17:11:17+08:00",
+    },
+    {
+      symbol: "DOG2",
+      name: "The Doge NFT2",
+      contract_address: "0xbaac2b4491727d78d2b78815144570b9f2fe8899",
+      icon_url:
+        "https://assets.coingecko.com/coins/images/18111/large/Doge.png?1696517615",
+      chain: "ethereum",
+      total_supply: 16969696969,
+      create_time: "2021-08-31T17:11:17+08:00",
+    },
+    {
+      symbol: "DOG3",
+      name: "The Doge NFT3",
+      contract_address: "0xbaac2b4491727d78d2b78815144570b9f2fe8899",
+      icon_url:
+        "https://assets.coingecko.com/coins/images/18111/large/Doge.png?1696517615",
+      chain: "ethereum",
+      total_supply: 16969696969,
+      create_time: "2021-08-31T17:11:17+08:00",
+    },
+    {
+      symbol: "DOG4",
+      name: "The Doge NFT4",
+      contract_address: "0xbaac2b4491727d78d2b78815144570b9f2fe8899",
+      icon_url:
+        "https://assets.coingecko.com/coins/images/18111/large/Doge.png?1696517615",
+      chain: "ethereum",
+      total_supply: 16969696969,
+      create_time: "2021-08-31T17:11:17+08:00",
+    },
+    {
+      symbol: "DOG5",
+      name: "The Doge NFT5",
+      contract_address: "0xbaac2b4491727d78d2b78815144570b9f2fe8899",
+      icon_url:
+        "https://assets.coingecko.com/coins/images/18111/large/Doge.png?1696517615",
+      chain: "ethereum",
+      total_supply: 16969696969,
+      create_time: "2021-08-31T17:11:17+08:00",
+    },
+    {
+      symbol: "DOG6",
+      name: "The Doge NFT6",
+      contract_address: "0xbaac2b4491727d78d2b78815144570b9f2fe8899",
+      icon_url:
+        "https://assets.coingecko.com/coins/images/18111/large/Doge.png?1696517615",
+      chain: "ethereum",
+      total_supply: 16969696969,
+      create_time: "2021-08-31T17:11:17+08:00",
+    },
+    {
+      symbol: "DOG7",
+      name: "The Doge NFT7",
+      contract_address: "0xbaac2b4491727d78d2b78815144570b9f2fe8899",
+      icon_url:
+        "https://assets.coingecko.com/coins/images/18111/large/Doge.png?1696517615",
+      chain: "ethereum",
+      total_supply: 16969696969,
+      create_time: "2021-08-31T17:11:17+08:00",
+    },
+    {
+      symbol: "DOG8",
+      name: "The Doge NFT8",
+      contract_address: "0xbaac2b4491727d78d2b78815144570b9f2fe8899",
+      icon_url:
+        "https://assets.coingecko.com/coins/images/18111/large/Doge.png?1696517615",
+      chain: "ethereum",
+      total_supply: 16969696969,
+      create_time: "2021-08-31T17:11:17+08:00",
+    },
+  ]);
+}
+
 export interface Indicator {
   id: number;
   created_at: string;
@@ -563,7 +666,7 @@ export function getIndicatorList(): Promise<IndicatorListResDto> {
             },
           ],
         },
-      ]
+      ],
     },
     {
       category: "Testxxx1111",
@@ -602,7 +705,7 @@ export function getIndicatorList(): Promise<IndicatorListResDto> {
             },
           ],
         },
-      ]
+      ],
     },
     {
       category: "Testxxx22222",
@@ -641,7 +744,7 @@ export function getIndicatorList(): Promise<IndicatorListResDto> {
             },
           ],
         },
-      ]
+      ],
     },
     {
       category: "Testxxx23333",
@@ -649,11 +752,9 @@ export function getIndicatorList(): Promise<IndicatorListResDto> {
       groups: [
         {
           group_name: "Test By Volume",
-          indicators: [
-            
-          ],
+          indicators: [],
         },
-      ]
+      ],
     },
     {
       category: "Testxxx5555",
@@ -675,10 +776,10 @@ export function getIndicatorList(): Promise<IndicatorListResDto> {
               description: "USD trade price by volume",
               is_active: true,
               param_schema: "",
-            }
+            },
           ],
         },
-      ]
+      ],
     },
     {
       category: "Testxxx666666666",
@@ -700,10 +801,10 @@ export function getIndicatorList(): Promise<IndicatorListResDto> {
               description: "USD trade price by volume",
               is_active: true,
               param_schema: "",
-            }
+            },
           ],
         },
-      ]
+      ],
     },
     {
       category: "Testxxx66666777",
@@ -725,10 +826,10 @@ export function getIndicatorList(): Promise<IndicatorListResDto> {
               description: "USD trade price by volume",
               is_active: true,
               param_schema: "",
-            }
+            },
           ],
         },
-      ]
+      ],
     },
     {
       category: "Testxxx666688888mmmmmmmmmmmmmmmmmm",
@@ -750,10 +851,10 @@ export function getIndicatorList(): Promise<IndicatorListResDto> {
               description: "USD trade price by volume",
               is_active: true,
               param_schema: "",
-            }
+            },
           ],
         },
-      ]
+      ],
     },
     {
       category: "Testxxx669999",
@@ -775,10 +876,10 @@ export function getIndicatorList(): Promise<IndicatorListResDto> {
               description: "USD trade price by volume",
               is_active: true,
               param_schema: "",
-            }
+            },
           ],
         },
-      ]
+      ],
     },
     {
       category: "Testxxx10",
@@ -800,10 +901,10 @@ export function getIndicatorList(): Promise<IndicatorListResDto> {
               description: "USD trade price by volume",
               is_active: true,
               param_schema: "",
-            }
+            },
           ],
         },
-      ]
+      ],
     },
     {
       category: "Testxxx11",
@@ -825,10 +926,10 @@ export function getIndicatorList(): Promise<IndicatorListResDto> {
               description: "USD trade price by volume",
               is_active: true,
               param_schema: "",
-            }
+            },
           ],
         },
-      ]
+      ],
     },
     {
       category: "Testxxx12",
@@ -850,10 +951,10 @@ export function getIndicatorList(): Promise<IndicatorListResDto> {
               description: "USD trade price by volume",
               is_active: true,
               param_schema: "",
-            }
+            },
           ],
         },
-      ]
+      ],
     },
     {
       category: "Testxxx13",
@@ -875,10 +976,10 @@ export function getIndicatorList(): Promise<IndicatorListResDto> {
               description: "USD trade price by volume",
               is_active: true,
               param_schema: "",
-            }
+            },
           ],
         },
-      ]
+      ],
     },
     {
       category: "Testxxx14",
@@ -900,10 +1001,10 @@ export function getIndicatorList(): Promise<IndicatorListResDto> {
               description: "USD trade price by volume",
               is_active: true,
               param_schema: "",
-            }
+            },
           ],
         },
-      ]
+      ],
     },
     {
       category: "Testxxx15",
@@ -925,10 +1026,10 @@ export function getIndicatorList(): Promise<IndicatorListResDto> {
               description: "USD trade price by volume",
               is_active: true,
               param_schema: "",
-            }
+            },
           ],
         },
-      ]
+      ],
     },
     {
       category: "Testxxx16",
@@ -950,10 +1051,10 @@ export function getIndicatorList(): Promise<IndicatorListResDto> {
               description: "USD trade price by volume",
               is_active: true,
               param_schema: "",
-            }
+            },
           ],
         },
-      ]
+      ],
     },
     {
       category: "Testxxx17",
@@ -975,10 +1076,10 @@ export function getIndicatorList(): Promise<IndicatorListResDto> {
               description: "USD trade price by volume",
               is_active: true,
               param_schema: "",
-            }
+            },
           ],
         },
-      ]
+      ],
     },
     {
       category: "Testxxx18",
@@ -1000,10 +1101,10 @@ export function getIndicatorList(): Promise<IndicatorListResDto> {
               description: "USD trade price by volume",
               is_active: true,
               param_schema: "",
-            }
+            },
           ],
         },
-      ]
-    }
+      ],
+    },
   ]);
 }

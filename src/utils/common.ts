@@ -15,7 +15,10 @@ export function removeSpacesFromObject(obj: Record<string, any>) {
 
 export function signInSuccessAction(userInfo: SignInResDto) {
   try {
-    localStorage.setItem(storageKey["userInfo"], JSON.stringify(userInfo || {}));
+    localStorage.setItem(
+      storageKey["userInfo"],
+      JSON.stringify(userInfo || {})
+    );
     const searchIns = new URLSearchParams(location.search);
     const redirectUrl = searchIns.get("redirectUrl");
     window.location.href = redirectUrl || "/charts";
@@ -33,4 +36,14 @@ export function getUserInfo(): SignInResDto {
   } catch {
     return {} as unknown as SignInResDto;
   }
+}
+
+export function findKeyByValueFromMapping<T>(mapping: Record<any, Array<T>>) {
+  return function (value: T) {
+    for (const key in mapping) {
+      if (mapping[key].includes(value)) {
+        return key;
+      }
+    }
+  };
 }

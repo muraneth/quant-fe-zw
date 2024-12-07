@@ -1,15 +1,47 @@
 import { create } from "zustand";
 
-interface CommonStore {
-  userName: string;
-  setUserName: (name: string) => void;
-  removeCommonStore: () => void;
+interface ChartStore {
+  tokenInfo: {
+    symbol: string;
+    chain: string;
+  };
+  indicatorInfo: {
+    required_level: number;
+    handler_name: string;
+  };
+  extra_params: Record<string, any>;
+
+  setTokenInfo: (tokenInfo: ChartStore["tokenInfo"]) => void;
+  setIndicatorInfo: (indicatorInfo: ChartStore["indicatorInfo"]) => void;
+  setExtraParams: (extra_params: ChartStore["extra_params"]) => void;
+
+  removeChartStore: () => void;
 }
 
-const useCommonStore = create<CommonStore>((set) => ({
-  userName: "",
-  setUserName: (name: string) => set(() => ({ userName: name })),
-  removeCommonStore: () => set({ userName: "" }),
+const useChartStore = create<ChartStore>((set) => ({
+  tokenInfo: {
+    symbol: "",
+    chain: "",
+  },
+  indicatorInfo: {
+    required_level: 0,
+    handler_name: "",
+  },
+  extra_params: {},
+
+  setTokenInfo: (tokenInfo) => set(() => ({ tokenInfo })),
+  setIndicatorInfo: (indicatorInfo) => set(() => ({ indicatorInfo })),
+  setExtraParams: (extra_params) => set(() => ({ extra_params })),
+
+  removeChartStore: () =>
+    set({
+      tokenInfo: {} as ChartStore["tokenInfo"],
+      indicatorInfo: {
+        required_level: 0,
+        handler_name: "",
+      },
+      extra_params: {},
+    }),
 }));
 
-export { useCommonStore };
+export { useChartStore };
