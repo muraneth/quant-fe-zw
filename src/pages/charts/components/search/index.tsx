@@ -16,36 +16,50 @@ enum View {
 
 const Search = () => {
   const [searchKeyword, setSearchKeyword] = useImmer<string>("");
-  const [curView, setCurView] = useImmer<View>(View.Category);
+
+  const [viewStack, setViewStack] = useImmer<Array<View>>([View.Category]);
+  const curView = viewStack[viewStack.length - 1];
+
   const { data: indicatorList = [] } = useRequest(getIndicatorList);
   const [selectedCategoryIndex, setSelectedCategoryIndex] = useImmer<number>(0);
 
-  const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (!e.target.value) {
-      changeView(View.Category);
-      return;
-    }
-    setSearchKeyword(e.target.value);
-    changeView(View.Result);
+  const toNextView = (nextView: View) => {
+    setViewStack((draft) => {
+      draft.push(nextView);
+    });
   };
 
-  const changeView = (view: View) => {
-    setCurView(view);
+  const backPreView = () => {
+    setViewStack((draft) => {
+      draft.pop();
+    });
+  };
+
+  // 使用一个栈来实现，封装一个 hook，useStack，其中 useStack 返回入栈，出栈，清空栈，以及栈顶元素获取等方法
+
+  const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchKeyword(e.target.value);
+    if (e.target.value) {
+      toNextView(View.Result);
+    } else {
+      backPreView();
+    }
   };
 
   const handleSelectCategory = (categoryIndex: number) => {
     setSelectedCategoryIndex(categoryIndex);
-    changeView(View.Group);
+    toNextView(View.Group);
   };
 
   return (
     <div className={styles.search}>
       <div className={styles.filter}>
         <Input
-          placeholder="Filter  Metrics"
+          placeholder="Filter Metrics"
           suffix={svgMap["filterMetries"]}
           allowClear
           onChange={handleSearch}
+          value={searchKeyword}
         />
       </div>
       {curView === View.Category ? (
@@ -57,13 +71,17 @@ const Search = () => {
       ) : null}
       {curView === View.Group ? (
         <Group
-          backCaterory={() => changeView(View.Category)}
+          backPreView={backPreView}
           indicatorList={indicatorList}
           selectedCategoryIndex={selectedCategoryIndex}
         />
       ) : null}
       {curView === View.Result ? (
-        <Result indicatorList={indicatorList} searchKeyword={searchKeyword} />
+        <Result
+          backPreView={backPreView}
+          indicatorList={indicatorList}
+          searchKeyword={searchKeyword}
+        />
       ) : null}
     </div>
   );

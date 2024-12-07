@@ -6,13 +6,13 @@ import styles from "./index.module.scss";
 import React from "react";
 
 interface GroupProps {
-  backCaterory: () => void;
+  backPreView: () => void;
   indicatorList: IndicatorListResDto;
   selectedCategoryIndex: number;
 }
 
 const Group: React.FC<GroupProps> = ({
-  backCaterory,
+  backPreView,
   indicatorList = [],
   selectedCategoryIndex,
 }) => {
@@ -38,7 +38,7 @@ const Group: React.FC<GroupProps> = ({
 
   return (
     <div className={styles.group}>
-      <div className={styles.groupToCategory} onClick={backCaterory}>
+      <div className={styles.groupToCategory} onClick={backPreView}>
         <ArrowLeftOutlined className={styles.groupToCategoryIcon} />
         <span className={styles.groupToCategoryTitle}>All Categories</span>
       </div>
