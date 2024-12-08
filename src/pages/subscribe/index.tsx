@@ -1,4 +1,4 @@
-import { svgMap } from '@/svg';
+import { svgMap } from '@/constants/svg';
 import { useNavigate } from "react-router-dom";
 import styles from './index.module.scss';
 

@@ -1,6 +1,6 @@
 import { Button, Form, Input } from "antd";
 import type { FormProps } from "antd";
-import { svgMap } from "@/svg";
+import { svgMap } from "@/constants/svg";
 import { useRequest } from "ahooks";
 import { signInService, SignInReqDto } from "@/service/sign-in-up";
 import { signInSuccessAction } from "@/utils/common";

@@ -1,5 +1,5 @@
 import { Segmented } from "antd";
-import { svgMap } from "@/svg";
+import { svgMap } from "@/constants/svg";
 import MiddleChart from "./middle-chart";
 import styles from "../index.module.scss";
 

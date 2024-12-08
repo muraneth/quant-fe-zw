@@ -3,7 +3,7 @@ import type { FormProps } from "antd";
 import { useRequest } from "ahooks";
 import { signUpService, signInService } from "@/service/sign-in-up";
 import type { SignUpReqDto } from "@/service/sign-in-up";
-import { svgMap } from "@/svg";
+import { svgMap } from "@/constants/svg";
 import { passwordRule } from "@/constants/regexp";
 import { signInSuccessAction } from '@/utils/common';
 import styles from "./index.module.scss";
