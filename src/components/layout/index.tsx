@@ -1,6 +1,6 @@
 import { useImmer } from "use-immer";
 import { MenuUnfoldOutlined, MenuFoldOutlined } from "@ant-design/icons";
-import { Outlet, Link } from "react-router-dom";
+import { Outlet } from "react-router-dom";
 import Menu from "./menu";
 import PersonalInfo from "./personal-info";
 import classNames from "classnames";
@@ -13,12 +13,16 @@ const Layout = () => {
     setMenuFold(!menuFold);
   };
 
+  const jumpToHome = () => {
+    window.location.href = "/";
+  };
+
   return (
     <div className={styles.layout}>
       <div className={classNames(styles.left, { [styles.menuFold]: menuFold })}>
-        <Link to="/">
-          <div className={styles.title}>{menuFold ? "M" : "MatrixCipher"}</div>
-        </Link>
+        <div className={styles.title} onClick={jumpToHome}>
+          {menuFold ? "M" : "MatrixCipher"}
+        </div>
         <Menu menuFold={menuFold} />
         <div className={styles.leftBottom}>
           <PersonalInfo menuFold={menuFold} />

@@ -10,7 +10,9 @@ interface MenuProps {
 }
 
 const Menu: React.FC<MenuProps> = ({ menuFold }) => {
-  const [curMenu, setCurMenu] = useImmer<MenuKey>(MenuKey.HOME);
+  const [curMenu, setCurMenu] = useImmer<MenuKey>(
+    () => location.pathname as MenuKey
+  );
 
   const changeMenu = (menuKey: MenuKey) => {
     setCurMenu(menuKey);
@@ -28,7 +30,9 @@ const Menu: React.FC<MenuProps> = ({ menuFold }) => {
               })}
               onClick={() => changeMenu(item.key)}
             >
-              <div className={styles.menuIcon}>{active ? item.activeIcon : item.icon}</div>
+              <div className={styles.menuIcon}>
+                {active ? item.activeIcon : item.icon}
+              </div>
               {menuFold ? null : (
                 <span className={styles.menuLabel}>{item.label}</span>
               )}

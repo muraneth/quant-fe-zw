@@ -1,15 +1,13 @@
 .layout {
   width: 100vw;
   height: 100vh;
-  background: #1c1d1e;
-  padding-right: 24px;
-  padding-bottom: 26px;
+  background: var(--primary-theme-color);
+  padding: 20px 24px 26px 0;
   display: flex;
 
   .left {
     position: relative;
     width: 160px;
-    padding-top: 21px;
     transition: all 200ms ease;
 
     .title {
@@ -24,7 +22,7 @@
     }
 
     .menu {
-      margin-top: 15px;
+      margin-top: 5px;
 
       .menuItem {
         display: flex;
@@ -55,7 +53,7 @@
 
       .menuActive {
         .menuLabel {
-          color: #2255ff;
+          color: var(--primary-blue-color);
           transition: color 100ms ease;
         }
       }
@@ -108,5 +106,6 @@
 
   .main {
     flex: 1;
+    overflow: hidden;
   }
 }

@@ -11,6 +11,24 @@
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+
+  /* 全局 css 变量 */
+  /* 黑色主题 */
+  --primary-theme-color: #1c1d1e;
+  /* 主要内容背景暗灰 */
+  --primary-content-color: #222324;
+  /* 主要蓝 */
+  --primary-blue-color: #2255ff;
+}
+
+/* 滚动条样式自定义 */
+::-webkit-scrollbar {
+  width: 5px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #2d2e30;
+  border-radius: 10px;
 }
 
 a {
@@ -68,26 +86,90 @@ button:focus-visible {
   }
 }
 
-*, *::before, *::after {
+*,
+*::before,
+*::after {
   box-sizing: border-box;
 }
 
 @font-face {
   font-family: slkscr-font;
-  src: url('./assets/slkscr.ttf') format("opentype");
+  src: url("./assets/slkscr.ttf") format("opentype");
   font-display: swap;
 }
 
 @font-face {
-  font-family: 'SF Pro Display';
+  font-family: "SF Pro Display";
   font-style: normal;
   font-weight: 400;
-  src: local('SF Pro Display'), url('https://fonts.cdnfonts.com/s/59278/SFPRODISPLAYREGULAR.woff') format('woff');
+  src: local("SF Pro Display"),
+    url("https://fonts.cdnfonts.com/s/59278/SFPRODISPLAYREGULAR.woff")
+      format("woff");
   font-display: swap;
 }
 
+/* 全局样式 */
 .common-ellipsis-1 {
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
+}
+
+/* antd 样式覆盖 */
+.ant-input-outlined {
+  background: none;
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+.ant-btn-variant-outlined {
+  border-color: rgba(255, 255, 255, 0.65);
+  background: none;
+}
+
+.ant-btn {
+  font-family: "SF Pro Display";
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 19px;
+  color: rgba(255, 255, 255, 0.85);
+}
+
+button:focus,
+button:focus-visible {
+  outline: none;
+}
+
+.ant-form-item
+  .ant-form-item-label
+  > label.ant-form-item-required:not(
+    .ant-form-item-required-mark-optional
+  )::before {
+  content: "";
+}
+
+.ant-collapse {
+  background: none;
+  border: none;
+  border-radius: 0;
+}
+
+.ant-collapse .ant-collapse-content {
+  background-color: var(--primary-content-color);
+}
+
+.ant-collapse > .ant-collapse-item {
+  border-bottom: 1px solid var(--primary-theme-color);
+}
+
+.ant-collapse .ant-collapse-content {
+  border-top: none;
+}
+
+.ant-collapse > .ant-collapse-item > .ant-collapse-header {
+  padding: 18px 16px;
+  font-family: "SF Pro Display";
+  font-style: normal;
+  font-weight: 400;
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.45);
 }

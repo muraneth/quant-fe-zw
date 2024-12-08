@@ -1,14 +1,13 @@
-import { useCommonStore } from "@/store/common";
+import Search from "./components/search";
 import styles from "./index.module.scss";
 
 const Charts = () => {
-  const setUserName = useCommonStore((store) => store.setUserName);
   return (
-    <div
-      className={styles.charts}
-      onClick={() => setUserName("charts 页面注入的状态")}
-    >
-      charts
+    <div className={styles.charts}>
+      <div className={styles.top} />
+      <div className={styles.content}>
+        <Search />
+      </div>
     </div>
   );
 };
