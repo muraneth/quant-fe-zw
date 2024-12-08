@@ -16,3 +16,10 @@
   - https://github.com/immerjs/use-immer
 - 需要用到全局状态管理的地方，使用 zustand
   - https://awesomedevin.github.io/zustand-vue/docs/introduce/start/zustand 
+
+## 页面路由
++ /charts 
++ /sign-in 登录
++ /sign-up 注册
++ /subscribe 订阅套餐选择
++ /payment 付款

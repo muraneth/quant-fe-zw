@@ -4,7 +4,10 @@ import { useDebounceFn, useRequest } from "ahooks";
 import { getTokenList, getTokenMarketInfo } from "@/service/charts";
 import { DownOutlined, SearchOutlined } from "@ant-design/icons";
 import EllipsisMiddle from "@/components/ellipsis-middle";
-import { extractedTokenMarketInfo } from "@/utils/common";
+import {
+  extractedTokenMarketInfo,
+  ExtractedTokenMarketInfoItem,
+} from "@/utils/common";
 import type { TokenListItem } from "@/service/charts";
 import classNames from "classnames";
 import styles from "./index.module.scss";
@@ -15,6 +18,9 @@ const Header = () => {
   const [currentToken, setCurrentToken] = useImmer<TokenListItem>(
     {} as TokenListItem
   );
+  const [tokenMarketInfoList, setTokenMarketInfoList] = useImmer<
+    Array<ExtractedTokenMarketInfoItem>
+  >([]);
 
   const { data: tokenList = [] } = useRequest(
     () => getTokenList({ key: keywords }),
@@ -28,7 +34,7 @@ const Header = () => {
     }
   );
 
-  const { data: tokenMarketInfo } = useRequest(
+  useRequest(
     () =>
       getTokenMarketInfo({
         symbol: currentToken.symbol,
@@ -37,9 +43,14 @@ const Header = () => {
     {
       refreshDeps: [currentToken],
       pollingInterval: 10 * 60 * 1000, // 10分钟轮询
+      onSuccess: (tokenMarketInfo) => {
+        setTokenMarketInfoList(extractedTokenMarketInfo(tokenMarketInfo));
+      },
+      onError: () => {
+        setTokenMarketInfoList([]);
+      },
     }
   );
-  const tokenMarketInfoList = extractedTokenMarketInfo(tokenMarketInfo);
 
   const { run: onSearch } = useDebounceFn(
     (v: string) => {

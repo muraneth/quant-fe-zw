@@ -48,7 +48,7 @@ export function findKeyByValueFromMapping<T>(mapping: Record<any, Array<T>>) {
   };
 }
 
-interface ExtractedTokenMarketInfoItem {
+export interface ExtractedTokenMarketInfoItem {
   percentage: string;
   title: string;
   type: "rise" | "fall" | "neutral";
