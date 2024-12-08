@@ -1,30 +1,28 @@
-import { findKeyByValueFromMapping } from "@/utils/common";
-import styles from '../index.module.scss';
-
-const findKeyIns = findKeyByValueFromMapping({
-  isSwingRatioChart: ["avgcost_ratio"],
-  isStackAreaChart: ["stack_balance_ratio"],
-  isAvgCostChart: ["AvgCost", "avg_cost"],
-  isBasicVolumeChart: [
-    "TradeVolume",
-    "DailyTradeVolumeUSD",
-    "DailyTxVolume",
-    "USDPnNVolume",
-    "PnNVolume",
-    "RobotVolume",
-    "TradingVolumeWithoutBot",
-  ],
-  isPriceByVolumeChart: ["PriceByVolumeTimeRange", "WalletPriceByVolume"],
-});
-
-// isBaseLineChart
+import { Segmented } from "antd";
+import { svgMap } from "@/svg";
+import styles from "../index.module.scss";
 
 const EchartsPanel = () => {
   return (
     <div className={styles.echartsPanel}>
-      888888
+      <div className={styles.topInfo}>
+        <div className={styles.left}>
+          <img
+            className={styles.img}
+            src="https://assets.coingecko.com/coins/images/18111/large/Doge.png?1696517615"
+          />
+          <span className={styles.title}>4CHAN</span>
+          <span className={styles.desc}>FirstDayWalletBalance</span>
+        </div>
+        <Segmented
+          options={[
+            { value: "List", icon: svgMap["kine"] },
+            { value: "Kanban", icon: svgMap["switch"] },
+          ]}
+        />
+      </div>
     </div>
-  )
-}
+  );
+};
 
 export default EchartsPanel;

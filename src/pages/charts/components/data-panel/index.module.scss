@@ -3,6 +3,14 @@
   position: relative;
   overflow-y: auto;
 
+  .maskBackground {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    left: 0;
+    top: 0;
+  }
+
   .maskGuide {
     width: 100%;
     height: 100%;
@@ -14,6 +22,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
+    z-index: 999;
 
     .content {
       display: flex;
@@ -46,10 +55,44 @@
       }
     }
   }
- 
+
   .echartsPanel {
     min-height: 700px;
-    background: var(--primary-content-color);
+
+    .topInfo {
+      height: 64px;
+      padding: 0 24px;
+      background: var(--primary-content-color);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+
+      .left {
+        display: flex;
+        align-items: center;
+
+        .img {
+          width: 20px;
+          height: 20px;
+          border-radius: 50%;
+          object-fit: cover;
+          margin-right: 8px;
+        }
+
+        .title {
+          margin-right: 13px;
+          font-weight: 600;
+          font-size: 18px;
+          color: #fff;
+        }
+
+        .desc {
+          font-weight: 500;
+          font-size: 16px;
+          color: rgba(255, 255, 255, 0.85);
+        }
+      }
+    }
   }
 
   .markdown {

@@ -10,11 +10,9 @@ interface ChartStore {
     handler_name: string;
   };
   extra_params: Record<string, any>;
-
   setTokenInfo: (tokenInfo: ChartStore["tokenInfo"]) => void;
   setIndicatorInfo: (indicatorInfo: ChartStore["indicatorInfo"]) => void;
   setExtraParams: (extra_params: ChartStore["extra_params"]) => void;
-
   removeChartStore: () => void;
 }
 
@@ -28,11 +26,9 @@ const useChartStore = create<ChartStore>((set) => ({
     handler_name: "",
   },
   extra_params: {},
-
   setTokenInfo: (tokenInfo) => set(() => ({ tokenInfo })),
   setIndicatorInfo: (indicatorInfo) => set(() => ({ indicatorInfo })),
   setExtraParams: (extra_params) => set(() => ({ extra_params })),
-
   removeChartStore: () =>
     set({
       tokenInfo: {} as ChartStore["tokenInfo"],

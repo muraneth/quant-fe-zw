@@ -8,6 +8,8 @@ import Charts from "@/pages/charts";
 import Studio from "./pages/studio";
 import Compare from "./pages/compare";
 import Wallet from "./pages/wallet";
+import Subscribe from "./pages/subscribe";
+import Payment from "./pages/payment";
 
 function App() {
   return (
@@ -39,6 +41,8 @@ function App() {
           <Route path="/studio" element={<Studio />} />
           <Route path="/compare" element={<Compare />} />
           <Route path="/wallet" element={<Wallet />} />
+          <Route path="/subscribe" element={<Subscribe />} />
+          <Route path="/payment" element={<Payment />} />
         </Route>
         <Route path="*" element={<Navigate to="/" />} />
       </Routes>

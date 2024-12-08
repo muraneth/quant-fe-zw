@@ -47,3 +47,31 @@ export function findKeyByValueFromMapping<T>(mapping: Record<any, Array<T>>) {
     }
   };
 }
+
+interface ExtractedTokenMarketInfoItem {
+  percentage: string;
+  title: string;
+  type: "rise" | "fall" | "neutral";
+  value: number;
+}
+
+export function extractedTokenMarketInfo(
+  tokenMarketInfo?: Record<string, any>
+): Array<ExtractedTokenMarketInfoItem> {
+  if (!tokenMarketInfo) return [];
+  return Object.entries(tokenMarketInfo)
+    .filter(([key]) => key.endsWith("_24h_chg"))
+    .map(([key, value]) => {
+      const baseKey = key.replace("_24h_chg", "");
+      const title = baseKey
+        .replace(/_/g, " ")
+        .replace(/\b\w/g, (char) => char.toUpperCase());
+
+      return {
+        title,
+        value: tokenMarketInfo[baseKey] ?? null,
+        type: value > 0 ? "rise" : value < 0 ? "fall" : "neutral",
+        percentage: `${(value * 100).toFixed(2)}%`,
+      };
+    });
+}

@@ -1,0 +1,169 @@
+.header {
+  display: flex;
+
+  .left {
+    width: 212px;
+    display: flex;
+    flex-direction: column;
+    padding-right: 20px;
+    cursor: pointer;
+
+    .skeleton {
+      display: flex;
+      flex-wrap: wrap;
+    }
+
+    .leftTop {
+      display: flex;
+      align-items: center;
+
+      .logo {
+        width: 16px;
+        height: 16px;
+      }
+
+      .name {
+        margin: 0 0 0 8px;
+        font-weight: 500;
+        font-size: 14px;
+        line-height: 14px;
+        color: rgba(255, 255, 255, 0.85);
+        font-family: "SF Pro Display";
+      }
+
+      .arrow {
+        margin-left: 8px;
+      }
+    }
+
+    .leftBottom {
+      color: rgba(255, 255, 255, 0.45);
+    }
+  }
+
+  .right {
+    height: 37px;
+    flex: 1;
+    overflow-x: auto;
+    display: flex;
+
+    .itemInfo:not(:last-child) {
+      margin-right: 32px;
+    }
+
+    .itemInfo {
+      flex-shrink: 0;
+      .title {
+        font-weight: 400;
+        font-size: 12px;
+        line-height: 12px;
+        color: #ffffff;
+        opacity: 0.45;
+        font-family: "SF Pro Display";
+      }
+
+      .valueInfo {
+        span {
+          font-weight: bold;
+          font-size: 14px;
+          line-height: 14px;
+          opacity: 0.85;
+          font-family: "DIN Alternate";
+        }
+
+        span:first-child {
+          color: #ffffff;
+        }
+
+        span:last-child {
+          margin-left: 4px;
+        }
+      }
+    }
+  }
+}
+
+.tokenContent {
+  height: 500px;
+  width: 500px;
+  display: flex;
+  flex-direction: column;
+
+  .content {
+    overflow-y: auto;
+    margin-top: 16px;
+
+    .item {
+      padding-left: 8px;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      cursor: pointer;
+
+      &:hover {
+        background: var(--primary-content-color);
+        border-radius: 8px;
+        transition: all 500ms ease;
+      }
+
+      .left {
+        img {
+          width: 24px;
+          height: 24px;
+        }
+      }
+
+      .right {
+        display: flex;
+        flex-direction: column;
+        margin-left: 8px;
+
+        .itemHeader {
+          display: flex;
+        }
+
+        .itemHeaderName {
+          font-weight: 600;
+          font-size: 12px;
+          color: #ffffff;
+          flex-shrink: 0;
+        }
+
+        .itemHeaderDesc {
+          margin-left: 8px;
+          font-weight: 400;
+          font-size: 12px;
+          color: rgba(255, 255, 255, 0.65);
+
+          overflow: hidden;
+          text-overflow: ellipsis;
+          display: -webkit-box;
+          -webkit-box-orient: vertical;
+          -webkit-line-clamp: 1;
+          word-break: break-all;
+        }
+
+        img {
+          width: 12px;
+          height: 12px;
+        }
+
+        .rightBottom {
+          margin-top: 4px;
+          display: flex;
+          align-items: center;
+
+          .contract_address {
+            margin-left: 4px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: -webkit-box;
+            -webkit-box-orient: vertical;
+            -webkit-line-clamp: 1;
+            word-break: break-all;
+          }
+        }
+      }
+    }
+  }
+}
