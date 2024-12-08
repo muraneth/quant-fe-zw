@@ -2,6 +2,8 @@
   flex: 1;
   position: relative;
   overflow-y: auto;
+  height: calc(100vh - 70px);
+  margin-left: 1px;
 
   .maskBackground {
     position: absolute;
@@ -57,10 +59,8 @@
   }
 
   .echartsPanel {
-    min-height: 700px;
-
     .topInfo {
-      height: 64px;
+      height: 60px;
       padding: 0 24px;
       background: var(--primary-content-color);
       display: flex;
@@ -92,6 +92,15 @@
           color: rgba(255, 255, 255, 0.85);
         }
       }
+    }
+
+    .echartsWrapper {
+      height: calc(100vh - 134px);
+      margin-top: 1px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--primary-content-color);
     }
   }
 

@@ -1,5 +1,9 @@
 import { request } from "@/utils/request";
 
+export enum IndicatorChartType {
+  INDEPENDENT_LINE = "independent_line",
+}
+
 interface TokenListReqDto {
   key: string;
 }
@@ -55,7 +59,7 @@ export interface Indicator {
   category: string;
   handler_name: string;
   group_name: string;
-  type: string;
+  type: IndicatorChartType;
   required_level: number;
   description: string;
   is_active: boolean;
@@ -82,5 +86,31 @@ export function getIndicatorList(): Promise<IndicatorListResDto> {
   return request({
     url: "/data/api/base/indicatorList",
     method: "GET",
+  });
+}
+
+interface IndicatorDetailReqDto {
+  symbol: string;
+  chain: string;
+  handler_name: string;
+  extra_params: Record<string, any>;
+}
+
+/**
+ * 获取指标详情
+ */
+export function getIndicatorDetail(
+  params: IndicatorDetailReqDto
+): Promise<Array<Record<string, any>>> {
+  return request({
+    url: "/data/api/indicator",
+    method: "POST",
+    params: {
+      symbol: "MSTR",
+      chain: "eth",
+      handle_name: "avgcost.all",
+
+      extra_params: {},
+    },
   });
 }

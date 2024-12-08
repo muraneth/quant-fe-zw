@@ -1,3 +1,4 @@
+import * as React from "react";
 import { useImmer } from "use-immer";
 import { Input, Popover, Skeleton } from "antd";
 import { useDebounceFn, useRequest } from "ahooks";
@@ -8,6 +9,7 @@ import {
   extractedTokenMarketInfo,
   ExtractedTokenMarketInfoItem,
 } from "@/utils/common";
+import { useChartStore } from "@/store/charts";
 import type { TokenListItem } from "@/service/charts";
 import classNames from "classnames";
 import styles from "./index.module.scss";
@@ -60,6 +62,12 @@ const Header = () => {
       wait: 200,
     }
   );
+
+  const setTokenInfo = useChartStore((state) => state.setTokenInfo);
+  React.useEffect(() => {
+    setTokenInfo({ symbol: currentToken.symbol, chain: currentToken.chain });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currentToken]);
 
   const tokenContent = (
     <div className={styles.tokenContent}>

@@ -10,11 +10,12 @@ const IndicatorItem: React.FC<IndicatorItemProps> = ({
   required_level = 1,
   name = "",
   handler_name = "",
+  type
 }) => {
   const setIndicatorInfo = useChartStore((state) => state.setIndicatorInfo);
 
   const chooseIndicator = () => {
-    setIndicatorInfo({ handler_name, required_level: required_level - 1 });
+    setIndicatorInfo({ handler_name, required_level: required_level - 1, type });
   };
 
   return (

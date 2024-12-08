@@ -11,8 +11,9 @@ interface IFetchParams {
 enum ResponseCode {
   // 成功
   SUCCESS = 0,
+  NOT_SIGN_IN_1 = 1008,
   // 未登录
-  NOT_SIGN_IN = 1009,
+  NOT_SIGN_IN_2 = 1009,
   // token 校验失败
   TOKEN_ERROR = 1010,
   // 无权限
@@ -56,7 +57,8 @@ const request = ({ url, method, params = {} }: IFetchParams) => {
         case ResponseCode.NO_PERMISSION:
         case ResponseCode.SUCCESS:
           return Promise.resolve(res.data);
-        case ResponseCode.NOT_SIGN_IN:
+        case ResponseCode.NOT_SIGN_IN_1:
+        case ResponseCode.NOT_SIGN_IN_2:
         case ResponseCode.TOKEN_ERROR:
           window.location.href = "/sign-in";
           return Promise.reject();

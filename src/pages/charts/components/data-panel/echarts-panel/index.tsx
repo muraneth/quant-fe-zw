@@ -1,5 +1,6 @@
 import { Segmented } from "antd";
 import { svgMap } from "@/svg";
+import MiddleChart from "./middle-chart";
 import styles from "../index.module.scss";
 
 const EchartsPanel = () => {
@@ -20,6 +21,9 @@ const EchartsPanel = () => {
             { value: "Kanban", icon: svgMap["switch"] },
           ]}
         />
+      </div>
+      <div className={styles.echartsWrapper}>
+        <MiddleChart />
       </div>
     </div>
   );
