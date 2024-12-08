@@ -15,7 +15,10 @@ export function removeSpacesFromObject(obj: Record<string, any>) {
 
 export function signInSuccessAction(userInfo: SignInResDto) {
   try {
-    localStorage.setItem(storageKey["userInfo"], JSON.stringify(userInfo || {}));
+    localStorage.setItem(
+      storageKey["userInfo"],
+      JSON.stringify(userInfo || {})
+    );
     const searchIns = new URLSearchParams(location.search);
     const redirectUrl = searchIns.get("redirectUrl");
     window.location.href = redirectUrl || "/charts";
@@ -33,4 +36,42 @@ export function getUserInfo(): SignInResDto {
   } catch {
     return {} as unknown as SignInResDto;
   }
+}
+
+export function findKeyByValueFromMapping<T>(mapping: Record<any, Array<T>>) {
+  return function (value: T) {
+    for (const key in mapping) {
+      if (mapping[key].includes(value)) {
+        return key;
+      }
+    }
+  };
+}
+
+export interface ExtractedTokenMarketInfoItem {
+  percentage: string;
+  title: string;
+  type: "rise" | "fall" | "neutral";
+  value: number;
+}
+
+export function extractedTokenMarketInfo(
+  tokenMarketInfo?: Record<string, any>
+): Array<ExtractedTokenMarketInfoItem> {
+  if (!tokenMarketInfo) return [];
+  return Object.entries(tokenMarketInfo)
+    .filter(([key]) => key.endsWith("_24h_chg"))
+    .map(([key, value]) => {
+      const baseKey = key.replace("_24h_chg", "");
+      const title = baseKey
+        .replace(/_/g, " ")
+        .replace(/\b\w/g, (char) => char.toUpperCase());
+
+      return {
+        title,
+        value: tokenMarketInfo[baseKey] ?? null,
+        type: value > 0 ? "rise" : value < 0 ? "fall" : "neutral",
+        percentage: `${(value * 100).toFixed(2)}%`,
+      };
+    });
 }

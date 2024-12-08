@@ -35,12 +35,12 @@ const Search = () => {
     });
   };
 
-  // 使用一个栈来实现，封装一个 hook，useStack，其中 useStack 返回入栈，出栈，清空栈，以及栈顶元素获取等方法
-
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchKeyword(e.target.value);
     if (e.target.value) {
-      toNextView(View.Result);
+      if (curView !== View.Result) {
+        toNextView(View.Result);
+      }
     } else {
       backPreView();
     }
@@ -49,6 +49,11 @@ const Search = () => {
   const handleSelectCategory = (categoryIndex: number) => {
     setSelectedCategoryIndex(categoryIndex);
     toNextView(View.Group);
+  };
+
+  const handleResultBackView = () => {
+    backPreView();
+    setSearchKeyword("");
   };
 
   return (
@@ -78,7 +83,7 @@ const Search = () => {
       ) : null}
       {curView === View.Result ? (
         <Result
-          backPreView={backPreView}
+          backPreView={handleResultBackView}
           indicatorList={indicatorList}
           searchKeyword={searchKeyword}
         />

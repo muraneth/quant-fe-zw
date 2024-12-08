@@ -3,7 +3,7 @@ import { ArrowLeftOutlined } from "@ant-design/icons";
 import IndicatorItem from "./indicator-item";
 import type { IndicatorListResDto } from "@/service/charts";
 import type { Indicator } from "@/service/charts";
-import styles from './index.module.scss';
+import styles from "./index.module.scss";
 
 interface ResultProps {
   backPreView: () => void;
@@ -29,13 +29,17 @@ const Result: React.FC<ResultProps> = ({
 
   return (
     <div className={styles.result}>
-        <div className={styles.resultToCategory} onClick={backPreView}>
+      <div className={styles.resultToCategory} onClick={backPreView}>
         <ArrowLeftOutlined className={styles.resultToCategoryIcon} />
         <span className={styles.resultToCategoryTitle}>Filtered results</span>
       </div>
-      {(filterIndicatorList || []).map((item, index) => (
-        <IndicatorItem key={index} {...item} />
-      ))}
+      <div className={styles.resultIndicatorWrapper}>
+        {(filterIndicatorList || []).map((item, index) => (
+          <div key={index} className={styles.resultIndicatorItem}>
+            <IndicatorItem {...item} />
+          </div>
+        ))}
+      </div>
     </div>
   );
 };

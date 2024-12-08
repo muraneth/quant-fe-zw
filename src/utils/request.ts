@@ -1,18 +1,19 @@
 import fetch from "isomorphic-fetch";
-import { removeSpacesFromObject, getUserInfo } from "@/utils/common";
-import { serverUrl } from '@/constants/common';
+import { getUserInfo } from "@/utils/common";
+import { serverUrl } from "@/constants/common";
 
 interface IFetchParams {
   url: string;
   method: "GET" | "POST";
-  body?: Record<string, any>;
+  params?: Record<string, any>;
 }
 
 enum ResponseCode {
   // 成功
   SUCCESS = 0,
+  NOT_SIGN_IN_1 = 1008,
   // 未登录
-  NOT_SIGN_IN = 1009,
+  NOT_SIGN_IN_2 = 1009,
   // token 校验失败
   TOKEN_ERROR = 1010,
   // 无权限
@@ -21,13 +22,18 @@ enum ResponseCode {
 
 const envMode = import.meta.env.MODE;
 
-const request = ({ url, method, body = {} }: IFetchParams) => {
-  const fetchUrl = `${serverUrl[envMode]}${url}`;
+const request = ({ url, method, params = {} }: IFetchParams) => {
+  const urlMap = {
+    GET: `${serverUrl[envMode]}${url}?${new URLSearchParams(
+      params
+    ).toString()}`,
+    POST: `${serverUrl[envMode]}${url}`,
+  };
 
-  const fetchBody =
-    method === "GET"
-      ? JSON.stringify(body)
-      : JSON.stringify(removeSpacesFromObject(body));
+  const bodyMap = {
+    GET: undefined,
+    POST: JSON.stringify(params),
+  };
 
   const { token, uid } = getUserInfo();
   const fetchHeaders = {
@@ -39,10 +45,10 @@ const request = ({ url, method, body = {} }: IFetchParams) => {
     Uid: uid,
   };
 
-  return fetch(fetchUrl, {
+  return fetch(urlMap[method], {
     method,
     credentials: "same-origin",
-    body: fetchBody,
+    body: bodyMap[method],
     headers: fetchHeaders,
   })
     .then((res) => res.json())
@@ -51,12 +57,13 @@ const request = ({ url, method, body = {} }: IFetchParams) => {
         case ResponseCode.NO_PERMISSION:
         case ResponseCode.SUCCESS:
           return Promise.resolve(res.data);
-        case ResponseCode.NOT_SIGN_IN:
+        case ResponseCode.NOT_SIGN_IN_1:
+        case ResponseCode.NOT_SIGN_IN_2:
         case ResponseCode.TOKEN_ERROR:
           window.location.href = "/sign-in";
           return Promise.reject();
       }
-      return Promise.reject(); 
+      return Promise.reject();
     })
     .catch((err) => {
       return Promise.reject(err);
