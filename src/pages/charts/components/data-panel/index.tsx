@@ -2,7 +2,7 @@ import Markdown from "react-markdown";
 import { useChartStore } from "@/store/charts";
 import EchartsPanel from "./echarts-panel";
 import MaskGuide from "./mask-guide";
-import { svgMap } from "@/svg";
+import { svgMap } from "@/constants/svg";
 import styles from "./index.module.scss";
 
 const DataPanel = () => {

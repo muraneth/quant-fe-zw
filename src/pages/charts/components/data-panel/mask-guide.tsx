@@ -1,5 +1,5 @@
 import { Button } from "antd";
-import { svgMap } from "@/svg";
+import { svgMap } from "@/constants/svg";
 import styles from "./index.module.scss";
 
 const MaskGuide = () => {

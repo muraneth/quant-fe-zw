@@ -1,4 +1,4 @@
-import { svgMap } from '@/svg';
+import { svgMap } from '@/constants/svg';
 import { Button, Divider, InputNumber, Select, Typography } from 'antd'
 import styles from './index.module.scss';
 import { QRCodeSVG } from 'qrcode.react';

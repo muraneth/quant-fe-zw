@@ -2,7 +2,7 @@ import { useImmer } from "use-immer";
 import { Input } from "antd";
 import { useRequest } from "ahooks";
 import { getIndicatorList } from "@/service/charts";
-import { svgMap } from "@/svg";
+import { svgMap } from "@/constants/svg";
 import Category from "./category";
 import Group from "./group";
 import Result from "./result";
