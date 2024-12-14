@@ -18,7 +18,7 @@ const Header = () => {
   const [openPopover, setOpenPopover] = useImmer(false);
   const [keywords, setKeywords] = useImmer("");
   const [currentToken, setCurrentToken] = useImmer<TokenListItem>(
-    {} as TokenListItem
+    null as unknown as TokenListItem
   );
   const [tokenMarketInfoList, setTokenMarketInfoList] = useImmer<
     Array<ExtractedTokenMarketInfoItem>
@@ -37,16 +37,20 @@ const Header = () => {
   );
 
   useRequest(
-    () =>
-      getTokenMarketInfo({
+    () => {
+      if (!currentToken) return null as any;
+      return getTokenMarketInfo({
         symbol: currentToken.symbol,
         chain: currentToken.chain,
-      }),
+      });
+    },
     {
       refreshDeps: [currentToken],
       pollingInterval: 10 * 60 * 1000, // 10分钟轮询
       onSuccess: (tokenMarketInfo) => {
-        setTokenMarketInfoList(extractedTokenMarketInfo(tokenMarketInfo));
+        if (tokenMarketInfo) {
+          setTokenMarketInfoList(extractedTokenMarketInfo(tokenMarketInfo));
+        }
       },
       onError: () => {
         setTokenMarketInfoList([]);
@@ -65,7 +69,9 @@ const Header = () => {
 
   const setTokenInfo = useChartStore((state) => state.setTokenInfo);
   React.useEffect(() => {
-    setTokenInfo({ symbol: currentToken.symbol, chain: currentToken.chain });
+    if (currentToken) {
+      setTokenInfo({ symbol: currentToken.symbol, chain: currentToken.chain });
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentToken]);
 

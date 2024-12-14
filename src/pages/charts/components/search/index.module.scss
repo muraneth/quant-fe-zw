@@ -143,10 +143,20 @@
   }
 
   .indicatorItem {
-    width: 176px;
-    padding: 8px 0;
+    margin: 10px 14px;
+    padding: 8px 6px 8px 6px;
     display: flex;
     align-items: center;
+    cursor: pointer;
+
+    &:first-child {
+      margin-top: -10px;
+    }
+
+    &:hover {
+      background: #2d2e30;
+      border-radius: 8px;
+    }
 
     .indicatorItemLevel {
       width: 16px;
@@ -179,11 +189,11 @@
     .indicatorName {
       color: rgba(255, 255, 255, 0.85);
       font-size: 12px;
-
-      &:hover {
-        color: var(--primary-blue-color);
-        cursor: pointer;
-      }
     }
+  }
+
+  .indicatorItemActive {
+    background: #2d2e30;
+    border-radius: 8px;
   }
 }

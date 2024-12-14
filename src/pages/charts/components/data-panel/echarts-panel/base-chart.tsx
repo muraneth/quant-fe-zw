@@ -31,9 +31,12 @@ const BaseChart = ({ options }) => {
   const ref = React.useRef();
   const myChartRef = React.useRef();
 
+  // 菜单收起跟展开的时候，也需要 resize 一下
   useEventListener("resize", () => {
     myChartRef.current?.resize();
   });
+
+  
 
   React.useEffect(() => {
     myChartRef.current = echarts.init(ref.current);

@@ -63,7 +63,7 @@ const request = ({ url, method, params = {} }: IFetchParams) => {
           window.location.href = "/sign-in";
           return Promise.reject();
       }
-      return Promise.reject();
+      return Promise.reject(res.msg || 'fetch error');
     })
     .catch((err) => {
       return Promise.reject(err);
