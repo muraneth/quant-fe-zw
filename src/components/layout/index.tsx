@@ -3,6 +3,7 @@ import { MenuUnfoldOutlined, MenuFoldOutlined } from "@ant-design/icons";
 import { Outlet } from "react-router-dom";
 import Menu from "./menu";
 import PersonalInfo from "./personal-info";
+import { menuChangeEvent } from '@/utils/event';
 import classNames from "classnames";
 import styles from "./index.module.scss";
 
@@ -11,6 +12,7 @@ const Layout = () => {
 
   const handleMenuFold = () => {
     setMenuFold(!menuFold);
+    window.dispatchEvent(menuChangeEvent);
   };
 
   const jumpToHome = () => {
