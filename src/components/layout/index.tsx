@@ -23,7 +23,7 @@ const Layout = () => {
     <div className={styles.layout}>
       <div className={classNames(styles.left, { [styles.menuFold]: menuFold })}>
         <div className={styles.title} onClick={jumpToHome}>
-          {menuFold ? "M" : "MatrixCipher"}
+          {menuFold ? "T" : "Tokenalytic"}
         </div>
         <Menu menuFold={menuFold} />
         <div className={styles.leftBottom}>
