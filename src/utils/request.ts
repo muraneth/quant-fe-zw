@@ -22,8 +22,8 @@ enum ResponseCode {
   NO_LEVEL_AUTH = 3026
 }
 
-const envMode = import.meta.env.MODE;
-
+// const envMode = import.meta.env.MODE;
+const envMode = 'dev'
 const request = ({ url, method, params = {} }: IFetchParams) => {
   const urlMap = {
     GET: `${serverUrl[envMode]}${url}?${new URLSearchParams(
