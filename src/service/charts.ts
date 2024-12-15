@@ -62,7 +62,7 @@ export interface Indicator {
   updated_at: string;
   name: string;
   category: string;
-  handler_name: string;
+  handle_name: string;
   group_name: string;
   type: IndicatorChartType;
   required_level: number;

@@ -9,7 +9,7 @@ interface ChartStore {
   indicatorInfo: {
     selectedIndicatorsId?: string;
     required_level: number;
-    handler_name: string;
+    handle_name: string;
     type: IndicatorChartType;
   };
   extra_params: Record<string, any>;
@@ -30,7 +30,7 @@ const useChartStore = create<ChartStore>((set) => ({
   },
   indicatorInfo: {
     required_level: 0,
-    handler_name: "",
+    handle_name: "",
     type: null as unknown as IndicatorChartType.INDEPENDENT_LINE,
   },
   extra_params: {},

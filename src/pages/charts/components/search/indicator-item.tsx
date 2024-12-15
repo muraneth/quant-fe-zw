@@ -9,7 +9,7 @@ type IndicatorItemProps = Indicator;
 const IndicatorItem: React.FC<IndicatorItemProps> = ({
   required_level = 1,
   name = "",
-  handler_name = "",
+  handle_name = "",
   type,
   id,
 }) => {
@@ -20,7 +20,7 @@ const IndicatorItem: React.FC<IndicatorItemProps> = ({
 
   const chooseIndicator = () => {
     setIndicatorInfo({
-      handler_name,
+      handle_name,
       required_level: required_level - 1,
       type,
       selectedIndicatorsId: id,
