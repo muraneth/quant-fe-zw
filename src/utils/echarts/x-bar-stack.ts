@@ -36,7 +36,8 @@ export function xBarStackTransform({ indicatorData, klineList, klineType }) {
         options.series.push({
           name: "kline",
           data: klineList.map((item) => item.avg_price),
-          type: "candlestick",
+          type: "line",
+          smooth: true, 
         });
         options.series[options.series.length - 1].yAxisIndex =
           options.series.length - 1;
@@ -49,13 +50,13 @@ export function xBarStackTransform({ indicatorData, klineList, klineType }) {
       type: "value",
       name: "value",
     });
+    
     const seriesLen = options.series.length;
     options.series.push({
       name: "value",
       data: indicatorData.map((item) => item.value),
       type: "bar",
       smooth: true,
-      stack: "x-bar-stack",
     });
     options.series[options.series.length - 1].yAxisIndex = seriesLen;
 
@@ -64,6 +65,9 @@ export function xBarStackTransform({ indicatorData, klineList, klineType }) {
       data: indicatorData.map((item) => item.positive_value),
       type: "bar",
       stack: "x-bar-stack",
+      itemStyle: {
+        color: 'rgba(144, 238, 144, 0.5)'
+      }
     });
     options.series[options.series.length - 1].yAxisIndex = seriesLen;
 
@@ -72,6 +76,9 @@ export function xBarStackTransform({ indicatorData, klineList, klineType }) {
       data: indicatorData.map((item) => item.negative_value),
       type: "bar",
       stack: "x-bar-stack",
+      itemStyle: {
+        color: ' rgba(255, 111, 97, 0.5)'
+      }
     });
     options.series[options.series.length - 1].yAxisIndex = seriesLen;
   }

@@ -42,7 +42,8 @@ export function independentLineTransform({
         options.series.push({
           name: "kline",
           data: klineList.map((item) => item.avg_price),
-          type: "candlestick",
+          type: "line",
+          smooth: true, 
         });
         options.series[options.series.length - 1].yAxisIndex =
           options.series.length - 1;

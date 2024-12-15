@@ -33,7 +33,8 @@ export function priceLineTransform({ indicatorData, klineList, klineType }) {
         options.series.push({
           name: "kline",
           data: klineList.map((item) => item.avg_price),
-          type: "candlestick",
+          type: "line",
+          smooth: true, 
         });
         break;
     }

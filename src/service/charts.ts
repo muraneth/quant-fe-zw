@@ -97,7 +97,7 @@ export function getIndicatorList(): Promise<IndicatorListResDto> {
 interface IndicatorDetailReqDto {
   symbol: string;
   chain: string;
-  handler_name: string;
+  handle_name: string;
   base_params: Record<string, any>;
   extra_params?: Record<string, any>;
 }
@@ -108,6 +108,10 @@ interface IndicatorDetailReqDto {
 export function getIndicatorDetail(
   params: IndicatorDetailReqDto
 ): Promise<Array<Record<string, any>>> {
+  params.extra_params = {
+    start_time: "2024-10-10 00:00:00",
+    end_time: "2024-11-10 00:00:00",
+  };
   return request({
     url: "/data/api/indicator",
     method: "POST",

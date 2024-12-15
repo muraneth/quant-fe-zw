@@ -24,7 +24,12 @@ const Group: React.FC<GroupProps> = ({
         ));
         return {
           key: groupItem.group_name,
-          label: groupItem.group_name,
+          label: (
+            <div style={{ display: "flex", justifyContent: "space-between" }}>
+              {groupItem.group_name}
+              <span>{groupItem.indicators.length}</span>
+            </div>
+          ),
           children,
         };
       }

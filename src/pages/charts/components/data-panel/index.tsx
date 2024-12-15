@@ -7,17 +7,25 @@ import { svgMap } from "@/constants/svg";
 import styles from "./index.module.scss";
 
 const DataPanel = () => {
-  const { required_level } =
-    useChartStore((state) => state.indicatorInfo) || {};
+  const hasLevelAuth = useChartStore(state => state.hasLevelAuth);
 
   return (
     <div className={styles.dataPanel}>
-      {required_level >= 1 ? (
+      {!hasLevelAuth ? (
         <>
           <div className={styles.maskBackground}>
             {svgMap["maskBackground"]}
           </div>
           <MaskGuide />
+          <>
+          <div className={styles.echartsPanel}>
+            <SettingChart />
+            <EchartsPanel />
+          </div>
+          <Markdown className={styles.markdown}>
+            {"# Hi, *Markdown area*!"}
+          </Markdown>
+        </>
         </>
       ) : (
         <>

@@ -20,6 +20,8 @@ const EchartsPanel = () => {
   const { handler_name, type } =
     useChartStore((state) => state.indicatorInfo) || {};
 
+  const setHasLevelAuth = useChartStore(state => state.setHasLevelAuth);
+
   const {
     loading,
     error,
@@ -32,7 +34,7 @@ const EchartsPanel = () => {
         getIndicatorDetail({
           symbol,
           chain,
-          handler_name,
+          handle_name: handler_name,
           base_params: {},
           extra_params: {},
         }),
@@ -47,6 +49,10 @@ const EchartsPanel = () => {
       refreshDeps: [symbol, chain, handler_name],
       onSuccess: (res) => {
         if (!res.length) return;
+        if (res[0]?.code === 3026) {
+          setHasLevelAuth(false);
+          return;
+        }
         setChartData({ indicatorData: res[0], klineList: res[1] });
       },
     }
