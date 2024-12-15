@@ -67,9 +67,18 @@ const Header = () => {
     }
   );
 
-  const setTokenInfo = useChartStore((state) => state.setTokenInfo);
+  const setTokenInfo = useChartStore.use.setTokenInfo();
+  const setOptions = useChartStore.use.setOptions();
+  const setChartData = useChartStore.use.setChartData();
+
+  const resetStoreData = () => {
+    setOptions(null);
+    setChartData(null);
+  };
+
   React.useEffect(() => {
     if (currentToken) {
+      resetStoreData();
       setTokenInfo({ symbol: currentToken.symbol, chain: currentToken.chain });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps

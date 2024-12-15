@@ -1,11 +1,45 @@
-import { Segmented } from "antd";
+import { Segmented, Popover, Checkbox } from "antd";
 import { svgMap } from "@/constants/svg";
 import { useChartStore } from "@/store/charts";
+import FormRender, { useForm } from "form-render";
+import type { GetProp } from "antd";
 import styles from "./index.module.scss";
 
+const options = [
+  { label: "DEX", value: "DEX" },
+  { label: "CEX", value: "CEX" },
+  { label: "MEV Bot", value: "MEV Bot" },
+  { label: "Contract", value: "Contract" },
+  { label: "Staker", value: "Staker" },
+];
+
 const SettingChart = () => {
-  const klineType = useChartStore((state) => state.klineType);
-  const setKlineType = useChartStore((state) => state.setKlineType);
+  const klineType = useChartStore.use.klineType();
+  const setKlineType = useChartStore.use.setKlineType();
+  const base_params = useChartStore.use.base_params();
+  const setBaseParams = useChartStore.use.setBaseParams();
+  const setExtraParams = useChartStore.use.setExtraParams();
+
+  const param_schema = useChartStore.use.indicatorInfo().param_schema;
+  const { use_base_param, extra_params } =
+    JSON.parse((param_schema || null) as string) || {};
+  extra_params.column = 3;
+
+  const form = useForm();
+
+  const handleBaseChange: GetProp<typeof Checkbox.Group, "onChange"> = (
+    checkedValues
+  ) => {
+    setBaseParams({
+      exclude_wallets: {
+        by_labels: checkedValues,
+      },
+    });
+  };
+
+  const handleExtraChange = (allValues: Record<string, any>) => {
+    setExtraParams(allValues);
+  };
 
   return (
     <>
@@ -30,6 +64,34 @@ const SettingChart = () => {
       <div className={styles.setting}>
         {svgMap["settingIcon"]}
         <span className={styles.settingTitle}>Parameter Setting</span>
+        {use_base_param ? (
+          <div>
+            <Popover
+              placement="bottomLeft"
+              content={
+                <Checkbox.Group
+                  options={options}
+                  value={base_params?.exclude_wallets?.by_labels || []}
+                  onChange={handleBaseChange}
+                />
+              }
+            >
+              设置 base
+            </Popover>
+          </div>
+        ) : null}
+        {extra_params ? (
+          <FormRender
+            form={form}
+            schema={extra_params}
+            watch={{
+              "#": (allValues) => {
+                handleExtraChange(allValues);
+              },
+            }}
+            style={{ marginLeft: 20 }}
+          />
+        ) : null}
       </div>
     </>
   );

@@ -1,5 +1,4 @@
 import * as React from "react";
-import { useImmer } from "use-immer";
 import { LoadingOutlined, RedoOutlined } from "@ant-design/icons";
 import { useRequest } from "ahooks";
 import { useChartStore } from "@/store/charts";
@@ -9,18 +8,16 @@ import { generateOptions } from "@/utils/echarts";
 import styles from "../index.module.scss";
 
 const EchartsPanel = () => {
-  const [options, setOptions] = useImmer({});
-  const [chartData, setChartData] = useImmer<any>({
-    indicatorData: null,
-    klineList: null,
-  });
-
-  const klineType = useChartStore((state) => state.klineType);
-  const { symbol, chain } = useChartStore((state) => state.tokenInfo) || {};
-  const { handle_name, type } =
-    useChartStore((state) => state.indicatorInfo) || {};
-
-  const setHasLevelAuth = useChartStore(state => state.setHasLevelAuth);
+  const options = useChartStore.use.options();
+  const chartData = useChartStore.use.chartData();
+  const klineType = useChartStore.use.klineType();
+  const { symbol, chain } = useChartStore.use.tokenInfo();
+  const { handle_name, type } = useChartStore.use.indicatorInfo();
+  const base_params = useChartStore.use.base_params();
+  const extra_params = useChartStore.use.extra_params();
+  const setOptions = useChartStore.use.setOptions();
+  const setChartData = useChartStore.use.setChartData();
+  const setHasLevelAuth = useChartStore.use.setHasLevelAuth();
 
   const {
     loading,
@@ -35,37 +32,37 @@ const EchartsPanel = () => {
           symbol,
           chain,
           handle_name: handle_name,
-          base_params: {},
-          extra_params: {},
+          base_params,
+          extra_params,
         }),
         getBasePrice({
           symbol,
           chain,
-          extra_params: {},
         }),
       ]);
     },
     {
-      refreshDeps: [symbol, chain, handle_name],
+      refreshDeps: [symbol, chain, handle_name, base_params, extra_params],
       onSuccess: (res) => {
         if (!res.length) return;
         if (res[0]?.code === 3026) {
           setHasLevelAuth(false);
           return;
         }
+        setHasLevelAuth(true);
         setChartData({ indicatorData: res[0], klineList: res[1] });
       },
     }
   );
 
   React.useEffect(() => {
-    const { indicatorData, klineList } = chartData;
+    const { indicatorData, klineList } = chartData || {};
     if (indicatorData && klineList && klineType && type) {
       setOptions(
         generateOptions({
           type,
-          indicatorData: chartData.indicatorData,
-          klineList: chartData.klineList,
+          indicatorData,
+          klineList,
           klineType,
         })
       );
@@ -74,9 +71,9 @@ const EchartsPanel = () => {
   }, [chartData, klineType, type]);
 
   console.log("echartsOptions:", options);
-
   const renderContent = () => {
-    if (loading) return <LoadingOutlined style={{ fontSize: 20 }} />;
+    if (loading && !options)
+      return <LoadingOutlined style={{ fontSize: 20 }} />;
     if (error)
       return (
         <RedoOutlined
@@ -87,7 +84,11 @@ const EchartsPanel = () => {
     return <BaseChart options={options} />;
   };
 
-  return <div className={styles.echartsWrapper}>{renderContent()}</div>;
+  return (
+    <div style={{ marginTop: 50 }} className={styles.echartsWrapper}>
+      {renderContent()}
+    </div>
+  );
 };
 
 export default EchartsPanel;
