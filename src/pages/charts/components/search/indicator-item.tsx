@@ -12,18 +12,31 @@ const IndicatorItem: React.FC<IndicatorItemProps> = ({
   handle_name = "",
   type,
   id,
+  param_schema,
 }) => {
-  const selectedIndicatorsId = useChartStore(
-    (state) => state.indicatorInfo.selectedIndicatorsId
-  );
-  const setIndicatorInfo = useChartStore((state) => state.setIndicatorInfo);
+  const selectedIndicatorsId =
+    useChartStore.use.indicatorInfo().selectedIndicatorsId;
+  const setIndicatorInfo = useChartStore.use.setIndicatorInfo();
+  const setBaseParams = useChartStore.use.setBaseParams();
+  const setExtraParams = useChartStore.use.setExtraParams();
+  const setOptions = useChartStore.use.setOptions();
+  const setChartData = useChartStore.use.setChartData();
+
+  const resetStoreData = () => {
+    setBaseParams({});
+    setExtraParams({});
+    setOptions(null);
+    setChartData(null);
+  };
 
   const chooseIndicator = () => {
+    resetStoreData();
     setIndicatorInfo({
       handle_name,
       required_level: required_level - 1,
       type,
       selectedIndicatorsId: id,
+      param_schema,
     });
   };
 

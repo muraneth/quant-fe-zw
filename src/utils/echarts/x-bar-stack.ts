@@ -53,14 +53,6 @@ export function xBarStackTransform({ indicatorData, klineList, klineType }) {
     
     const seriesLen = options.series.length;
     options.series.push({
-      name: "value",
-      data: indicatorData.map((item) => item.value),
-      type: "bar",
-      smooth: true,
-    });
-    options.series[options.series.length - 1].yAxisIndex = seriesLen;
-
-    options.series.push({
       name: "positive_value",
       data: indicatorData.map((item) => item.positive_value),
       type: "bar",
