@@ -1,7 +1,12 @@
 import { request } from "@/utils/request";
 
 export enum IndicatorChartType {
+  PRICE_LINE = "price_line",
   INDEPENDENT_LINE = "independent_line",
+  X_BAR = "x_bar",
+  X_BAR_STACK = "x_bar_stack",
+  Y_BAR = "y_bar",
+  Y_BAR_STACK = "y_bar_stack",
 }
 
 interface TokenListReqDto {
@@ -52,7 +57,7 @@ export function getTokenMarketInfo(
 }
 
 export interface Indicator {
-  id: number;
+  id: string;
   created_at: string;
   updated_at: string;
   name: string;
@@ -92,8 +97,9 @@ export function getIndicatorList(): Promise<IndicatorListResDto> {
 interface IndicatorDetailReqDto {
   symbol: string;
   chain: string;
-  handler_name: string;
-  extra_params: Record<string, any>;
+  handle_name: string;
+  base_params: Record<string, any>;
+  extra_params?: Record<string, any>;
 }
 
 /**
@@ -102,15 +108,44 @@ interface IndicatorDetailReqDto {
 export function getIndicatorDetail(
   params: IndicatorDetailReqDto
 ): Promise<Array<Record<string, any>>> {
+  params.extra_params = {
+    start_time: "2024-10-10 00:00:00",
+    end_time: "2024-11-10 00:00:00",
+  };
   return request({
     url: "/data/api/indicator",
     method: "POST",
-    params: {
-      symbol: "MSTR",
-      chain: "eth",
-      handle_name: "avgcost.all",
+    params,
+  });
+}
 
-      extra_params: {},
-    },
+interface BasePriceReqDto {
+  symbol: string;
+  chain: string;
+  extra_params?: Record<string, any>;
+}
+
+interface BasePriceItem {
+  time: string;
+  timestamp: number;
+  avg_price: number;
+  high: number;
+  low: number;
+  open: number;
+  close: number;
+}
+
+type BasePriceResDto = BasePriceItem[];
+
+/**
+ * 获取k线价格
+ */
+export function getBasePrice(
+  params: BasePriceReqDto
+): Promise<BasePriceResDto> {
+  return request({
+    url: "/data/api/base/price",
+    method: "POST",
+    params,
   });
 }

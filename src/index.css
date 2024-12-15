@@ -180,6 +180,10 @@ button:focus-visible {
   color: rgba(255, 255, 255, 0.45);
 }
 
+.ant-collapse .ant-collapse-content>.ant-collapse-content-box {
+  padding: 0;
+}
+
 .ant-segmented {
   padding: 4px;
   border-radius: 36px;

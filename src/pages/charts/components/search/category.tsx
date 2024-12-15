@@ -17,7 +17,11 @@ const Category: React.FC<CategoryProps> = ({
 }) => {
   return (
     <div className={styles.category}>
-      {(indicatorList || []).map(({ category, order }, index) => {
+      {(indicatorList || []).map(({ category, groups }, index) => {
+        const allIndicatorsNum = groups.reduce(
+          (pre, cur) => (pre += cur.indicators.length),
+          0
+        );
         return (
           <div
             className={classNames(styles.categoryItem, {
@@ -39,7 +43,7 @@ const Category: React.FC<CategoryProps> = ({
             ) : (
               category
             )}
-            <span className={styles.indicatorsNum}>{order}</span>
+            <span className={styles.indicatorsNum}>{allIndicatorsNum}</span>
           </div>
         );
       })}

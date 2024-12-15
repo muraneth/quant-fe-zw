@@ -425,4 +425,22 @@ export const svgMap = {
       </defs>
     </svg>
   ),
+  settingIcon: (
+    <svg
+      width="14"
+      height="11"
+      viewBox="0 0 14 11"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path
+        d="M11.6667 0.833252H7L4.33333 10.1666L2.33333 6.16659H1M8.33333 6.16659L12.3333 10.1666M8.33333 10.1666L12.3333 6.16659"
+        stroke="white"
+        strokeOpacity="0.65"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  ),
 };

@@ -36,6 +36,12 @@ const BaseChart = ({ options }) => {
   });
 
   React.useEffect(() => {
+    window.addEventListener("menuChange", () => {
+      myChartRef.current?.resize();
+    });
+  }, []);
+
+  React.useEffect(() => {
     myChartRef.current = echarts.init(ref.current);
   }, []);
 
