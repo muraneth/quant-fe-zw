@@ -17,7 +17,7 @@ const EchartsPanel = () => {
 
   const klineType = useChartStore((state) => state.klineType);
   const { symbol, chain } = useChartStore((state) => state.tokenInfo) || {};
-  const { handler_name, type } =
+  const { handle_name, type } =
     useChartStore((state) => state.indicatorInfo) || {};
 
   const setHasLevelAuth = useChartStore(state => state.setHasLevelAuth);
@@ -28,13 +28,13 @@ const EchartsPanel = () => {
     run: runGetIndicatorDetail,
   } = useRequest(
     () => {
-      if (!symbol || !chain || !handler_name)
+      if (!symbol || !chain || !handle_name)
         return [] as unknown as Promise<any[]>;
       return Promise.all([
         getIndicatorDetail({
           symbol,
           chain,
-          handle_name: handler_name,
+          handle_name: handle_name,
           base_params: {},
           extra_params: {},
         }),
@@ -46,7 +46,7 @@ const EchartsPanel = () => {
       ]);
     },
     {
-      refreshDeps: [symbol, chain, handler_name],
+      refreshDeps: [symbol, chain, handle_name],
       onSuccess: (res) => {
         if (!res.length) return;
         if (res[0]?.code === 3026) {
