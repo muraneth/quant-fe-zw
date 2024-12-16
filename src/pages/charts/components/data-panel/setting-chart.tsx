@@ -23,7 +23,7 @@ const SettingChart = () => {
   const param_schema = useChartStore.use.indicatorInfo().param_schema;
   const { use_base_param, extra_params } =
     JSON.parse((param_schema || null) as string) || {};
-  extra_params.column = 3;
+  // extra_params.column = 3;
 
   const form = useForm();
 
