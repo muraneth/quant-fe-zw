@@ -2,7 +2,7 @@
 // @ts-nocheck
 import { Tooltip } from "antd";
 import { getPriceSeries,getIndenpendYAxis, getToolTipFormater,commonOption,padArrayAhead } from "./common";
-import {formatBigNumber} from "@/utils/common";
+import {formatNumber} from "@/utils/common";
 
 export function xBarStackTransform({ indicatorData, klineList, klineType }) {
   indicatorData = padArrayAhead(indicatorData, klineList.length);
@@ -49,7 +49,7 @@ export function xBarStackTransform({ indicatorData, klineList, klineType }) {
         color: 'rgba(144, 238, 144, 0.5)'
       },
       tooltip: {
-        valueFormatter: val =>formatBigNumber(val)
+        valueFormatter: val =>formatNumber(val)
       },
       yAxisIndex:1
     });
@@ -63,7 +63,7 @@ export function xBarStackTransform({ indicatorData, klineList, klineType }) {
         color: ' rgba(255, 111, 97, 0.5)'
       },
       tooltip: {
-        valueFormatter: val =>formatBigNumber(val)
+        valueFormatter: val =>formatNumber(val)
       },
       yAxisIndex : 1
     });

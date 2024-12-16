@@ -6,6 +6,7 @@ import type { GetProp } from "antd";
 import styles from "./index.module.scss";
 import classNames from "classnames";
 import {ExclamationCircleOutlined} from "@ant-design/icons";
+import { Divider } from "antd";
 
 
 const options = [
@@ -67,9 +68,9 @@ const SettingChart = () => {
                  href={indicatorInfo.doc} 
                  target="_blank" 
                  rel="noopener noreferrer" 
-                 style={{ marginLeft: '8px', color: 'blue' }}
+                 style={{ marginLeft: '8px', color: 'green' }}
                >
-                 Learn More
+                 LearnMore
                </a>
              )}
            </div>
@@ -87,6 +88,7 @@ const SettingChart = () => {
           onChange={setKlineType}
         />
       </div>
+      {/* <Divider /> */}
       <div className={styles.setting}>
         {svgMap["settingIcon"]}
         <span className={styles.settingTitle}>Parameter Setting</span>
@@ -102,7 +104,8 @@ const SettingChart = () => {
                 />
               }
             >
-              设置 base
+              <span className={styles.baseSettingTitle}>Base Params</span>
+
             </Popover>
           </div>
         ) : null}

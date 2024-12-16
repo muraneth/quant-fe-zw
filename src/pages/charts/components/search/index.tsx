@@ -7,6 +7,7 @@ import Category from "./category";
 import Group from "./group";
 import Result from "./result";
 import styles from "./index.module.scss";
+import { Divider } from 'antd';
 
 enum View {
   Category,
@@ -67,6 +68,7 @@ const Search = () => {
           value={searchKeyword}
         />
       </div>
+      <Divider/>
       {curView === View.Category ? (
         <Category
           indicatorList={indicatorList}

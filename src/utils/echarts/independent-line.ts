@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 // @ts-nocheck
 import { getPriceSeries,getIndenpendYAxis,getToolTipFormater, commonOption, padArrayAhead } from "./common";
-import {formatBigNumber} from "@/utils/common";
+import {formatNumber} from "@/utils/common";
 
 
 export function independentLineTransform({

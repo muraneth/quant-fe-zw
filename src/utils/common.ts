@@ -71,14 +71,13 @@ export function extractedTokenMarketInfo(
         title,
         value: tokenMarketInfo[baseKey] ?? null,
         type: value > 0 ? "rise" : value < 0 ? "fall" : "neutral",
-        percentage: `${(value * 100).toFixed(2)}%`,
+        percentage: `${numberToPercentage(value)}`,
       };
     });
 }
 
 
-
-export const formatBigNumber = (data:any) => {
+export const formatNumber = (data:any) => {
   if (data === undefined) {
     return 'N/A';
   }
@@ -100,8 +99,10 @@ export const formatBigNumber = (data:any) => {
   } else if (Math.abs(numData) > 0.01) {
     return numData.toFixed(3);
   } else if (Math.abs(numData) > 0.001) {
+    return numData.toFixed(4);
+  } else if (Math.abs(numData) > 0.0001) {
     return numData.toFixed(5);
-  } else if (Math.abs(numData) > 0.00001) {
+  }else if (Math.abs(numData) > 0.00001) {
     return numData.toFixed(6);
   } else if (Math.abs(numData) > 0.000001) {
     return numData.toFixed(7);
@@ -112,10 +113,9 @@ export const formatBigNumber = (data:any) => {
   }else if (Math.abs(numData) == 0.0) {
     return 0
   }
-
-  return numData.toFixed(10);
+  return numData
 };
 
 export const numberToPercentage = (value:number) => {
-  return (value * 100).toFixed(2) + '%';
+  return (value * 100).toFixed(1) + '%';
 };

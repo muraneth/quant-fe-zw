@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 // @ts-nocheck
-import { formatBigNumber } from "../common";
+import { formatNumber } from "../common";
 export function parsePriceToKlineSeriesData(klineList) {
   return klineList.map((item) => [item.open, item.close, item.low, item.high]);
 }
@@ -49,7 +49,7 @@ export const getIndenpendYAxis = (indicatorData) => {
     name: "value",
     axisLabel: {
       formatter: function (val) {
-        return formatBigNumber(val); // Formatting Y-axis labels
+        return formatNumber(val); // Formatting Y-axis labels
       }
     },
     splitLine: {
@@ -76,10 +76,10 @@ export const getToolTipFormater = (params) => {
             result += `
               <div style="margin: 5px 0; line-height: 1.5;">
                 <strong>${param.seriesName}:</strong> 
-                <span style="color: #999;">Open:</span> ${formatBigNumber(open)} 
-                <span style="color: #999;">Close:</span> ${formatBigNumber(close)} 
-                <span style="color: #999;">Low:</span> ${formatBigNumber(low)} 
-                <span style="color: #999;">High:</span> ${formatBigNumber(high)}
+                <span style="color: #999;">Open:</span> ${formatNumber(open)} 
+                <span style="color: #999;">Close:</span> ${formatNumber(close)} 
+                <span style="color: #999;">Low:</span> ${formatNumber(low)} 
+                <span style="color: #999;">High:</span> ${formatNumber(high)}
               </div>
               <div>
               <strong>Change:</strong> 
@@ -92,7 +92,7 @@ export const getToolTipFormater = (params) => {
               result += `
               <div style="margin: 5px 0; line-height: 1.5;">
                 <span style="display: inline-block; width: 10px; height: 10px; background-color: ${param.color}; border-radius: 50%; margin-right: 5px;"></span>
-                <strong>${param.seriesName}:</strong> ${formatBigNumber(param.value)}
+                <strong>${param.seriesName}:</strong> ${formatNumber(param.value)}
               </div>
             `;
             }
@@ -116,9 +116,10 @@ export const commonOption = {
     },
   ],
   grid: {
+    top: '0%',
     left: '1%',
     right: '1%',
-    bottom: '10%',
+    bottom: '30%',
     containLabel: true
   },
   legend: {},

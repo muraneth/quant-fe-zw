@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 // @ts-nocheck
 import { getPriceSeries, commonOption,getToolTipFormater } from "./common";
-import {formatBigNumber} from "@/utils/common";
+import {formatNumber} from "@/utils/common";
 
 
 export function yBarStackTransform({ indicatorData, klineList, klineType }) {
@@ -49,8 +49,8 @@ export function yBarStackTransform({ indicatorData, klineList, klineType }) {
     if (options.yAxis.length > 0) {
       const maxPrice = indicatorData.reduce((max, p) => (p.price_range_upper > max ? p.price_range_upper : max), indicatorData[0].price_range_upper);
       const minPrice = indicatorData.reduce((min, p) => (p.price_range_lower < min ? p.price_range_lower : min), indicatorData[0].price_range_lower);
-      options.yAxis[0].min = formatBigNumber( minPrice); // set price range
-      options.yAxis[0].max =formatBigNumber( maxPrice); 
+      options.yAxis[0].min = formatNumber( minPrice); // set price range
+      options.yAxis[0].max =formatNumber( maxPrice); 
     }
     options.xAxis.push({
       type: "value",
@@ -66,7 +66,7 @@ export function yBarStackTransform({ indicatorData, klineList, klineType }) {
       },
       axisLabel: {
         formatter:  function (val) {
-          return formatBigNumber(val);
+          return formatNumber(val);
         }
       }
     });
@@ -78,7 +78,7 @@ export function yBarStackTransform({ indicatorData, klineList, klineType }) {
       position:"left",
       axisLabel: {
         formatter: function (val) {
-          return formatBigNumber(val); 
+          return formatNumber(val); 
         }
       },
     });
