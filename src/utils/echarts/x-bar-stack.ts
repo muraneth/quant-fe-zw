@@ -55,7 +55,7 @@ export function xBarStackTransform({ indicatorData, klineList, klineType }) {
     const seriesLen = options.series.length;
     options.series.push({
       name: "positive_value",
-      data: indicatorData.map((item) => item.positive_value),
+      data: indicatorData.map((item) => item?.positive_value),
       type: "bar",
       stack: "x-bar-stack",
       itemStyle: {
@@ -66,7 +66,7 @@ export function xBarStackTransform({ indicatorData, klineList, klineType }) {
 
     options.series.push({
       name: "negative_value",
-      data: indicatorData.map((item) => item.negative_value),
+      data: indicatorData.map((item) => item?.negative_value),
       type: "bar",
       stack: "x-bar-stack",
       itemStyle: {

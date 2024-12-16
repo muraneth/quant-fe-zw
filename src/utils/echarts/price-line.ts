@@ -44,9 +44,13 @@ export function priceLineTransform({ indicatorData, klineList, klineType }) {
   if (indicatorData?.length) {
     options.series.push({
       name: "indicator",
-      data: indicatorData.map((item) => item.value),
+      data: indicatorData.map((item) => item?.value),
       type: "line",
+      areaStyle: {
+        color: 'rgba(0, 123, 255, 0.2)' // Adjust the RGB and opacity as needed
+      },
       smooth: true,
+      symbol: 'none'
     });
   }
 

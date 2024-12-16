@@ -59,9 +59,13 @@ export function independentLineTransform({
     });
     options.series.push({
       name: "indicator",
-      data: indicatorData.map((item) => item.value),
+      data: indicatorData.map((item) => item?.value),
       type: "line",
+      areaStyle: {
+        color: 'rgba(0, 123, 255, 0.2)'
+      },
       smooth: true,
+      symbol: 'none'
     });
     options.series[options.series.length - 1].yAxisIndex =
       options.series.length - 1;
