@@ -1,7 +1,8 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 // @ts-nocheck
 import { Tooltip } from "antd";
-import { getPriceSeries,getIndenpendYAxis, getToolTipFormater,commonOption,padArrayAhead,formatBigNumber } from "./common";
+import { getPriceSeries,getIndenpendYAxis, getToolTipFormater,commonOption,padArrayAhead } from "./common";
+import {formatBigNumber} from "@/utils/common";
 
 export function xBarStackTransform({ indicatorData, klineList, klineType }) {
   indicatorData = padArrayAhead(indicatorData, klineList.length);

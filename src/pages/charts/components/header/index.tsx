@@ -13,6 +13,8 @@ import { useChartStore } from "@/store/charts";
 import type { TokenListItem } from "@/service/charts";
 import classNames from "classnames";
 import styles from "./index.module.scss";
+import {formatBigNumber} from "@/utils/common";
+
 
 const Header = () => {
   const [openPopover, setOpenPopover] = useImmer(false);
@@ -198,7 +200,7 @@ const Header = () => {
             <div key={index} className={styles.itemInfo}>
               <div className={styles.title}>{i.title}</div>
               <div className={styles.valueInfo}>
-                <span>{i.value}</span>
+                <span>{formatBigNumber(  i.value)}</span>
                 {i.type !== "neutral" && (
                   <span
                     style={{ color: i.type === "rise" ? "#36F097" : "#EB5757" }}

@@ -60,9 +60,9 @@ export function extractedTokenMarketInfo(
 ): Array<ExtractedTokenMarketInfoItem> {
   if (!tokenMarketInfo) return [];
   return Object.entries(tokenMarketInfo)
-    .filter(([key]) => key.endsWith("_24h_chg"))
+    .filter(([key]) => key.endsWith("_daily_chg"))
     .map(([key, value]) => {
-      const baseKey = key.replace("_24h_chg", "");
+      const baseKey = key.replace("_daily_chg", "");
       const title = baseKey
         .replace(/_/g, " ")
         .replace(/\b\w/g, (char) => char.toUpperCase());
@@ -75,3 +75,47 @@ export function extractedTokenMarketInfo(
       };
     });
 }
+
+
+
+export const formatBigNumber = (data:any) => {
+  if (data === undefined) {
+    return 'N/A';
+  }
+  const numData = Number(data);
+
+  // Check if conversion resulted in a valid number
+  if (isNaN(numData)) {
+    console.error('Invalid input to formatBigNumber:', data);
+    return 'N/A';
+  }
+  if (Math.abs(numData) > 1000000000) {
+    return (numData / 1000000000).toFixed(1) + 'B';
+  } else if (Math.abs(numData) > 1000000) {
+    return (numData / 1000000).toFixed(1) + 'M';
+  } else if (Math.abs(numData) > 1000) {
+    return (numData / 1000).toFixed(1) + 'K';
+  } else if (Math.abs(numData) > 1) {
+    return numData.toFixed(2);
+  } else if (Math.abs(numData) > 0.01) {
+    return numData.toFixed(3);
+  } else if (Math.abs(numData) > 0.001) {
+    return numData.toFixed(5);
+  } else if (Math.abs(numData) > 0.00001) {
+    return numData.toFixed(6);
+  } else if (Math.abs(numData) > 0.000001) {
+    return numData.toFixed(7);
+  } else if (Math.abs(numData) > 0.0000001) {
+    return numData.toFixed(8);
+  }else if (Math.abs(numData) > 0.00000001) {
+    return numData.toFixed(9);
+  }else if (Math.abs(numData) == 0.0) {
+    return 0
+  }
+
+  return numData.toFixed(10);
+};
+
+export const numberToPercentage = (value:number) => {
+  return (value * 100).toFixed(2) + '%';
+};

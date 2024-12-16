@@ -2,6 +2,7 @@
 // @ts-nocheck
 import { getPriceSeries,getIndenpendYAxis,getToolTipFormater, commonOption, padArrayAhead } from "./common";
 
+
 export function xBarTransform({ indicatorData, klineList, klineType }) {
   indicatorData = padArrayAhead(indicatorData, klineList.length);
   const options = {

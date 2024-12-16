@@ -1,6 +1,8 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 // @ts-nocheck
-import { getPriceSeries, commonOption,getToolTipFormater ,formatBigNumber} from "./common";
+import { getPriceSeries, commonOption,getToolTipFormater } from "./common";
+import {formatBigNumber} from "@/utils/common";
+
 
 export function yBarStackTransform({ indicatorData, klineList, klineType }) {
   const options = {

@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 // @ts-nocheck
-
+import { formatBigNumber } from "../common";
 export function parsePriceToKlineSeriesData(klineList) {
   return klineList.map((item) => [item.open, item.close, item.low, item.high]);
 }
@@ -10,48 +10,6 @@ export const padArrayAhead = (arr, targetLen) => {
     arr.unshift(null);
   }
   return arr;
-};
-
-export const formatBigNumber = (data) => {
-  if (data === undefined) {
-    return 'N/A';
-  }
-  const numData = Number(data);
-
-  // Check if conversion resulted in a valid number
-  if (isNaN(numData)) {
-    console.error('Invalid input to formatBigNumber:', data);
-    return 'N/A';
-  }
-  if (Math.abs(numData) > 1000000000) {
-    return (numData / 1000000000).toFixed(2) + 'B';
-  } else if (Math.abs(numData) > 1000000) {
-    return (numData / 1000000).toFixed(2) + 'M';
-  } else if (Math.abs(numData) > 1000) {
-    return (numData / 1000).toFixed(2) + 'K';
-  } else if (Math.abs(numData) > 1) {
-    return numData.toFixed(2);
-  } else if (Math.abs(numData) > 0.01) {
-    return numData.toFixed(3);
-  } else if (Math.abs(numData) > 0.0001) {
-    return numData.toFixed(5);
-  } else if (Math.abs(numData) > 0.00001) {
-    return numData.toFixed(6);
-  } else if (Math.abs(numData) > 0.000001) {
-    return numData.toFixed(7);
-  } else if (Math.abs(numData) > 0.0000001) {
-    return numData.toFixed(8);
-  }else if (Math.abs(numData) > 0.00000001) {
-    return numData.toFixed(9);
-  }else if (Math.abs(numData) == 0.0) {
-    return 0
-  }
-
-  return numData.toFixed(10);
-};
-
-export const numberToPercentage = (value) => {
-  return (value * 100).toFixed(2) + '%';
 };
 
 export const getPriceSeries = (klineList,klineType) => {
@@ -107,6 +65,7 @@ export const getIndenpendYAxis = (indicatorData) => {
 }
 
 export const getToolTipFormater = (params) => {
+  // refer to : https://echarts.apache.org/handbook/zh/how-to/interaction/drag/#%E6%B7%BB%E5%8A%A0-tooltip-%E7%BB%84%E4%BB%B6
   console.log('params', params);
   let result = `<strong>Date:</strong> ${params[0].axisValue}<br/>`;  
         params.forEach((param) => {

@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 // @ts-nocheck
 import { getPriceSeries, commonOption,getToolTipFormater, padArrayAhead } from "./common";
+import {formatBigNumber} from "@/utils/common";
 
 export function priceLineTransform({ indicatorData, klineList, klineType }) {
   indicatorData = padArrayAhead(indicatorData, klineList.length);

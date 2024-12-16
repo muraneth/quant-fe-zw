@@ -50,10 +50,7 @@ const SettingChart = () => {
     <>
       <div className={styles.topInfo}>
         <div className={styles.left}>
-          {/* <img
-            className={styles.img}
-            src="https://assets.coingecko.com/coins/images/18111/large/Doge.png?1696517615"
-          /> */}
+          
            <span
             className={classNames(styles.indicatorItemLevel, {
               [styles[`indicatorItemLevel${indicatorInfo.required_level }`]]: true,
@@ -62,11 +59,24 @@ const SettingChart = () => {
             {`L${indicatorInfo.required_level  }`}
           </span>
           <span className={styles.title}>{indicatorInfo.name}</span>
-          <Tooltip title={indicatorInfo.description} placement="right">
+          <Tooltip title={
+             <div>
+             {indicatorInfo.description}
+             {indicatorInfo.doc && (
+               <a 
+                 href={indicatorInfo.doc} 
+                 target="_blank" 
+                 rel="noopener noreferrer" 
+                 style={{ marginLeft: '8px', color: 'blue' }}
+               >
+                 Learn More
+               </a>
+             )}
+           </div>
+          } placement="right">
             <ExclamationCircleOutlined />
           </Tooltip>
-          {/* <ExclamationCircleOutlined/> */}
-          {/* <span className={styles.desc}>{indicatorInfo.description}</span> */}
+         
         </div>
         <Segmented
           options={[

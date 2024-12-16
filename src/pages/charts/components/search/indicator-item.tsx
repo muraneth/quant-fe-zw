@@ -37,7 +37,7 @@ const IndicatorItem: React.FC<IndicatorItemProps> = ({
       handle_name,
       name,
       description,
-      doc_url:doc,
+      doc:doc,
       required_level: required_level - 1,
       type,
       selectedIndicatorsId: id,
