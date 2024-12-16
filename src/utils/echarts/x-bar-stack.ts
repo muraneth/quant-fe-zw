@@ -3,11 +3,12 @@
 import { parsePriceToKlineSeriesData, commonOption } from "./common";
 
 export function xBarStackTransform({ indicatorData, klineList, klineType }) {
+  indicatorData = padArrayAhead(indicatorData, klineList.length);
   const options = {
     ...commonOption,
     xAxis: {
       type: "category",
-      data: indicatorData.map((item) => item.time),
+      data: klineList.map((item) => item.time),
     },
     yAxis: [],
     series: [],
@@ -37,7 +38,7 @@ export function xBarStackTransform({ indicatorData, klineList, klineType }) {
           name: "kline",
           data: klineList.map((item) => item.avg_price),
           type: "line",
-          smooth: true, 
+          smooth: true,
         });
         options.series[options.series.length - 1].yAxisIndex =
           options.series.length - 1;
@@ -50,7 +51,7 @@ export function xBarStackTransform({ indicatorData, klineList, klineType }) {
       type: "value",
       name: "value",
     });
-    
+
     const seriesLen = options.series.length;
     options.series.push({
       name: "value",

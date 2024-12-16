@@ -1,13 +1,14 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 // @ts-nocheck
-import { parsePriceToKlineSeriesData, commonOption } from "./common";
+import { parsePriceToKlineSeriesData, commonOption, padArrayAhead } from "./common";
 
 export function xBarTransform({ indicatorData, klineList, klineType }) {
+  indicatorData = padArrayAhead(indicatorData, klineList.length);
   const options = {
     ...commonOption,
     xAxis: {
       type: "category",
-      data: indicatorData.map((item) => item.time),
+      data: klineList.map((item) => item.time),
     },
     yAxis: [],
     series: [],
@@ -37,7 +38,7 @@ export function xBarTransform({ indicatorData, klineList, klineType }) {
           name: "kline",
           data: klineList.map((item) => item.avg_price),
           type: "line",
-          smooth: true, 
+          smooth: true,
         });
         options.series[options.series.length - 1].yAxisIndex =
           options.series.length - 1;

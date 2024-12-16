@@ -5,6 +5,12 @@ export function parsePriceToKlineSeriesData(klineList) {
   return klineList.map((item) => [item.open, item.close, item.low, item.high]);
 }
 
+export const padArrayAhead = (arr, targetLen) => {
+  while (arr.length < targetLen) {
+    arr.unshift(null);
+  }
+  return arr;
+};
 export const commonOption = {
   dataZoom: [
     {
