@@ -92,7 +92,7 @@ const Header = () => {
             onSearch(v.target.value);
           }}
           allowClear
-          placeholder="search of cion name"
+          placeholder="search by token name or symbol or address"
           style={{ height: 32, background: "#222324" }}
           suffix={<SearchOutlined style={{ color: "gray" }} />}
         />

@@ -15,6 +15,9 @@ interface ChartStore {
     selectedIndicatorsId?: string;
     required_level: number;
     handle_name: string;
+    name: string;
+    description: string;
+    doc_url: string;
     type: IndicatorChartType;
     param_schema: string | null;
   };
@@ -49,6 +52,9 @@ const useChartStore = createSelectors(
     indicatorInfo: {
       required_level: 0,
       handle_name: "",
+      name: "",
+      description: "",
+      doc_url: "",
       type: null as unknown as IndicatorChartType.INDEPENDENT_LINE,
       param_schema: null,
     },

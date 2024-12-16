@@ -4,6 +4,8 @@ import { useChartStore } from "@/store/charts";
 import FormRender, { useForm } from "form-render";
 import type { GetProp } from "antd";
 import styles from "./index.module.scss";
+import classNames from "classnames";
+
 
 const options = [
   { label: "DEX", value: "DEX" },
@@ -19,8 +21,10 @@ const SettingChart = () => {
   const base_params = useChartStore.use.base_params();
   const setBaseParams = useChartStore.use.setBaseParams();
   const setExtraParams = useChartStore.use.setExtraParams();
-
-  const param_schema = useChartStore.use.indicatorInfo().param_schema;
+  const indicatorInfo = useChartStore.use.indicatorInfo();
+  // console.log("indicatorInfo", indicatorInfo);
+  
+  const param_schema = indicatorInfo.param_schema;
   const { use_base_param, extra_params } =
     JSON.parse((param_schema || null) as string) || {};
   // extra_params.column = 3;
@@ -45,12 +49,19 @@ const SettingChart = () => {
     <>
       <div className={styles.topInfo}>
         <div className={styles.left}>
-          <img
+          {/* <img
             className={styles.img}
             src="https://assets.coingecko.com/coins/images/18111/large/Doge.png?1696517615"
-          />
-          <span className={styles.title}>4CHAN</span>
-          <span className={styles.desc}>FirstDayWalletBalance</span>
+          /> */}
+           <span
+            className={classNames(styles.indicatorItemLevel, {
+              [styles[`indicatorItemLevel${indicatorInfo.required_level }`]]: true,
+            })} 
+          >
+            {`L${indicatorInfo.required_level  }`}
+          </span>
+          <span className={styles.title}>{indicatorInfo.name}</span>
+          {/* <span className={styles.desc}>{indicatorInfo.description}</span> */}
         </div>
         <Segmented
           options={[

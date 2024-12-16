@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 // @ts-nocheck
-import { parsePriceToKlineSeriesData, commonOption } from "./common";
+import { parsePriceToKlineSeriesData, commonOption,padArrayAhead } from "./common";
 
 export function xBarStackTransform({ indicatorData, klineList, klineType }) {
   indicatorData = padArrayAhead(indicatorData, klineList.length);

@@ -120,7 +120,32 @@
       background: var(--primary-content-color);
     }
   }
+  .indicatorItemLevel {
+    width: 16px;
+    height: 16px;
+    line-height: 16px;
+    text-align: center;
+    margin-right: 8px;
+    font-family: "DIN Alternate";
+    font-style: normal;
+    font-weight: 700;
+    font-size: 12px;
+    border-radius: 2px;
+  }
+  .indicatorItemLevel0 {
+    background: #38393a;
+    color: #fff;
+  }
 
+  .indicatorItemLevel1 {
+    background: #1e2b39;
+    color: #007aff;
+  }
+
+  .indicatorItemLevel2 {
+    background: #272836;
+    color: #5f5cf5;
+  }
   .markdown {
     margin-top: 1px;
   }
