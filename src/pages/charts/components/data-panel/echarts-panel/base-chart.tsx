@@ -48,11 +48,6 @@ const BaseChart = ({ options }) => {
   React.useEffect(() => {
     if (!options) return;
     myChartRef.current.setOption(options);
-
-    return () => {
-      // 数据清理，确保数据不会相互影响
-      myChartRef.current?.clear();
-    };
   }, [options]);
 
   return <div ref={ref} style={{ width: "100%", height: "100%" }} />;

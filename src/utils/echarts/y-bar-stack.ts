@@ -62,15 +62,6 @@ export function yBarStackTransform({ indicatorData, klineList, klineType }) {
 
     const seriesLen = options.series.length;
     options.series.push({
-      name: "Volume",
-      type: "bar",
-      data: indicatorData.map((item) => item.total_Value),
-      barWidth: "40%",
-    });
-    options.series[options.series.length - 1].xAxisIndex = seriesLen;
-    options.series[options.series.length - 1].yAxisIndex = seriesLen;
-
-    options.series.push({
       name: "positive_value",
       data: indicatorData.map((item) => item.positive_value),
       type: "bar",
