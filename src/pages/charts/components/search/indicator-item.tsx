@@ -10,6 +10,8 @@ const IndicatorItem: React.FC<IndicatorItemProps> = ({
   required_level = 1,
   name = "",
   handle_name = "",
+  description = "",
+  doc,
   type,
   id,
   param_schema,
@@ -33,6 +35,9 @@ const IndicatorItem: React.FC<IndicatorItemProps> = ({
     resetStoreData();
     setIndicatorInfo({
       handle_name,
+      name,
+      description,
+      doc:doc,
       required_level: required_level - 1,
       type,
       selectedIndicatorsId: id,

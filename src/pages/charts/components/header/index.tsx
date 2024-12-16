@@ -13,6 +13,8 @@ import { useChartStore } from "@/store/charts";
 import type { TokenListItem } from "@/service/charts";
 import classNames from "classnames";
 import styles from "./index.module.scss";
+import {formatNumber} from "@/utils/common";
+
 
 const Header = () => {
   const [openPopover, setOpenPopover] = useImmer(false);
@@ -92,7 +94,7 @@ const Header = () => {
             onSearch(v.target.value);
           }}
           allowClear
-          placeholder="search of cion name"
+          placeholder="search by token name or symbol or address"
           style={{ height: 32, background: "#222324" }}
           suffix={<SearchOutlined style={{ color: "gray" }} />}
         />
@@ -198,7 +200,7 @@ const Header = () => {
             <div key={index} className={styles.itemInfo}>
               <div className={styles.title}>{i.title}</div>
               <div className={styles.valueInfo}>
-                <span>{i.value}</span>
+                <span>{formatNumber(  i.value)}</span>
                 {i.type !== "neutral" && (
                   <span
                     style={{ color: i.type === "rise" ? "#36F097" : "#EB5757" }}

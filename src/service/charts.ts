@@ -67,6 +67,7 @@ export interface Indicator {
   type: IndicatorChartType;
   required_level: number;
   description: string;
+  doc: string;
   is_active: boolean;
   param_schema: string;
 }

@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 // @ts-nocheck
-import { parsePriceToKlineSeriesData, commonOption } from "./common";
+import { getPriceSeries, commonOption } from "./common";
 
 export function yBarTransform({ indicatorData, klineList, klineType }) {
   const options = {
@@ -16,35 +16,17 @@ export function yBarTransform({ indicatorData, klineList, klineType }) {
   };
 
   if (klineList?.length) {
-    switch (klineType) {
-      case "kline":
-        options.yAxis.push({
-          type: "value",
-          name: "price",
-        });
-        options.series.push({
-          name: "kline",
-          data: parsePriceToKlineSeriesData(klineList),
-          type: "candlestick",
-        });
-        options.series[options.series.length - 1].yAxisIndex =
-          options.series.length - 1;
-        break;
-      case "avgPrice":
-        options.yAxis.push({
-          type: "value",
-          name: "avg_price",
-        });
-        options.series.push({
-          name: "kline",
-          data: klineList.map((item) => item.avg_price),
-          type: "line",
-          smooth: true,
-        });
-        options.series[options.series.length - 1].yAxisIndex =
-          options.series.length - 1;
-        break;
-    }
+    options.yAxis.push({
+      type: "value",
+      name: "price",
+      splitLine: {
+        show: false
+      },
+      position: 'right',
+      nameLocation: 'middle',
+    })
+    var  ser = getPriceSeries(klineList,klineType);
+    options.series.push(ser);
   }
 
   if (indicatorData?.length) {
@@ -58,6 +40,8 @@ export function yBarTransform({ indicatorData, klineList, klineType }) {
       data: indicatorData.map((item) => item.price_range_lower),
       name: "Price Levels",
       nameLocation: "middle",
+      position:"left",
+      
     });
     options.series.push({
       name: "Volume",

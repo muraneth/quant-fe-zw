@@ -6,7 +6,6 @@ import { getIndicatorDetail, getBasePrice } from "@/service/charts";
 import BaseChart from "./base-chart";
 import { generateOptions } from "@/utils/echarts";
 import styles from "../index.module.scss";
-
 const EchartsPanel = () => {
   const options = useChartStore.use.options();
   const chartData = useChartStore.use.chartData();
@@ -85,7 +84,9 @@ const EchartsPanel = () => {
   };
 
   return (
-    <div style={{ marginTop: 50 }} className={styles.echartsWrapper}>
+    <div 
+    // style={{ marginTop: 50 }}
+     className={styles.echartsWrapper}>
       {renderContent()}
     </div>
   );
