@@ -1,10 +1,11 @@
-import { Segmented, Popover, Checkbox } from "antd";
+import { Segmented, Popover, Checkbox,Tooltip } from "antd";
 import { svgMap } from "@/constants/svg";
 import { useChartStore } from "@/store/charts";
 import FormRender, { useForm } from "form-render";
 import type { GetProp } from "antd";
 import styles from "./index.module.scss";
 import classNames from "classnames";
+import {ExclamationCircleOutlined} from "@ant-design/icons";
 
 
 const options = [
@@ -61,6 +62,10 @@ const SettingChart = () => {
             {`L${indicatorInfo.required_level  }`}
           </span>
           <span className={styles.title}>{indicatorInfo.name}</span>
+          <Tooltip title={indicatorInfo.description} placement="right">
+            <ExclamationCircleOutlined />
+          </Tooltip>
+          {/* <ExclamationCircleOutlined/> */}
           {/* <span className={styles.desc}>{indicatorInfo.description}</span> */}
         </div>
         <Segmented

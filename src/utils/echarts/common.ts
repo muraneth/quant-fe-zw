@@ -11,6 +11,136 @@ export const padArrayAhead = (arr, targetLen) => {
   }
   return arr;
 };
+
+export const formatBigNumber = (data) => {
+  if (data === undefined) {
+    return 'N/A';
+  }
+  const numData = Number(data);
+
+  // Check if conversion resulted in a valid number
+  if (isNaN(numData)) {
+    console.error('Invalid input to formatBigNumber:', data);
+    return 'N/A';
+  }
+  if (Math.abs(numData) > 1000000000) {
+    return (numData / 1000000000).toFixed(2) + 'B';
+  } else if (Math.abs(numData) > 1000000) {
+    return (numData / 1000000).toFixed(2) + 'M';
+  } else if (Math.abs(numData) > 1000) {
+    return (numData / 1000).toFixed(2) + 'K';
+  } else if (Math.abs(numData) > 1) {
+    return numData.toFixed(2);
+  } else if (Math.abs(numData) > 0.01) {
+    return numData.toFixed(3);
+  } else if (Math.abs(numData) > 0.0001) {
+    return numData.toFixed(5);
+  } else if (Math.abs(numData) > 0.00001) {
+    return numData.toFixed(6);
+  } else if (Math.abs(numData) > 0.000001) {
+    return numData.toFixed(7);
+  } else if (Math.abs(numData) > 0.0000001) {
+    return numData.toFixed(8);
+  }else if (Math.abs(numData) > 0.00000001) {
+    return numData.toFixed(9);
+  }else if (Math.abs(numData) == 0.0) {
+    return 0
+  }
+
+  return numData.toFixed(10);
+};
+
+export const numberToPercentage = (value) => {
+  return (value * 100).toFixed(2) + '%';
+};
+
+export const getPriceSeries = (klineList,klineType) => {
+  
+  if (klineList?.length) {
+    switch (klineType) {
+      case "kline":
+        return{
+          name: "kline",
+          data: parsePriceToKlineSeriesData(klineList),
+          type: "candlestick",
+          itemStyle: {
+            color0: '#ef232a',
+            color: '#14b143',
+            borderColor0: '#ef232a',
+            borderColor: '#14b143'
+          },
+          yAxisIndex: 0,
+        }
+
+      case "avgPrice":
+       return{
+          name: "kline",
+          data: klineList.map((item) => item?.avg_price),
+          type: "line",
+          smooth: true,
+          yAxisIndex: 0,
+        }
+    }
+  }
+  return {}
+}
+
+export const getIndenpendYAxis = (indicatorData) => {
+  return {
+    type: "value",
+    name: "value",
+    axisLabel: {
+      formatter: function (val) {
+        return formatBigNumber(val); // Formatting Y-axis labels
+      }
+    },
+    splitLine: {
+      show: true,
+      lineStyle: {
+        color: 'rgba(200, 200, 200, 0.4)', // Very light gray with transparency
+        // or use '#eeeeee' for a light solid color
+        width: 0.5, // Thinner line
+        type: 'solid' // or 'dashed', 'dotted'
+      }
+    }
+  }
+}
+
+export const getToolTipFormater = (params) => {
+  console.log('params', params);
+  let result = `<strong>Date:</strong> ${params[0].axisValue}<br/>`;  
+        params.forEach((param) => {
+          if (param.seriesType === 'candlestick') {
+            // Assuming param.value format is [open, close, low, high] for K-line
+            const [key, open, close, low, high] = param.value;
+            const percentageChange = (((close - open) / open) * 100).toFixed(2);
+            result += `
+              <div style="margin: 5px 0; line-height: 1.5;">
+                <strong>${param.seriesName}:</strong> 
+                <span style="color: #999;">Open:</span> ${formatBigNumber(open)} 
+                <span style="color: #999;">Close:</span> ${formatBigNumber(close)} 
+                <span style="color: #999;">Low:</span> ${formatBigNumber(low)} 
+                <span style="color: #999;">High:</span> ${formatBigNumber(high)}
+              </div>
+              <div>
+              <strong>Change:</strong> 
+                <span style="color: ${percentageChange >= 0 ? 'green' : 'red'};">${percentageChange}%</span>
+              </div>
+            `;
+          } 
+          else {
+            // For other series, just display series name and value
+              result += `
+              <div style="margin: 5px 0; line-height: 1.5;">
+                <span style="display: inline-block; width: 10px; height: 10px; background-color: ${param.color}; border-radius: 50%; margin-right: 5px;"></span>
+                <strong>${param.seriesName}:</strong> ${formatBigNumber(param.value)}
+              </div>
+            `;
+            }
+          
+        });
+        return result;
+}
 export const commonOption = {
   dataZoom: [
     {
@@ -26,11 +156,18 @@ export const commonOption = {
       filterMode: "filter",
     },
   ],
+  grid: {
+    left: '1%',
+    right: '1%',
+    bottom: '10%',
+    containLabel: true
+  },
   legend: {},
   tooltip: {
     trigger: "axis",
     axisPointer: {
       type: 'cross'
     },
+    
   },
 };

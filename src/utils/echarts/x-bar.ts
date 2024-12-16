@@ -1,11 +1,19 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 // @ts-nocheck
-import { parsePriceToKlineSeriesData, commonOption, padArrayAhead } from "./common";
+import { getPriceSeries,getIndenpendYAxis,getToolTipFormater, commonOption, padArrayAhead } from "./common";
 
 export function xBarTransform({ indicatorData, klineList, klineType }) {
   indicatorData = padArrayAhead(indicatorData, klineList.length);
   const options = {
     ...commonOption,
+    tooltip:{
+      trigger: "axis",
+      formatter: function (params) {
+        let result = getToolTipFormater(params);
+        return result;
+      }
+    },
+
     xAxis: {
       type: "category",
       data: klineList.map((item) => item.time),
@@ -15,50 +23,27 @@ export function xBarTransform({ indicatorData, klineList, klineType }) {
   };
 
   if (klineList?.length) {
-    switch (klineType) {
-      case "kline":
-        options.yAxis.push({
-          type: "value",
-          name: "price",
-        });
-        options.series.push({
-          name: "kline",
-          data: parsePriceToKlineSeriesData(klineList),
-          type: "candlestick",
-        });
-        options.series[options.series.length - 1].yAxisIndex =
-          options.series.length - 1;
-        break;
-      case "avgPrice":
-        options.yAxis.push({
-          type: "value",
-          name: "avg_price",
-        });
-        options.series.push({
-          name: "kline",
-          data: klineList.map((item) => item.avg_price),
-          type: "line",
-          smooth: true,
-        });
-        options.series[options.series.length - 1].yAxisIndex =
-          options.series.length - 1;
-        break;
-    }
+    options.yAxis.push({
+      type: "value",
+      name: "price",
+      splitLine: {
+        show: false
+      }
+    })
+    var  ser = getPriceSeries(klineList,klineType);
+    options.series.push(ser);
   }
 
   if (indicatorData?.length) {
+    options.yAxis.push(getIndenpendYAxis());
     options.series.push({
       name: "indicator",
       data: indicatorData.map((item) => item?.value),
       type: "bar",
       smooth: true,
+      yAxisIndex: 1,
     });
-    options.yAxis.push({
-      type: "value",
-      name: "value",
-    });
-    options.series[options.series.length - 1].yAxisIndex =
-      options.series.length - 1;
+   
   }
 
   return options;

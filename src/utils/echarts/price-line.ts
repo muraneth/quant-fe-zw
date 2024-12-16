@@ -1,11 +1,18 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 // @ts-nocheck
-import { parsePriceToKlineSeriesData, commonOption, padArrayAhead } from "./common";
+import { getPriceSeries, commonOption,getToolTipFormater, padArrayAhead } from "./common";
 
 export function priceLineTransform({ indicatorData, klineList, klineType }) {
   indicatorData = padArrayAhead(indicatorData, klineList.length);
   const options = {
     ...commonOption,
+    tooltip:{
+      trigger: "axis",
+      formatter: function (params) {
+        let result = getToolTipFormater(params);
+        return result;
+      }
+    },
     xAxis: [
       {
         type: "category",
@@ -16,29 +23,23 @@ export function priceLineTransform({ indicatorData, klineList, klineType }) {
       {
         type: "value",
         name: "price",
+        splitLine: {
+          show: true,
+          lineStyle: {
+            color: 'rgba(200, 200, 200, 0.4)', // Very light gray with transparency
+            width: 0.5, // Thinner line
+            type: 'solid' // or 'dashed', 'dotted'
+          }
+        }
       },
     ],
     series: [],
   };
 
   if (klineList?.length) {
-    switch (klineType) {
-      case "kline":
-        options.series.push({
-          name: "kline",
-          data: parsePriceToKlineSeriesData(klineList),
-          type: "candlestick",
-        });
-        break;
-      case "avgPrice":
-        options.series.push({
-          name: "kline",
-          data: klineList.map((item) => item.avg_price),
-          type: "line",
-          smooth: true,
-        });
-        break;
-    }
+    var  ser = getPriceSeries(klineList,klineType);
+    options.series.push(ser);
+    
   }
 
   if (indicatorData?.length) {
