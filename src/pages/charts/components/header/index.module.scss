@@ -1,44 +1,60 @@
 .header {
   display: flex;
   padding-top: 5px;
-  // background: var(--primary-theme-color);
-  .left {
-    width: 212px;
+  position: relative;
+
+  .leftWrapper {
     display: flex;
-    flex-direction: column;
-    padding-right: 20px;
-    cursor: pointer;
 
-    .skeleton {
-      display: flex;
-      flex-wrap: wrap;
+    .title {
+      padding: 0 16px;
+      font-family: slkscr-font, Silkscreen;
+      font-weight: 400;
+      font-size: 22px;
+      color: #fff;
+      line-height: 28px;
+      letter-spacing: -0.2em;
+      cursor: pointer;
     }
 
-    .leftTop {
+    .left {
+      width: 212px;
       display: flex;
-      align-items: center;
-
-      .logo {
-        width: 16px;
-        height: 16px;
+      flex-direction: column;
+      padding-right: 20px;
+      cursor: pointer;
+  
+      .skeleton {
+        display: flex;
+        flex-wrap: wrap;
       }
-
-      .name {
-        margin: 0 0 0 8px;
-        font-weight: 500;
-        font-size: 14px;
-        line-height: 14px;
-        color: rgba(255, 255, 255, 0.85);
-        font-family: "SF Pro Display";
+  
+      .leftTop {
+        display: flex;
+        align-items: center;
+  
+        .logo {
+          width: 16px;
+          height: 16px;
+        }
+  
+        .name {
+          margin: 0 0 0 8px;
+          font-weight: 500;
+          font-size: 14px;
+          line-height: 14px;
+          color: rgba(255, 255, 255, 0.85);
+          font-family: "SF Pro Display";
+        }
+  
+        .arrow {
+          margin-left: 8px;
+        }
       }
-
-      .arrow {
-        margin-left: 8px;
+  
+      .leftBottom {
+        color: rgba(255, 255, 255, 0.45);
       }
-    }
-
-    .leftBottom {
-      color: rgba(255, 255, 255, 0.45);
     }
   }
 
@@ -80,6 +96,27 @@
           margin-left: 4px;
         }
       }
+    }
+  }
+
+  .personalInfo {
+    display: flex;
+    align-items: center;
+    position: absolute;
+    top: 50%;
+    right: 38px;
+    transform: translateY(-50%);
+    color: rgba(255, 255, 255, 0.85);
+
+    .avatar {
+      width: 16px;
+      height: 16px;
+      margin-right: 12px;
+      border-radius: 50%;
+    }
+
+    .name {
+      margin-right: 8px;
     }
   }
 }

@@ -1,6 +1,7 @@
-.chartSettingContainer { 
-    display: 'flex';
-    justify-content: 'space-between';
-    align-items: 'center';
-    width: '100%' 
+.chartSetting {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  padding-left: 22px;
 }

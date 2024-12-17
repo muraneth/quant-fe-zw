@@ -5,6 +5,7 @@ import { useDebounceFn, useRequest } from "ahooks";
 import { getTokenList, getTokenMarketInfo } from "@/service/charts";
 import { DownOutlined, SearchOutlined } from "@ant-design/icons";
 import EllipsisMiddle from "@/components/ellipsis-middle";
+import PersonalInfo from "./personal-info";
 import {
   extractedTokenMarketInfo,
   ExtractedTokenMarketInfoItem,
@@ -139,63 +140,66 @@ const Header = () => {
 
   return (
     <div className={styles.header}>
-      <Popover
-        open={openPopover}
-        onOpenChange={(v) => {
-          setOpenPopover(v);
-        }}
-        placement="bottomLeft"
-        content={tokenContent}
-        trigger={["click"]}
-      >
-        <div className={styles.left}>
-          {currentToken ? (
-            <>
-              <div className={styles.leftTop}>
-                <img
-                  className={styles.logo}
-                  src={currentToken?.icon_url}
-                  alt=""
+      <div className={styles.leftWrapper}>
+        <span className={styles.title}>T</span>
+        <Popover
+          open={openPopover}
+          onOpenChange={(v) => {
+            setOpenPopover(v);
+          }}
+          placement="bottomLeft"
+          content={tokenContent}
+          trigger={["click"]}
+        >
+          <div className={styles.left}>
+            {currentToken ? (
+              <>
+                <div className={styles.leftTop}>
+                  <img
+                    className={styles.logo}
+                    src={currentToken?.icon_url}
+                    alt=""
+                  />
+                  <p className={classNames(styles.name, ["common-ellipsis-1"])}>
+                    {currentToken?.name}
+                  </p>
+                  <DownOutlined
+                    style={{
+                      color: "rgba(255, 255, 255, 0.45)",
+                      fontWeight: "bolder",
+                    }}
+                    className={styles.arrow}
+                  />
+                </div>
+                <EllipsisMiddle
+                  className={styles.leftBottom}
+                  title={currentToken?.contract_address}
+                >
+                  {currentToken?.contract_address}
+                </EllipsisMiddle>
+              </>
+            ) : (
+              <div className={styles.skeleton}>
+                <Skeleton.Avatar
+                  style={{ marginRight: 10, width: 18, height: 18 }}
+                  active
+                  size="small"
                 />
-                <p className={classNames(styles.name, ["common-ellipsis-1"])}>
-                  {currentToken?.name}
-                </p>
-                <DownOutlined
-                  style={{
-                    color: "rgba(255, 255, 255, 0.45)",
-                    fontWeight: "bolder",
-                  }}
-                  className={styles.arrow}
+                <Skeleton.Input
+                  style={{ width: 160, height: 18 }}
+                  active
+                  size="small"
+                />
+                <Skeleton.Input
+                  style={{ width: 191, height: 10, marginTop: 7 }}
+                  active
+                  size="small"
                 />
               </div>
-              <EllipsisMiddle
-                className={styles.leftBottom}
-                title={currentToken?.contract_address}
-              >
-                {currentToken?.contract_address}
-              </EllipsisMiddle>
-            </>
-          ) : (
-            <div className={styles.skeleton}>
-              <Skeleton.Avatar
-                style={{ marginRight: 10, width: 18, height: 18 }}
-                active
-                size="small"
-              />
-              <Skeleton.Input
-                style={{ width: 160, height: 18 }}
-                active
-                size="small"
-              />
-              <Skeleton.Input
-                style={{ width: 191, height: 10, marginTop: 7 }}
-                active
-                size="small"
-              />
-            </div>
-          )}
-        </div>
-      </Popover>
+            )}
+          </div>
+        </Popover>
+      </div>
       <div className={styles.right}>
         {tokenMarketInfoList?.map((i, index) => {
           return (
@@ -216,6 +220,7 @@ const Header = () => {
           );
         })}
       </div>
+      <PersonalInfo />
     </div>
   );
 };
