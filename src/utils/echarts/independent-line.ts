@@ -6,7 +6,10 @@ import {
   getToolTipFormater,
   commonOption,
   padArrayAhead,
+  getXAxis
 } from "./common";
+
+
 
 export function independentLineTransform({
   indicatorData,
@@ -14,6 +17,7 @@ export function independentLineTransform({
   klineType,
 }) {
   indicatorData = padArrayAhead(indicatorData, klineList.length);
+
   const options = {
     ...commonOption,
     tooltip: {
@@ -23,12 +27,7 @@ export function independentLineTransform({
         return result;
       },
     },
-    xAxis: [
-      {
-        type: "category",
-        data: klineList.map((item) => item.time),
-      },
-    ],
+    xAxis: [ getXAxis(klineList) ],
     yAxis: [],
     series: [],
   };

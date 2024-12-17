@@ -1,6 +1,8 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 // @ts-nocheck
 import { formatNumber } from "../common";
+import dayjs from 'dayjs';
+
 export function parsePriceToKlineSeriesData(klineList) {
   return klineList.map((item) => [item.open, item.close, item.low, item.high]);
 }
@@ -43,6 +45,12 @@ export const getPriceSeries = (klineList, klineType) => {
   return {};
 };
 
+export const getXAxis = (klineList) => {
+  return {
+    type: "category",
+    data: klineList.map((item) => dayjs(item.time).format('YYYY-MM-DD')),
+  };
+}
 export const getIndenpendYAxis = () => {
   return {
     type: "value",

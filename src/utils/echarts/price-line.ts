@@ -5,6 +5,7 @@ import {
   commonOption,
   getToolTipFormater,
   padArrayAhead,
+  getXAxis
 } from "./common";
 
 export function priceLineTransform({ indicatorData, klineList, klineType }) {
@@ -19,10 +20,7 @@ export function priceLineTransform({ indicatorData, klineList, klineType }) {
       },
     },
     xAxis: [
-      {
-        type: "category",
-        data: klineList.map((item) => item.time),
-      },
+      getXAxis(klineList)
     ],
     yAxis: [
       {

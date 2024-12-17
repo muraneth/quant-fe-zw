@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 // @ts-nocheck
-import { getPriceSeries, commonOption, getToolTipFormater } from "./common";
+import { get } from "http";
+import { getPriceSeries, commonOption, getToolTipFormater,getXAxis } from "./common";
 import { formatNumber } from "@/utils/common";
 
 export function yBarStackTransform({ indicatorData, klineList, klineType }) {
@@ -14,10 +15,7 @@ export function yBarStackTransform({ indicatorData, klineList, klineType }) {
       },
     },
     xAxis: [
-      {
-        type: "category",
-        data: klineList.map((item) => item.time),
-      },
+      getXAxis(klineList),
     ],
     yAxis: [],
     series: [],
