@@ -13,8 +13,7 @@ import { useChartStore } from "@/store/charts";
 import type { TokenListItem } from "@/service/charts";
 import classNames from "classnames";
 import styles from "./index.module.scss";
-import {formatNumber} from "@/utils/common";
-
+import { formatNumber } from "@/utils/common";
 
 const Header = () => {
   const [openPopover, setOpenPopover] = useImmer(false);
@@ -81,11 +80,12 @@ const Header = () => {
   React.useEffect(() => {
     if (currentToken) {
       resetStoreData();
-      setTokenInfo({ 
-        symbol: currentToken.symbol, 
+      setTokenInfo({
+        symbol: currentToken.symbol,
         chain: currentToken.chain,
-        start_time:"", 
-        end_time:"" });
+        start_time: "",
+        end_time: "",
+      });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentToken]);
@@ -118,10 +118,8 @@ const Header = () => {
             </div>
             <div className={styles.right}>
               <div className={styles.itemHeader}>
-                <span className={styles.itemHeaderName}>{i.name}</span>
-                <span className={styles.itemHeaderDesc}>
-                  Department of Government Efficience
-                </span>
+                <span className={styles.itemHeaderName}>{i.symbol}</span>
+                <span className={styles.itemHeaderDesc}>{i.name}</span>
               </div>
               <div className={styles.rightBottom}>
                 <img src={i.icon_url} alt="" />
@@ -204,7 +202,7 @@ const Header = () => {
             <div key={index} className={styles.itemInfo}>
               <div className={styles.title}>{i.title}</div>
               <div className={styles.valueInfo}>
-                <span>{formatNumber(  i.value)}</span>
+                <span>{formatNumber(i.value)}</span>
                 {i.type !== "neutral" && (
                   <span
                     style={{ color: i.type === "rise" ? "#36F097" : "#EB5757" }}
