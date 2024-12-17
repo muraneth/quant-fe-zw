@@ -45,7 +45,7 @@ const EchartsPanel = () => {
       ]);
     },
     {
-      refreshDeps: [symbol, chain, handle_name, base_params, extra_params],
+      refreshDeps: [symbol, chain,start_time,end_time, handle_name, base_params, extra_params],
       onSuccess: (res) => {
         if (!res.length) return;
         if (res[0]?.code === 3026) {
