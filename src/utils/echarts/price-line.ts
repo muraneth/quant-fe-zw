@@ -27,12 +27,12 @@ export function priceLineTransform({ indicatorData, klineList, klineType }) {
     yAxis: [
       {
         type: "value",
-        name: "price",
+        name: "price($)",
         splitLine: {
           show: true,
           lineStyle: {
             color: "rgba(200, 200, 200, 0.4)", // Very light gray with transparency
-            width: 0.5, // Thinner line
+            width: 0.1, // Thinner line
             type: "solid", // or 'dashed', 'dotted'
           },
         },

@@ -11,6 +11,8 @@ interface ChartStore {
   tokenInfo: {
     symbol: string;
     chain: string;
+    start_time : string;
+    end_time : string;
   };
   indicatorInfo: {
     selectedIndicatorsId?: string;
@@ -50,6 +52,8 @@ const useChartStore = createSelectors(
       tokenInfo: {
         symbol: "",
         chain: "",
+        start_time : "",
+        end_time : "",
       },
       indicatorInfo: {
         required_level: 0,

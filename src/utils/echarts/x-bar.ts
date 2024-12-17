@@ -32,6 +32,7 @@ export function xBarTransform({ indicatorData, klineList, klineType }) {
     options.yAxis.push({
       type: "value",
       name: "price",
+      position:"right",
       splitLine: {
         show: false,
       },

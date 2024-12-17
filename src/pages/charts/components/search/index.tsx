@@ -68,7 +68,7 @@ const Search = () => {
           value={searchKeyword}
         />
       </div>
-      <Divider/>
+      {/* <Divider style={{margin:0}}/> */}
       {curView === View.Category ? (
         <Category
           indicatorList={indicatorList}

@@ -36,7 +36,8 @@ export function independentLineTransform({
   if (klineList?.length) {
     options.yAxis.push({
       type: "value",
-      name: "price",
+      name: "price($)",
+      position:"right",
       splitLine: {
         show: false,
       },

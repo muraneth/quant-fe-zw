@@ -81,7 +81,11 @@ const Header = () => {
   React.useEffect(() => {
     if (currentToken) {
       resetStoreData();
-      setTokenInfo({ symbol: currentToken.symbol, chain: currentToken.chain });
+      setTokenInfo({ 
+        symbol: currentToken.symbol, 
+        chain: currentToken.chain,
+        start_time:"", 
+        end_time:"" });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentToken]);

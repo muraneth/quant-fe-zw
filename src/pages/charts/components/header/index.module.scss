@@ -1,6 +1,7 @@
 .header {
   display: flex;
-
+  padding-top: 5px;
+  background: var(--primary-content-color);
   .left {
     width: 212px;
     display: flex;
@@ -88,7 +89,7 @@
   width: 500px;
   display: flex;
   flex-direction: column;
-
+  
   .content {
     overflow-y: auto;
     margin-top: 16px;

@@ -10,7 +10,7 @@ const EchartsPanel = () => {
   const options = useChartStore.use.options();
   const chartData = useChartStore.use.chartData();
   const klineType = useChartStore.use.klineType();
-  const { symbol, chain } = useChartStore.use.tokenInfo();
+  const { symbol, chain,start_time,end_time } = useChartStore.use.tokenInfo();
   const { handle_name, type } = useChartStore.use.indicatorInfo();
   const base_params = useChartStore.use.base_params();
   const extra_params = useChartStore.use.extra_params();
@@ -30,6 +30,8 @@ const EchartsPanel = () => {
         getIndicatorDetail({
           symbol,
           chain,
+          start_time,
+          end_time,
           handle_name: handle_name,
           base_params,
           extra_params,
@@ -37,6 +39,8 @@ const EchartsPanel = () => {
         getBasePrice({
           symbol,
           chain,
+          start_time,
+          end_time,
         }),
       ]);
     },

@@ -46,7 +46,8 @@ export const getPriceSeries = (klineList, klineType) => {
 export const getIndenpendYAxis = () => {
   return {
     type: "value",
-    name: "value",
+    // name: "value",
+    position:"left",
     axisLabel: {
       formatter: function (val) {
         return formatNumber(val); // Formatting Y-axis labels
@@ -56,8 +57,7 @@ export const getIndenpendYAxis = () => {
       show: true,
       lineStyle: {
         color: "rgba(200, 200, 200, 0.4)", // Very light gray with transparency
-        // or use '#eeeeee' for a light solid color
-        width: 0.5, // Thinner line
+        width: 0.1, // Thinner line
         type: "solid", // or 'dashed', 'dotted'
       },
     },
@@ -119,7 +119,7 @@ export const commonOption = {
     },
   ],
   grid: {
-    top: "5%",
+    top: "10%",
     left: "2%",
     right: "2%",
     bottom: "12%",
