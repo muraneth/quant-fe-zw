@@ -1,7 +1,8 @@
 import { useChartStore } from "@/store/charts";
 import EchartsPanel from "./echarts-panel";
 import MaskGuide from "./mask-guide";
-import SettingChart from "./setting-chart";
+import ChartInfo from "./chart-info";
+import ChartSetting from "./setting"
 import { svgMap } from "@/constants/svg";
 import styles from "./index.module.scss";
 
@@ -21,7 +22,8 @@ const DataPanel = () => {
             </>
           ) : null}
           <div className={styles.echartsPanel}>
-            <SettingChart />
+            <ChartInfo />
+            <ChartSetting />
             <EchartsPanel />
           </div>
         </>

@@ -14,9 +14,11 @@
 
   /* 全局 css 变量 */
   /* 黑色主题 */
-  --primary-theme-color: #1c1d1e;
+  /* --primary-theme-color: #1c1d1e; */
+  --primary-theme-color: #111215;
   /* 主要内容背景暗灰 */
-  --primary-content-color: #222324;
+  /* --primary-content-color: #222324; */
+  --primary-content-color: #121212;
   /* 主要蓝 */
   --primary-blue-color: #2255ff;
 }
@@ -180,7 +182,7 @@ button:focus-visible {
   color: rgba(255, 255, 255, 0.45);
 }
 
-.ant-collapse .ant-collapse-content>.ant-collapse-content-box {
+.ant-collapse .ant-collapse-content > .ant-collapse-content-box {
   padding: 0;
 }
 
@@ -211,12 +213,12 @@ button:focus-visible {
 }
 
 .ant-popover .ant-popover-inner {
-  background-color: #3A3C3D;
+  background-color: #3a3c3d;
   padding: 16px;
 }
 
 .ant-popover .ant-popover-arrow:before {
-  background-color: #3A3C3D;
+  background-color: #3a3c3d;
 }
 
 .ant-input-number {
@@ -261,9 +263,9 @@ button:focus-visible {
 }
 
 .ant-select-selection-item {
-  font-family: 'SF Pro Display';
+  font-family: "SF Pro Display";
   font-style: normal;
   font-weight: 600;
   font-size: 18px;
-  color: #FFFFFF;
+  color: #ffffff;
 }

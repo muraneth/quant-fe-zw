@@ -1,11 +1,13 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 // @ts-nocheck
+import { get } from "http";
 import {
   getPriceSeries,
   getIndenpendYAxis,
   getToolTipFormater,
   commonOption,
   padArrayAhead,
+  getXAxis
 } from "./common";
 
 export function xBarTransform({ indicatorData, klineList, klineType }) {
@@ -20,10 +22,7 @@ export function xBarTransform({ indicatorData, klineList, klineType }) {
       },
     },
 
-    xAxis: {
-      type: "category",
-      data: klineList.map((item) => item.time),
-    },
+    xAxis: getXAxis(klineList),
     yAxis: [],
     series: [],
   };
@@ -32,6 +31,7 @@ export function xBarTransform({ indicatorData, klineList, klineType }) {
     options.yAxis.push({
       type: "value",
       name: "price",
+      position:"right",
       splitLine: {
         show: false,
       },

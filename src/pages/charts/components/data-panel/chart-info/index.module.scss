@@ -1,0 +1,69 @@
+
+.topInfo {
+    height: 42px;
+    // margin: 10px;
+    padding: 22px ;
+    display: flex;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1); 
+    background: var(--primary-content-color);
+
+    .left {
+    display: flex;
+    align-items: center;
+
+    .img {
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        object-fit: cover;
+        margin-right: 8px;
+    }
+
+    .title {
+        margin-right: 13px;
+        font-weight: 600;
+        font-size: 16px;
+        color: #fff;
+    }
+
+    .desc {
+        font-weight: 500;
+        font-size: 16px;
+        color: rgba(255, 255, 255, 0.85);
+    }
+    }
+}
+
+
+
+  
+  .indicatorItemLevel {
+    width: 16px;
+    height: 16px;
+    line-height: 16px;
+    text-align: center;
+    margin-right: 8px;
+    font-family: "DIN Alternate";
+    font-style: normal;
+    font-weight: 700;
+    font-size: 12px;
+    border-radius: 2px;
+  }
+  .indicatorItemLevel0 {
+    background: #38393a;
+    color: #fff;
+  }
+
+  .indicatorItemLevel1 {
+    background: #1e2b39;
+    color: #007aff;
+  }
+
+  .indicatorItemLevel2 {
+    background: #272836;
+    color: #5f5cf5;
+  }
+  .markdown {
+    margin-top: 1px;
+  }
+

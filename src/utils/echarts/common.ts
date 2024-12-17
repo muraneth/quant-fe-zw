@@ -1,6 +1,8 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 // @ts-nocheck
 import { formatNumber } from "../common";
+import dayjs from 'dayjs';
+
 export function parsePriceToKlineSeriesData(klineList) {
   return klineList.map((item) => [item.open, item.close, item.low, item.high]);
 }
@@ -43,10 +45,17 @@ export const getPriceSeries = (klineList, klineType) => {
   return {};
 };
 
+export const getXAxis = (klineList) => {
+  return {
+    type: "category",
+    data: klineList.map((item) => dayjs(item.time).format('YYYY-MM-DD')),
+  };
+}
 export const getIndenpendYAxis = () => {
   return {
     type: "value",
-    name: "value",
+    // name: "value",
+    position:"left",
     axisLabel: {
       formatter: function (val) {
         return formatNumber(val); // Formatting Y-axis labels
@@ -56,8 +65,7 @@ export const getIndenpendYAxis = () => {
       show: true,
       lineStyle: {
         color: "rgba(200, 200, 200, 0.4)", // Very light gray with transparency
-        // or use '#eeeeee' for a light solid color
-        width: 0.5, // Thinner line
+        width: 0.1, // Thinner line
         type: "solid", // or 'dashed', 'dotted'
       },
     },
@@ -119,7 +127,7 @@ export const commonOption = {
     },
   ],
   grid: {
-    top: "5%",
+    top: "10%",
     left: "2%",
     right: "2%",
     bottom: "12%",

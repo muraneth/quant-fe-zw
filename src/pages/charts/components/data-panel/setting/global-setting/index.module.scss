@@ -1,0 +1,89 @@
+$primary-color: #6366f1; // Active option color
+$text-color: #a0aec0;    // Default text color
+$hover-color: #c3c6ca;   // Hover state color
+
+
+.componentWrapper {
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+  padding-right: 30px;
+}
+
+.calendarContainer {
+  display: flex;
+  align-items: center; // Vertical centering
+  justify-content: center; // Horizontal centering
+  // background-color: #545353;
+  padding: 2px;
+  padding-left: 10px;
+  border-radius: 5px;
+}
+
+.calendarOptions {
+  display: flex;
+  align-items: center; // Add this to vertically center the options
+  gap: 10px;
+}
+.calendarOption {
+  color: $text-color;
+  font-size: 12px;
+  cursor: pointer;
+  transition: color 0.3s;
+  border-right: 1px solid rgba(255, 255, 255, 0.2); 
+  padding-right: 10px;
+  &:hover {
+    color: $hover-color;
+  }
+}
+
+.active {
+  color: $primary-color;
+  font-weight: 600;
+}
+
+.calendarPicker {
+  margin-left: 15px;
+
+  :global(.ant-picker) {
+    background-color: #1e1e1e;
+    border: none;
+    color: $text-color;
+
+    &:hover {
+      border-color: $hover-color;
+    }
+
+    .ant-picker-input > input {
+      color: $text-color;
+    }
+
+    .ant-picker-suffix {
+      color: $text-color;
+    }
+  }
+}
+
+.iconContainer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px;
+  border-radius: 5px;
+  // background-color: #3f3d3d; // Light gray background
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+
+  &:hover {
+      background-color: #635f5f; // Slightly darker on hover
+  }
+
+  // Optional: Add a subtle box shadow for depth
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+
+  // Optional: Add a subtle scale effect on hover
+  &:active {
+      transform: scale(0.95);
+      transition: transform 0.1s ease;
+  }
+}

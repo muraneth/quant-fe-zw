@@ -1,15 +1,13 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 // @ts-nocheck
-import { getPriceSeries, commonOption } from "./common";
+import { get } from "http";
+import { getPriceSeries, commonOption,getXAxis } from "./common";
 
 export function yBarTransform({ indicatorData, klineList, klineType }) {
   const options = {
     ...commonOption,
     xAxis: [
-      {
-        type: "category",
-        data: klineList.map((item) => item.time),
-      },
+      getXAxis(klineList),
     ],
     yAxis: [],
     series: [],

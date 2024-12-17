@@ -98,6 +98,8 @@ export function getIndicatorList(): Promise<IndicatorListResDto> {
 interface IndicatorDetailReqDto {
   symbol: string;
   chain: string;
+  start_time: string;
+  end_time: string;
   handle_name: string;
   base_params: Record<string, any>;
   extra_params?: Record<string, any>;
@@ -119,6 +121,8 @@ export function getIndicatorDetail(
 interface BasePriceReqDto {
   symbol: string;
   chain: string;
+  start_time: string;
+  end_time:string;
 }
 
 interface BasePriceItem {
