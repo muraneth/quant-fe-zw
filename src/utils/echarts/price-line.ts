@@ -1,18 +1,22 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 // @ts-nocheck
-import { getPriceSeries, commonOption,getToolTipFormater, padArrayAhead } from "./common";
-import {formatNumber} from "@/utils/common";
+import {
+  getPriceSeries,
+  commonOption,
+  getToolTipFormater,
+  padArrayAhead,
+} from "./common";
 
 export function priceLineTransform({ indicatorData, klineList, klineType }) {
   indicatorData = padArrayAhead(indicatorData, klineList.length);
   const options = {
     ...commonOption,
-    tooltip:{
+    tooltip: {
       trigger: "axis",
       formatter: function (params) {
-        let result = getToolTipFormater(params);
+        const result = getToolTipFormater(params);
         return result;
-      }
+      },
     },
     xAxis: [
       {
@@ -27,20 +31,19 @@ export function priceLineTransform({ indicatorData, klineList, klineType }) {
         splitLine: {
           show: true,
           lineStyle: {
-            color: 'rgba(200, 200, 200, 0.4)', // Very light gray with transparency
+            color: "rgba(200, 200, 200, 0.4)", // Very light gray with transparency
             width: 0.5, // Thinner line
-            type: 'solid' // or 'dashed', 'dotted'
-          }
-        }
+            type: "solid", // or 'dashed', 'dotted'
+          },
+        },
       },
     ],
     series: [],
   };
 
   if (klineList?.length) {
-    var  ser = getPriceSeries(klineList,klineType);
+    const ser = getPriceSeries(klineList, klineType);
     options.series.push(ser);
-    
   }
 
   if (indicatorData?.length) {
@@ -49,10 +52,10 @@ export function priceLineTransform({ indicatorData, klineList, klineType }) {
       data: indicatorData.map((item) => item?.value),
       type: "line",
       areaStyle: {
-        color: 'rgba(0, 123, 255, 0.2)' // Adjust the RGB and opacity as needed
+        color: "rgba(0, 123, 255, 0.2)", // Adjust the RGB and opacity as needed
       },
       smooth: true,
-      symbol: 'none'
+      symbol: "none",
     });
   }
 

@@ -6,74 +6,73 @@ export function parsePriceToKlineSeriesData(klineList) {
 }
 
 export const padArrayAhead = (arr, targetLen) => {
-  while (arr.length < targetLen) {
-    arr.unshift(null);
+  const cloneArr = [...arr];
+  while (cloneArr.length < targetLen) {
+    cloneArr.unshift(null);
   }
-  return arr;
+  return cloneArr;
 };
 
-export const getPriceSeries = (klineList,klineType) => {
-  
+export const getPriceSeries = (klineList, klineType) => {
   if (klineList?.length) {
     switch (klineType) {
       case "kline":
-        return{
+        return {
           name: "kline",
           data: parsePriceToKlineSeriesData(klineList),
           type: "candlestick",
           itemStyle: {
-            color0: '#ef232a',
-            color: '#14b143',
-            borderColor0: '#ef232a',
-            borderColor: '#14b143'
+            color0: "#ef232a",
+            color: "#14b143",
+            borderColor0: "#ef232a",
+            borderColor: "#14b143",
           },
           yAxisIndex: 0,
-        }
+        };
 
       case "avgPrice":
-       return{
+        return {
           name: "kline",
           data: klineList.map((item) => item?.avg_price),
           type: "line",
           smooth: true,
           yAxisIndex: 0,
-        }
+        };
     }
   }
-  return {}
-}
+  return {};
+};
 
-export const getIndenpendYAxis = (indicatorData) => {
+export const getIndenpendYAxis = () => {
   return {
     type: "value",
     name: "value",
     axisLabel: {
       formatter: function (val) {
         return formatNumber(val); // Formatting Y-axis labels
-      }
+      },
     },
     splitLine: {
       show: true,
       lineStyle: {
-        color: 'rgba(200, 200, 200, 0.4)', // Very light gray with transparency
+        color: "rgba(200, 200, 200, 0.4)", // Very light gray with transparency
         // or use '#eeeeee' for a light solid color
         width: 0.5, // Thinner line
-        type: 'solid' // or 'dashed', 'dotted'
-      }
-    }
-  }
-}
+        type: "solid", // or 'dashed', 'dotted'
+      },
+    },
+  };
+};
 
 export const getToolTipFormater = (params) => {
   // refer to : https://echarts.apache.org/handbook/zh/how-to/interaction/drag/#%E6%B7%BB%E5%8A%A0-tooltip-%E7%BB%84%E4%BB%B6
-  console.log('params', params);
-  let result = `<strong>Date:</strong> ${params[0].axisValue}<br/>`;  
-        params.forEach((param) => {
-          if (param.seriesType === 'candlestick') {
-            // Assuming param.value format is [open, close, low, high] for K-line
-            const [key, open, close, low, high] = param.value;
-            const percentageChange = (((close - open) / open) * 100).toFixed(2);
-            result += `
+  let result = `<strong>Date:</strong> ${params[0].axisValue}<br/>`;
+  params.forEach((param) => {
+    if (param.seriesType === "candlestick") {
+      // Assuming param.value format is [open, close, low, high] for K-line
+      const [key, open, close, low, high] = param.value;
+      const percentageChange = (((close - open) / open) * 100).toFixed(2);
+      result += `
               <div style="margin: 5px 0; line-height: 1.5;">
                 <strong>${param.seriesName}:</strong> 
                 <span style="color: #999;">Open:</span> ${formatNumber(open)} 
@@ -83,23 +82,27 @@ export const getToolTipFormater = (params) => {
               </div>
               <div>
               <strong>Change:</strong> 
-                <span style="color: ${percentageChange >= 0 ? 'green' : 'red'};">${percentageChange}%</span>
+                <span style="color: ${
+                  percentageChange >= 0 ? "green" : "red"
+                };">${percentageChange}%</span>
               </div>
             `;
-          } 
-          else {
-            // For other series, just display series name and value
-              result += `
+    } else {
+      // For other series, just display series name and value
+      result += `
               <div style="margin: 5px 0; line-height: 1.5;">
-                <span style="display: inline-block; width: 10px; height: 10px; background-color: ${param.color}; border-radius: 50%; margin-right: 5px;"></span>
-                <strong>${param.seriesName}:</strong> ${formatNumber(param.value)}
+                <span style="display: inline-block; width: 10px; height: 10px; background-color: ${
+                  param.color
+                }; border-radius: 50%; margin-right: 5px;"></span>
+                <strong>${param.seriesName}:</strong> ${formatNumber(
+        param.value
+      )}
               </div>
             `;
-            }
-          
-        });
-        return result;
-}
+    }
+  });
+  return result;
+};
 export const commonOption = {
   dataZoom: [
     {
@@ -116,18 +119,17 @@ export const commonOption = {
     },
   ],
   grid: {
-    top: '0%',
-    left: '1%',
-    right: '1%',
-    bottom: '30%',
-    containLabel: true
+    top: "5%",
+    left: "2%",
+    right: "2%",
+    bottom: "12%",
+    containLabel: true,
   },
   legend: {},
   tooltip: {
     trigger: "axis",
     axisPointer: {
-      type: 'cross'
+      type: "cross",
     },
-    
   },
 };

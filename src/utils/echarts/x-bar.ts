@@ -1,18 +1,23 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 // @ts-nocheck
-import { getPriceSeries,getIndenpendYAxis,getToolTipFormater, commonOption, padArrayAhead } from "./common";
-
+import {
+  getPriceSeries,
+  getIndenpendYAxis,
+  getToolTipFormater,
+  commonOption,
+  padArrayAhead,
+} from "./common";
 
 export function xBarTransform({ indicatorData, klineList, klineType }) {
   indicatorData = padArrayAhead(indicatorData, klineList.length);
   const options = {
     ...commonOption,
-    tooltip:{
+    tooltip: {
       trigger: "axis",
       formatter: function (params) {
-        let result = getToolTipFormater(params);
+        const result = getToolTipFormater(params);
         return result;
-      }
+      },
     },
 
     xAxis: {
@@ -28,10 +33,10 @@ export function xBarTransform({ indicatorData, klineList, klineType }) {
       type: "value",
       name: "price",
       splitLine: {
-        show: false
-      }
-    })
-    var  ser = getPriceSeries(klineList,klineType);
+        show: false,
+      },
+    });
+    const ser = getPriceSeries(klineList, klineType);
     options.series.push(ser);
   }
 
@@ -44,7 +49,6 @@ export function xBarTransform({ indicatorData, klineList, klineType }) {
       smooth: true,
       yAxisIndex: 1,
     });
-   
   }
 
   return options;

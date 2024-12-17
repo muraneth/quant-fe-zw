@@ -1,4 +1,5 @@
 import { create } from "zustand";
+import { immer } from "zustand/middleware/immer";
 import { createSelectors } from "@/utils/store";
 import {
   IndicatorChartType,
@@ -44,38 +45,64 @@ interface ChartStore {
 }
 
 const useChartStore = createSelectors(
-  create<ChartStore>((set) => ({
-    tokenInfo: {
-      symbol: "",
-      chain: "",
-    },
-    indicatorInfo: {
-      required_level: 0,
-      handle_name: "",
-      name: "",
-      description: "",
-      doc: "",
-      type: null as unknown as IndicatorChartType.INDEPENDENT_LINE,
-      param_schema: null,
-    },
-    base_params: {},
-    extra_params: {},
-    klineType: "avgPrice",
-    hasLevelAuth: true,
-    options: null,
-    chartData: null,
+  create<ChartStore>()(
+    immer((set) => ({
+      tokenInfo: {
+        symbol: "",
+        chain: "",
+      },
+      indicatorInfo: {
+        required_level: 0,
+        handle_name: "",
+        name: "",
+        description: "",
+        doc: "",
+        type: null as unknown as IndicatorChartType.INDEPENDENT_LINE,
+        param_schema: null,
+      },
+      base_params: {},
+      extra_params: {},
+      klineType: "avgPrice",
+      hasLevelAuth: true,
+      options: null,
+      chartData: null,
 
-    setTokenInfo: (tokenInfo) => set(() => ({ tokenInfo })),
-    setIndicatorInfo: (indicatorInfo) => set(() => ({ indicatorInfo })),
-    setBaseParams: (base_params) => set(() => ({ base_params })),
-    setExtraParams: (extra_params) => set(() => ({ extra_params })),
-    setKlineType: (klineType) => set(() => ({ klineType })),
-    setHasLevelAuth: (hasLevelAuth) => set(() => ({ hasLevelAuth })),
-    setOptions: (options) => set(() => ({ options })),
-    setChartData: (chartData) => set(() => ({ chartData })),
+      setTokenInfo: (tokenInfo) =>
+        set((state) => {
+          state.tokenInfo = tokenInfo;
+        }),
+      setIndicatorInfo: (indicatorInfo) =>
+        set((state) => {
+          state.indicatorInfo = indicatorInfo;
+        }),
+      setBaseParams: (base_params) =>
+        set((state) => {
+          state.base_params = base_params;
+        }),
+      setExtraParams: (extra_params) =>
+        set((state) => {
+          state.extra_params = extra_params;
+        }),
+      setKlineType: (klineType) =>
+        set((state) => {
+          state.klineType = klineType;
+        }),
+      setHasLevelAuth: (hasLevelAuth) =>
+        set((state) => {
+          state.hasLevelAuth = hasLevelAuth;
+        }),
+      setOptions: (options) =>
+        set((state) => {
+          state.options = options;
+        }),
+      setChartData: (chartData) =>
+        set((state) => {
+          state.chartData = chartData;
+        }),
 
-    removeChartStore: () => set({}),
-  }))
+      removeChartStore: () => set({}),
+    }))
+  )
 );
 
 export { useChartStore };

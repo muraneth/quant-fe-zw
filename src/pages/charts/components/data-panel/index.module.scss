@@ -1,8 +1,7 @@
 .dataPanel {
   flex: 1;
   position: relative;
-  overflow-y: auto;
-  height: calc(100vh - 70px);
+  height: calc(100vh - 45px);
   margin-left: 1px;
 
   .maskBackground {
@@ -62,7 +61,6 @@
     .topInfo {
       height: 42px;
       padding: 0 24px;
-      // background: var(--primary-content-color);
       display: flex;
       align-items: center;
       justify-content: space-between;
@@ -121,12 +119,11 @@
     }
 
     .echartsWrapper {
-      height: calc(100vh - 134px);
+      height: calc(100vh - 135px);
       margin-top: 1px;
       display: flex;
       align-items: center;
       justify-content: center;
-      // background: var(--primary-content-color);
     }
   }
   .indicatorItemLevel {

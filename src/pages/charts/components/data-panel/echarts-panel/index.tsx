@@ -83,13 +83,7 @@ const EchartsPanel = () => {
     return <BaseChart options={options} />;
   };
 
-  return (
-    <div 
-    // style={{ marginTop: 50 }}
-     className={styles.echartsWrapper}>
-      {renderContent()}
-    </div>
-  );
+  return <div className={styles.echartsWrapper}>{renderContent()}</div>;
 };
 
 export default EchartsPanel;

@@ -1,6 +1,5 @@
 import fetch from "isomorphic-fetch";
 import { getUserInfo } from "@/utils/common";
-import { serverUrl } from "@/constants/common";
 
 interface IFetchParams {
   url: string;
@@ -22,14 +21,14 @@ enum ResponseCode {
   NO_LEVEL_AUTH = 3026
 }
 
-// const envMode = import.meta.env.MODE;
-const envMode = 'dev'
+const serverUrl = import.meta.env.VITE_SERVER_URL;
+
 const request = ({ url, method, params = {} }: IFetchParams) => {
   const urlMap = {
-    GET: `${serverUrl[envMode]}${url}?${new URLSearchParams(
+    GET: `${serverUrl}${url}?${new URLSearchParams(
       params
     ).toString()}`,
-    POST: `${serverUrl[envMode]}${url}`,
+    POST: `${serverUrl}${url}`,
   };
 
   const bodyMap = {

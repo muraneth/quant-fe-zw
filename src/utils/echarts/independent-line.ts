@@ -1,8 +1,12 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 // @ts-nocheck
-import { getPriceSeries,getIndenpendYAxis,getToolTipFormater, commonOption, padArrayAhead } from "./common";
-import {formatNumber} from "@/utils/common";
-
+import {
+  getPriceSeries,
+  getIndenpendYAxis,
+  getToolTipFormater,
+  commonOption,
+  padArrayAhead,
+} from "./common";
 
 export function independentLineTransform({
   indicatorData,
@@ -12,12 +16,12 @@ export function independentLineTransform({
   indicatorData = padArrayAhead(indicatorData, klineList.length);
   const options = {
     ...commonOption,
-    tooltip:{
+    tooltip: {
       trigger: "axis",
       formatter: function (params) {
-        let result = getToolTipFormater(params);
+        const result = getToolTipFormater(params);
         return result;
-      }
+      },
     },
     xAxis: [
       {
@@ -34,10 +38,10 @@ export function independentLineTransform({
       type: "value",
       name: "price",
       splitLine: {
-        show: false
-      }
-    })
-    var  ser = getPriceSeries(klineList,klineType);
+        show: false,
+      },
+    });
+    const ser = getPriceSeries(klineList, klineType);
     options.series.push(ser);
   }
 
@@ -45,16 +49,15 @@ export function independentLineTransform({
     options.yAxis.push(getIndenpendYAxis());
     options.series.push({
       name: "indicator",
-      data: indicatorData.map((item) =>  item?.value),
+      data: indicatorData.map((item) => item?.value),
       type: "line",
       areaStyle: {
-        color: 'rgba(0, 123, 255, 0.2)'
+        color: "rgba(0, 123, 255, 0.2)",
       },
       smooth: true,
-      symbol: 'none',
+      symbol: "none",
       yAxisIndex: 1,
     });
-   
   }
 
   return options;

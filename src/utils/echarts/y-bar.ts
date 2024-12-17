@@ -20,12 +20,12 @@ export function yBarTransform({ indicatorData, klineList, klineType }) {
       type: "value",
       name: "price",
       splitLine: {
-        show: false
+        show: false,
       },
-      position: 'right',
-      nameLocation: 'middle',
-    })
-    var  ser = getPriceSeries(klineList,klineType);
+      position: "right",
+      nameLocation: "middle",
+    });
+    const ser = getPriceSeries(klineList, klineType);
     options.series.push(ser);
   }
 
@@ -40,8 +40,7 @@ export function yBarTransform({ indicatorData, klineList, klineType }) {
       data: indicatorData.map((item) => item.price_range_lower),
       name: "Price Levels",
       nameLocation: "middle",
-      position:"left",
-      
+      position: "left",
     });
     options.series.push({
       name: "Volume",
