@@ -1,6 +1,59 @@
-
 .componentWrapper {
+  width: 100%;
+
+  .setting {
     display: flex;
-    flex-direction: row;
-    gap: 10px; 
+    align-items: center;
+
+    .baseSetting {
+      display: flex;
+      align-items: center;
+
+      > span {
+        color: rgba(255, 255, 255, 0.85);
+        font-family: "DIN Alternate";
+        font-style: normal;
+        font-weight: 700;
+        font-size: 12px;
+        margin-right: 4px;
+      }
+    }
+
+    .checkboxGrop {
+      display: flex;
+      flex-direction: column;
+      width: 200px;
+
+      :global {
+        .ant-checkbox-wrapper {
+          padding: 6px;
+        }
+      }
+    }
+
+    :global {
+      .ant-form-item {
+        margin-bottom: 0;
+      }
+
+      .ant-input {
+        font-size: 9px;
+      }
+
+      .ant-picker {
+        padding: 1px 7px 1px;
+      }
+
+      .ant-input-number {
+        height: 24px;
+      }
+
+      .ant-input-number .ant-input-number-input {
+        font-size: 14px;
+        text-align: center;
+        height: 23px;
+        line-height: 23px;
+      }
+    }
+  }
 }

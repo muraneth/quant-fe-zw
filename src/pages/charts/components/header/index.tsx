@@ -5,6 +5,7 @@ import { useDebounceFn, useRequest } from "ahooks";
 import { getTokenList, getTokenMarketInfo } from "@/service/charts";
 import { DownOutlined, SearchOutlined } from "@ant-design/icons";
 import EllipsisMiddle from "@/components/ellipsis-middle";
+import PersonalInfo from "./personal-info";
 import {
   extractedTokenMarketInfo,
   ExtractedTokenMarketInfoItem,
@@ -13,8 +14,7 @@ import { useChartStore } from "@/store/charts";
 import type { TokenListItem } from "@/service/charts";
 import classNames from "classnames";
 import styles from "./index.module.scss";
-import {formatNumber} from "@/utils/common";
-
+import { formatNumber } from "@/utils/common";
 
 const Header = () => {
   const [openPopover, setOpenPopover] = useImmer(false);
@@ -81,11 +81,12 @@ const Header = () => {
   React.useEffect(() => {
     if (currentToken) {
       resetStoreData();
-      setTokenInfo({ 
-        symbol: currentToken.symbol, 
+      setTokenInfo({
+        symbol: currentToken.symbol,
         chain: currentToken.chain,
-        start_time:"", 
-        end_time:"" });
+        start_time: "",
+        end_time: "",
+      });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentToken]);
@@ -141,70 +142,73 @@ const Header = () => {
 
   return (
     <div className={styles.header}>
-      <Popover
-        open={openPopover}
-        onOpenChange={(v) => {
-          setOpenPopover(v);
-        }}
-        placement="bottomLeft"
-        content={tokenContent}
-        trigger={["click"]}
-      >
-        <div className={styles.left}>
-          {currentToken ? (
-            <>
-              <div className={styles.leftTop}>
-                <img
-                  className={styles.logo}
-                  src={currentToken?.icon_url}
-                  alt=""
+      <div className={styles.leftWrapper}>
+        <span className={styles.title}>T</span>
+        <Popover
+          open={openPopover}
+          onOpenChange={(v) => {
+            setOpenPopover(v);
+          }}
+          placement="bottomLeft"
+          content={tokenContent}
+          trigger={["click"]}
+        >
+          <div className={styles.left}>
+            {currentToken ? (
+              <>
+                <div className={styles.leftTop}>
+                  <img
+                    className={styles.logo}
+                    src={currentToken?.icon_url}
+                    alt=""
+                  />
+                  <p className={classNames(styles.name, ["common-ellipsis-1"])}>
+                    {currentToken?.name}
+                  </p>
+                  <DownOutlined
+                    style={{
+                      color: "rgba(255, 255, 255, 0.45)",
+                      fontWeight: "bolder",
+                    }}
+                    className={styles.arrow}
+                  />
+                </div>
+                <EllipsisMiddle
+                  className={styles.leftBottom}
+                  title={currentToken?.contract_address}
+                >
+                  {currentToken?.contract_address}
+                </EllipsisMiddle>
+              </>
+            ) : (
+              <div className={styles.skeleton}>
+                <Skeleton.Avatar
+                  style={{ marginRight: 10, width: 18, height: 18 }}
+                  active
+                  size="small"
                 />
-                <p className={classNames(styles.name, ["common-ellipsis-1"])}>
-                  {currentToken?.name}
-                </p>
-                <DownOutlined
-                  style={{
-                    color: "rgba(255, 255, 255, 0.45)",
-                    fontWeight: "bolder",
-                  }}
-                  className={styles.arrow}
+                <Skeleton.Input
+                  style={{ width: 160, height: 18 }}
+                  active
+                  size="small"
+                />
+                <Skeleton.Input
+                  style={{ width: 191, height: 10, marginTop: 7 }}
+                  active
+                  size="small"
                 />
               </div>
-              <EllipsisMiddle
-                className={styles.leftBottom}
-                title={currentToken?.contract_address}
-              >
-                {currentToken?.contract_address}
-              </EllipsisMiddle>
-            </>
-          ) : (
-            <div className={styles.skeleton}>
-              <Skeleton.Avatar
-                style={{ marginRight: 10, width: 18, height: 18 }}
-                active
-                size="small"
-              />
-              <Skeleton.Input
-                style={{ width: 160, height: 18 }}
-                active
-                size="small"
-              />
-              <Skeleton.Input
-                style={{ width: 191, height: 10, marginTop: 7 }}
-                active
-                size="small"
-              />
-            </div>
-          )}
-        </div>
-      </Popover>
+            )}
+          </div>
+        </Popover>
+      </div>
       <div className={styles.right}>
         {tokenMarketInfoList?.map((i, index) => {
           return (
             <div key={index} className={styles.itemInfo}>
               <div className={styles.title}>{i.title}</div>
               <div className={styles.valueInfo}>
-                <span>{formatNumber(  i.value)}</span>
+                <span>{formatNumber(i.value)}</span>
                 {i.type !== "neutral" && (
                   <span
                     style={{ color: i.type === "rise" ? "#36F097" : "#EB5757" }}
@@ -218,6 +222,7 @@ const Header = () => {
           );
         })}
       </div>
+      <PersonalInfo />
     </div>
   );
 };
