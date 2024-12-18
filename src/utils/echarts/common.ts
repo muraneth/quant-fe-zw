@@ -112,32 +112,34 @@ export const getToolTipFormater = (params) => {
   return result;
 };
 export const commonOption = {
-  dataZoom: [
-    {
-      type: "slider",
-      xAxisIndex: 0,
-      filterMode: "filter",
-      backgroundColor: "#2d4137",
-      borderColor: "transparent",
+    dataZoom: [
+      {
+        type: "slider",
+        xAxisIndex: 0,
+        filterMode: "filter",
+        backgroundColor: "#2d4137",
+        borderColor: "transparent",
+      },
+      {
+        type: "inside",
+        xAxisIndex: 0,
+        filterMode: "filter",
+      },
+    ],
+    grid: {
+      top: "10%",
+      left: "2%",
+      right: "2%",
+      bottom: "12%",
+      containLabel: true,
     },
-    {
-      type: "inside",
-      xAxisIndex: 0,
-      filterMode: "filter",
+    legend: {},
+    tooltip: {
+      trigger: "axis",
+      axisPointer: {
+        type: "cross",
+      },
     },
-  ],
-  grid: {
-    top: "10%",
-    left: "2%",
-    right: "2%",
-    bottom: "12%",
-    containLabel: true,
-  },
-  legend: {},
-  tooltip: {
-    trigger: "axis",
-    axisPointer: {
-      type: "cross",
-    },
-  },
+    
+    
 };

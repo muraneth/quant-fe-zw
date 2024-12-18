@@ -1,9 +1,11 @@
+import { useEffect } from "react";
 import { Checkbox, Popover } from "antd";
 import FormRender, { useForm } from "form-render";
 import styles from "./index.module.scss";
 import { useChartStore } from "@/store/charts";
 import { svgMap } from "@/constants/svg";
 import type { GetProp } from "antd";
+
 
 const options = [
   { label: "DEX", value: "DEX" },
@@ -20,9 +22,9 @@ const IndicatorParam = () => {
   const indicatorInfo = useChartStore.use.indicatorInfo();
 
   const param_schema = indicatorInfo.param_schema;
-  const { use_base_param, extra_params = {} } = JSON.parse((param_schema || null) as string) || {};
-  extra_params.displayType = "row";
-  extra_params.column = 1;
+  const { use_base_param, extra_params_schema = {} } = JSON.parse((param_schema || null) as string) || {};
+  extra_params_schema.displayType = "row";
+  extra_params_schema.column = 1;
 
   const form = useForm();
 
@@ -39,6 +41,22 @@ const IndicatorParam = () => {
   const handleExtraChange = (allValues: Record<string, any>) => {
     setExtraParams(allValues);
   };
+  useEffect(() => {
+    if (extra_params_schema.properties) {
+        var extra_params:Record<string, any> = {};
+        const properties = extra_params_schema.properties;
+    
+        // Set default values for properties
+        Object.keys(properties).forEach((key) => {
+          const prop = properties[key];
+          if (prop.default !== undefined && prop.default !== null) {
+            extra_params[key] = prop.default;
+          }
+        });
+        setExtraParams(extra_params);
+      }
+     
+  }, [extra_params_schema]);
   return (
     <div className={styles.setting}>
       {use_base_param ? (
@@ -54,23 +72,26 @@ const IndicatorParam = () => {
           }
           getPopupContainer={(triggerNode) => triggerNode.parentNode as any}
         >
+       
           <span className={styles.baseSetting}>
+            <span className={styles.title}>Label Filter</span>
             <span>DEX / CEX / MEV Bot</span>
             {svgMap["downOutlined"]}
           </span>
         </Popover>
       ) : null}
-      {extra_params ? (
+      {extra_params_schema ? (
         <FormRender
           form={form}
-          schema={extra_params}
+          schema={extra_params_schema}
+        //   onMount 
           watch={{
             "#": (allValues) => {
               handleExtraChange(allValues);
             },
           }}
-          style={{ marginLeft: 24, width: 180 }}
-          labelCol={60}
+          style={{ marginLeft: 24, width: 300 }}
+        //   labelCol={60}
           fieldCol={17}
         />
       ) : null}
