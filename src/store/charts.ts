@@ -26,7 +26,7 @@ interface ChartStore {
   };
   base_params: Record<string, any>;
   extra_params: Record<string, any>;
-  klineType: "avgPrice" | "kline";
+  klineType: "kline"|"avgPrice";
   hasLevelAuth: boolean;
   options: Record<string, any> | null;
   chartData: {
@@ -66,7 +66,7 @@ const useChartStore = createSelectors(
       },
       base_params: {},
       extra_params: {},
-      klineType: "avgPrice",
+      klineType: "kline",
       hasLevelAuth: true,
       options: null,
       chartData: null,

@@ -8,7 +8,14 @@
     .baseSetting {
       display: flex;
       align-items: center;
-
+      .title {
+        color: rgba(182, 178, 178, 0.85);
+        font-family: "DIN Alternate";
+        font-style: normal;
+        font-weight: 700;
+        font-size: 10px;
+        margin-right: 4px;
+      }
       > span {
         color: rgba(255, 255, 255, 0.85);
         font-family: "DIN Alternate";

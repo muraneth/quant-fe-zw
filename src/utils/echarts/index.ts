@@ -7,7 +7,7 @@ import { xBarStackTransform } from "./x-bar-stack";
 import { yBarTransform } from "./y-bar";
 import { yBarStackTransform } from "./y-bar-stack";
 import { IndicatorChartType } from "@/service/charts";
-
+import {areaStackTransform} from "./area-stack";
 export function generateOptions({
   type,
   indicatorData = [] as any,
@@ -32,7 +32,8 @@ export function generateOptions({
 
     case IndicatorChartType.Y_BAR_STACK:
       return yBarStackTransform({ indicatorData, klineList, klineType });
-
+    case IndicatorChartType.AREA_STACK:
+      return areaStackTransform({ indicatorData, klineList, klineType });
     default:
       return {};
   }
