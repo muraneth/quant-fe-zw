@@ -20,8 +20,11 @@ export function yBarStackTransform({ indicatorData, klineList, klineType }) {
     yAxis: [],
     series: [],
   };
-
+  var klineMinPrice = 0
+  var klineMaxPrice = 0
   if (klineList?.length) {
+    klineMinPrice = klineList.reduce( (min, p) => (p.low < min ? p.low : min), klineList[0].low);
+    klineMaxPrice = klineList.reduce( (max, p) => (p.high > max ? p.high : max), klineList[0].high);
     options.yAxis.push({
       type: "value",
       name: "price",
@@ -42,7 +45,11 @@ export function yBarStackTransform({ indicatorData, klineList, klineType }) {
   }
 
   if (indicatorData?.length) {
+    let newIndicatorData = [...indicatorData];
+
     if (options.yAxis.length > 0) {
+      const step  = indicatorData[0].price_range_upper - indicatorData[0].price_range_lower
+     
       const maxPrice = indicatorData.reduce(
         (max, p) => (p.price_range_upper > max ? p.price_range_upper : max),
         indicatorData[0].price_range_upper
@@ -51,8 +58,34 @@ export function yBarStackTransform({ indicatorData, klineList, klineType }) {
         (min, p) => (p.price_range_lower < min ? p.price_range_lower : min),
         indicatorData[0].price_range_lower
       );
-      options.yAxis[0].min = formatNumber(minPrice); // set price range
-      options.yAxis[0].max = formatNumber(maxPrice);
+      const toFixedStepsLower = Math.floor((minPrice-klineMinPrice) / step)
+      const toFixedStepsUpper = Math.ceil((klineMaxPrice-maxPrice) / step)
+      console.log("step",step);
+      console.log("klineMinPrice",klineMinPrice, "klineMaxPrice",klineMaxPrice);
+      console.log("minPrice",minPrice, "maxPrice",maxPrice);
+      console.log("toFixedStepsLower",toFixedStepsLower);
+      console.log("toFixedStepsUpper",toFixedStepsUpper);
+
+      
+      for (let i = 0; i < toFixedStepsLower; i++) {
+        newIndicatorData.unshift({
+          price_range_lower: minPrice - step*(i+1),
+          price_range_upper: minPrice - step*(i),
+          positive_value: 0,
+          negative_value: 0,
+        });
+      }
+      for (let i = 0; i < toFixedStepsUpper; i++) {
+        newIndicatorData.push({
+          price_range_lower: maxPrice + step*(i),
+          price_range_upper: maxPrice + step*(i+1),
+          positive_value: 0,
+          negative_value: 0,
+        });
+      }
+
+      options.yAxis[0].min = formatNumber(klineMinPrice); // set price range
+      options.yAxis[0].max = formatNumber(klineMaxPrice);
     }
     options.xAxis.push({
       type: "value",
@@ -74,7 +107,7 @@ export function yBarStackTransform({ indicatorData, klineList, klineType }) {
     });
     options.yAxis.push({
       type: "category",
-      data: indicatorData.map((item) => item.price_range_lower),
+      data: newIndicatorData.map((item) => item.price_range_lower),
       name: "Price Levels",
       nameLocation: "middle",
       position: "left",
@@ -87,7 +120,7 @@ export function yBarStackTransform({ indicatorData, klineList, klineType }) {
 
     options.series.push({
       name: "positive_value",
-      data: indicatorData.map((item) => item.positive_value),
+      data: newIndicatorData.map((item) => item.positive_value),
       type: "bar",
       stack: "y-bar-stack",
       itemStyle: {
@@ -99,7 +132,7 @@ export function yBarStackTransform({ indicatorData, klineList, klineType }) {
 
     options.series.push({
       name: "negative_value",
-      data: indicatorData.map((item) => item.negative_value),
+      data: newIndicatorData.map((item) => item.negative_value),
       type: "bar",
       stack: "y-bar-stack",
       itemStyle: {

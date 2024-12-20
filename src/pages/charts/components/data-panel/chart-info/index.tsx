@@ -3,7 +3,7 @@ import styles from "./index.module.scss";
 import classNames from "classnames";
 import {ExclamationCircleOutlined} from "@ant-design/icons";
 import { useChartStore } from "@/store/charts";
-import {Divider} from "antd";
+
 const ChartInfo = () => {
     const indicatorInfo = useChartStore.use.indicatorInfo();
      return (
@@ -37,7 +37,7 @@ const ChartInfo = () => {
             </Tooltip>
           
           </div>
-          {/* <Divider /> */}
+
         </div>
      )
 }
