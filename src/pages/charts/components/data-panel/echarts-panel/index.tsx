@@ -10,7 +10,7 @@ const EchartsPanel = () => {
   const options = useChartStore.use.options();
   const chartData = useChartStore.use.chartData();
   const klineType = useChartStore.use.klineType();
-  const { symbol, chain,start_time,end_time } = useChartStore.use.tokenInfo();
+  const { symbol, chain, start_time, end_time } = useChartStore.use.tokenInfo();
   const { handle_name, type } = useChartStore.use.indicatorInfo();
   const base_params = useChartStore.use.base_params();
   const extra_params = useChartStore.use.extra_params();
@@ -45,7 +45,15 @@ const EchartsPanel = () => {
       ]);
     },
     {
-      refreshDeps: [symbol, chain,start_time,end_time, handle_name, base_params, extra_params],
+      refreshDeps: [
+        symbol,
+        chain,
+        start_time,
+        end_time,
+        handle_name,
+        base_params,
+        extra_params,
+      ],
       onSuccess: (res) => {
         if (!res.length) return;
         if (res[0]?.code === 3026) {
