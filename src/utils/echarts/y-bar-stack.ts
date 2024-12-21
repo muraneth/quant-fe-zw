@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 // @ts-nocheck
 import { get } from "http";
-import { getPriceSeries, commonOption, getToolTipFormater,getXAxis } from "./common";
+import { getPriceSeries, commonOption, getToolTipFormater,getXAxis,padPVBArray } from "./common";
 import { formatNumber } from "@/utils/common";
 
 export function yBarStackTransform({ indicatorData, klineList, klineType }) {
@@ -20,6 +20,7 @@ export function yBarStackTransform({ indicatorData, klineList, klineType }) {
     yAxis: [],
     series: [],
   };
+
 
   if (klineList?.length) {
     options.yAxis.push({
@@ -42,18 +43,11 @@ export function yBarStackTransform({ indicatorData, klineList, klineType }) {
   }
 
   if (indicatorData?.length) {
-    if (options.yAxis.length > 0) {
-      const maxPrice = indicatorData.reduce(
-        (max, p) => (p.price_range_upper > max ? p.price_range_upper : max),
-        indicatorData[0].price_range_upper
-      );
-      const minPrice = indicatorData.reduce(
-        (min, p) => (p.price_range_lower < min ? p.price_range_lower : min),
-        indicatorData[0].price_range_lower
-      );
-      options.yAxis[0].min = formatNumber(minPrice); // set price range
-      options.yAxis[0].max = formatNumber(maxPrice);
-    }
+    
+    const {newIndicatorData ,klineMinPrice,klineMaxPrice}= padPVBArray(indicatorData, klineList);
+    options.yAxis[0].min = formatNumber(klineMinPrice); // set price range
+    options.yAxis[0].max = formatNumber(klineMaxPrice);
+    
     options.xAxis.push({
       type: "value",
       name: "Volume",
@@ -74,20 +68,25 @@ export function yBarStackTransform({ indicatorData, klineList, klineType }) {
     });
     options.yAxis.push({
       type: "category",
-      data: indicatorData.map((item) => item.price_range_lower),
+      data: newIndicatorData.map((item) => item.price_range_lower),
       name: "Price Levels",
       nameLocation: "middle",
       position: "left",
+      // offset: -30,
       axisLabel: {
         formatter: function (val) {
           return formatNumber(val);
         },
       },
     });
+    // options.grid ={
+    //   ...options.grid,
+    //   left: '10%',
+    // }
 
     options.series.push({
       name: "positive_value",
-      data: indicatorData.map((item) => item.positive_value),
+      data: newIndicatorData.map((item) => item.positive_value),
       type: "bar",
       stack: "y-bar-stack",
       itemStyle: {
@@ -99,7 +98,7 @@ export function yBarStackTransform({ indicatorData, klineList, klineType }) {
 
     options.series.push({
       name: "negative_value",
-      data: indicatorData.map((item) => item.negative_value),
+      data: newIndicatorData.map((item) => item.negative_value),
       type: "bar",
       stack: "y-bar-stack",
       itemStyle: {
