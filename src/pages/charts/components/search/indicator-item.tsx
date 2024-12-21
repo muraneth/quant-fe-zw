@@ -15,20 +15,12 @@ const IndicatorItem: React.FC<IndicatorItemProps> = ({
   type,
   id,
   param_schema,
+  category,
 }) => {
-  const selectedIndicatorsId =
-    useChartStore.use.indicatorInfo().selectedIndicatorsId;
+  const indicatorInfo = useChartStore.use.indicatorInfo();
   const setIndicatorInfo = useChartStore.use.setIndicatorInfo();
-  const setBaseParams = useChartStore.use.setBaseParams();
   const setExtraParams = useChartStore.use.setExtraParams();
-  const setOptions = useChartStore.use.setOptions();
-  const setChartData = useChartStore.use.setChartData();
-
-  const resetStoreData = () => {
-    setBaseParams({});
-    setOptions(null);
-    setChartData(null);
-  };
+  const resetChartPanelData = useChartStore.use.resetChartPanelData();
 
   const getDefaultExtraParams = () => {
     const { extra_params_schema = {} } =
@@ -52,16 +44,19 @@ const IndicatorItem: React.FC<IndicatorItemProps> = ({
   };
 
   const chooseIndicator = () => {
-    resetStoreData();
+    resetChartPanelData({
+      refreshChart: indicatorInfo.category !== category,
+    });
     setIndicatorInfo({
       handle_name,
       name,
       description,
       doc,
-      required_level: required_level - 1,
+      required_level,
       type,
-      selectedIndicatorsId: id,
+      id,
       param_schema,
+      category
     });
     setExtraParams(getDefaultExtraParams());
   };
@@ -69,7 +64,7 @@ const IndicatorItem: React.FC<IndicatorItemProps> = ({
   return (
     <div
       className={classNames(styles.indicatorItem, [
-        { [styles.indicatorItemActive]: selectedIndicatorsId === id },
+        { [styles.indicatorItemActive]: indicatorInfo.id === id },
       ])}
       onClick={chooseIndicator}
     >

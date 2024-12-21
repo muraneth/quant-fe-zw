@@ -10,30 +10,30 @@ import { IndicatorChartType } from "@/service/charts";
 import {areaStackTransform} from "./area-stack";
 export function generateOptions({
   type,
-  indicatorData = [] as any,
-  klineList = [] as any,
+  indicatorDetailList = [] as any,
+  priceList = [] as any,
   klineType = '',
 }) {
   switch (type) {
     case IndicatorChartType.PRICE_LINE:
-      return priceLineTransform({ indicatorData, klineList, klineType });
+      return priceLineTransform({ indicatorDetailList, priceList, klineType });
 
     case IndicatorChartType.INDEPENDENT_LINE:
-      return independentLineTransform({ indicatorData, klineList, klineType });
+      return independentLineTransform({ indicatorDetailList, priceList, klineType });
 
     case IndicatorChartType.X_BAR:
-      return xBarTransform({ indicatorData, klineList, klineType });
+      return xBarTransform({ indicatorDetailList, priceList, klineType });
 
     case IndicatorChartType.X_BAR_STACK:
-      return xBarStackTransform({ indicatorData, klineList, klineType });
+      return xBarStackTransform({ indicatorDetailList, priceList, klineType });
 
     case IndicatorChartType.Y_BAR:
-      return yBarTransform({ indicatorData, klineList, klineType });
+      return yBarTransform({ indicatorDetailList, priceList, klineType });
 
     case IndicatorChartType.Y_BAR_STACK:
-      return yBarStackTransform({ indicatorData, klineList, klineType });
+      return yBarStackTransform({ indicatorDetailList, priceList, klineType });
     case IndicatorChartType.AREA_STACK:
-      return areaStackTransform({ indicatorData, klineList, klineType });
+      return areaStackTransform({ indicatorDetailList, priceList, klineType });
     default:
       return {};
   }

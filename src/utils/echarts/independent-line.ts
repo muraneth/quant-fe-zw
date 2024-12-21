@@ -12,11 +12,11 @@ import {
 
 
 export function independentLineTransform({
-  indicatorData,
-  klineList,
+  indicatorDetailList,
+  priceList,
   klineType,
 }) {
-  indicatorData = padArrayAhead(indicatorData, klineList.length);
+  indicatorDetailList = padArrayAhead(indicatorDetailList, priceList.length);
 
   const options = {
     ...commonOption,
@@ -27,12 +27,12 @@ export function independentLineTransform({
         return result;
       },
     },
-    xAxis: [ getXAxis(klineList) ],
+    xAxis: [ getXAxis(priceList) ],
     yAxis: [],
     series: [],
   };
 
-  if (klineList?.length) {
+  if (priceList?.length) {
     options.yAxis.push({
       type: "value",
       name: "price($)",
@@ -41,15 +41,15 @@ export function independentLineTransform({
         show: false,
       },
     });
-    const ser = getPriceSeries(klineList, klineType);
+    const ser = getPriceSeries(priceList, klineType);
     options.series.push(ser);
   }
 
-  if (indicatorData?.length) {
+  if (indicatorDetailList?.length) {
     options.yAxis.push(getIndenpendYAxis());
     options.series.push({
       name: "indicator",
-      data: indicatorData.map((item) => item?.value),
+      data: indicatorDetailList.map((item) => item?.value),
       type: "line",
       areaStyle: {
         color: "rgba(0, 123, 255, 0.2)",

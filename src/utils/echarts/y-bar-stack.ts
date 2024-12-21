@@ -4,7 +4,7 @@ import { get } from "http";
 import { getPriceSeries, commonOption, getToolTipFormater,getXAxis } from "./common";
 import { formatNumber } from "@/utils/common";
 
-export function yBarStackTransform({ indicatorData, klineList, klineType }) {
+export function yBarStackTransform({ indicatorDetailList, priceList, klineType }) {
   const options = {
     ...commonOption,
     tooltip: {
@@ -15,13 +15,13 @@ export function yBarStackTransform({ indicatorData, klineList, klineType }) {
       },
     },
     xAxis: [
-      getXAxis(klineList),
+      getXAxis(priceList),
     ],
     yAxis: [],
     series: [],
   };
 
-  if (klineList?.length) {
+  if (priceList?.length) {
     options.yAxis.push({
       type: "value",
       name: "price",
@@ -38,18 +38,18 @@ export function yBarStackTransform({ indicatorData, klineList, klineType }) {
       position: "right",
     });
 
-    options.series.push(getPriceSeries(klineList, klineType));
+    options.series.push(getPriceSeries(priceList, klineType));
   }
 
-  if (indicatorData?.length) {
+  if (indicatorDetailList?.length) {
     if (options.yAxis.length > 0) {
-      const maxPrice = indicatorData.reduce(
+      const maxPrice = indicatorDetailList.reduce(
         (max, p) => (p.price_range_upper > max ? p.price_range_upper : max),
-        indicatorData[0].price_range_upper
+        indicatorDetailList[0].price_range_upper
       );
-      const minPrice = indicatorData.reduce(
+      const minPrice = indicatorDetailList.reduce(
         (min, p) => (p.price_range_lower < min ? p.price_range_lower : min),
-        indicatorData[0].price_range_lower
+        indicatorDetailList[0].price_range_lower
       );
       options.yAxis[0].min = formatNumber(minPrice); // set price range
       options.yAxis[0].max = formatNumber(maxPrice);
@@ -74,7 +74,7 @@ export function yBarStackTransform({ indicatorData, klineList, klineType }) {
     });
     options.yAxis.push({
       type: "category",
-      data: indicatorData.map((item) => item.price_range_lower),
+      data: indicatorDetailList.map((item) => item.price_range_lower),
       name: "Price Levels",
       nameLocation: "middle",
       position: "left",
@@ -87,7 +87,7 @@ export function yBarStackTransform({ indicatorData, klineList, klineType }) {
 
     options.series.push({
       name: "positive_value",
-      data: indicatorData.map((item) => item.positive_value),
+      data: indicatorDetailList.map((item) => item.positive_value),
       type: "bar",
       stack: "y-bar-stack",
       itemStyle: {
@@ -99,7 +99,7 @@ export function yBarStackTransform({ indicatorData, klineList, klineType }) {
 
     options.series.push({
       name: "negative_value",
-      data: indicatorData.map((item) => item.negative_value),
+      data: indicatorDetailList.map((item) => item.negative_value),
       type: "bar",
       stack: "y-bar-stack",
       itemStyle: {

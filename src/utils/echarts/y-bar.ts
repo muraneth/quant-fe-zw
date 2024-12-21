@@ -3,17 +3,17 @@
 import { get } from "http";
 import { getPriceSeries, commonOption,getXAxis } from "./common";
 
-export function yBarTransform({ indicatorData, klineList, klineType }) {
+export function yBarTransform({ indicatorDetailList, priceList, klineType }) {
   const options = {
     ...commonOption,
     xAxis: [
-      getXAxis(klineList),
+      getXAxis(priceList),
     ],
     yAxis: [],
     series: [],
   };
 
-  if (klineList?.length) {
+  if (priceList?.length) {
     options.yAxis.push({
       type: "value",
       name: "price",
@@ -23,11 +23,11 @@ export function yBarTransform({ indicatorData, klineList, klineType }) {
       position: "right",
       nameLocation: "middle",
     });
-    const ser = getPriceSeries(klineList, klineType);
+    const ser = getPriceSeries(priceList, klineType);
     options.series.push(ser);
   }
 
-  if (indicatorData?.length) {
+  if (indicatorDetailList?.length) {
     options.xAxis.push({
       type: "value",
       name: "Volume",
@@ -35,7 +35,7 @@ export function yBarTransform({ indicatorData, klineList, klineType }) {
     });
     options.yAxis.push({
       type: "category",
-      data: indicatorData.map((item) => item.price_range_lower),
+      data: indicatorDetailList.map((item) => item.price_range_lower),
       name: "Price Levels",
       nameLocation: "middle",
       position: "left",
@@ -43,7 +43,7 @@ export function yBarTransform({ indicatorData, klineList, klineType }) {
     options.series.push({
       name: "Volume",
       type: "bar",
-      data: indicatorData.map((item) => item.total_Value),
+      data: indicatorDetailList.map((item) => item.total_Value),
       barWidth: "40%",
     });
     options.series[options.series.length - 1].xAxisIndex =

@@ -12,12 +12,12 @@ import {
   
   
   export function areaStackTransform({
-    indicatorData,
-    klineList,
+    indicatorDetailList,
+    priceList,
     klineType,
   }) {
-    var indicatorData0 = padArrayAhead(indicatorData[0], klineList.length);
-    var indicatorData1 = padArrayAhead(indicatorData[1], klineList.length);
+    var indicatorDetailList0 = padArrayAhead(indicatorDetailList[0], priceList.length);
+    var indicatorDetailList1 = padArrayAhead(indicatorDetailList[1], priceList.length);
 
   
     const options = {
@@ -29,12 +29,12 @@ import {
           return result;
         },
       },
-      xAxis: [ getXAxis(klineList) ],
+      xAxis: [ getXAxis(priceList) ],
       yAxis: [],
       series: [],
     };
   
-    if (klineList?.length) {
+    if (priceList?.length) {
       options.yAxis.push({
         type: "value",
         name: "price($)",
@@ -43,15 +43,15 @@ import {
           show: false,
         },
       });
-      const ser = getPriceSeries(klineList, klineType);
+      const ser = getPriceSeries(priceList, klineType);
       options.series.push(ser);
     }
   
-    if (indicatorData?.length) {
+    if (indicatorDetailList?.length) {
       options.yAxis.push(getIndenpendYAxis());
       options.series.push({
         name: "indicator",
-        data: indicatorData0.map((item) => item?.value),
+        data: indicatorDetailList0.map((item) => item?.value),
         type: "line",
         areaStyle: {
           color: "rgba(100, 23, 25, 0.2)",
@@ -63,7 +63,7 @@ import {
       });
       options.series.push({
         name: "indicator",
-        data: indicatorData1.map((item) => item?.value),
+        data: indicatorDetailList1.map((item) => item?.value),
         type: "line",
         areaStyle: {
           color: "rgba(0, 123, 255, 0.2)",

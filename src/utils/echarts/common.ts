@@ -3,8 +3,8 @@
 import { formatNumber } from "../common";
 import dayjs from 'dayjs';
 
-export function parsePriceToKlineSeriesData(klineList) {
-  return klineList.map((item) => [item.open, item.close, item.low, item.high]);
+export function parsePriceToKlineSeriesData(priceList) {
+  return priceList.map((item) => [item.open, item.close, item.low, item.high]);
 }
 
 export const padArrayAhead = (arr, targetLen) => {
@@ -15,13 +15,13 @@ export const padArrayAhead = (arr, targetLen) => {
   return cloneArr;
 };
 
-export const getPriceSeries = (klineList, klineType) => {
-  if (klineList?.length) {
+export const getPriceSeries = (priceList, klineType) => {
+  if (priceList?.length) {
     switch (klineType) {
       case "kline":
         return {
           name: "kline",
-          data: parsePriceToKlineSeriesData(klineList),
+          data: parsePriceToKlineSeriesData(priceList),
           type: "candlestick",
           itemStyle: {
             color0: "#ef232a",
@@ -35,7 +35,7 @@ export const getPriceSeries = (klineList, klineType) => {
       case "avgPrice":
         return {
           name: "kline",
-          data: klineList.map((item) => item?.avg_price),
+          data: priceList.map((item) => item?.avg_price),
           type: "line",
           smooth: true,
           yAxisIndex: 0,
@@ -45,10 +45,10 @@ export const getPriceSeries = (klineList, klineType) => {
   return {};
 };
 
-export const getXAxis = (klineList) => {
+export const getXAxis = (priceList) => {
   return {
     type: "category",
-    data: klineList.map((item) => dayjs(item.time).format('YYYY-MM-DD')),
+    data: priceList.map((item) => dayjs(item.time).format('YYYY-MM-DD')),
   };
 }
 export const getIndenpendYAxis = () => {

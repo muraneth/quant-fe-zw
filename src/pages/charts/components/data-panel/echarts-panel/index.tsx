@@ -7,42 +7,37 @@ import BaseChart from "./base-chart";
 import { generateOptions } from "@/utils/echarts";
 import styles from "../index.module.scss";
 const EchartsPanel = () => {
-  const options = useChartStore.use.options();
-  const chartData = useChartStore.use.chartData();
-  const klineType = useChartStore.use.klineType();
   const { symbol, chain, start_time, end_time } = useChartStore.use.tokenInfo();
   const { handle_name, type } = useChartStore.use.indicatorInfo();
+
+  const indicatorDetailList = useChartStore.use.indicatorDetailList();
+  const priceList = useChartStore.use.priceList();
+  const klineType = useChartStore.use.klineType();
   const base_params = useChartStore.use.base_params();
   const extra_params = useChartStore.use.extra_params();
+  const options = useChartStore.use.options();
+
   const setOptions = useChartStore.use.setOptions();
-  const setChartData = useChartStore.use.setChartData();
-  const setHasLevelAuth = useChartStore.use.setHasLevelAuth();
+  const setIndicatorDetailList = useChartStore.use.setIndicatorDetailList();
+  const setPriceList = useChartStore.use.setPriceList();
 
   const {
-    loading,
-    error,
+    loading: getIndicatorDetailLoading,
+    error: getIndicatorDetailError,
     run: runGetIndicatorDetail,
   } = useRequest(
     () => {
       if (!symbol || !chain || !handle_name)
-        return [] as unknown as Promise<any[]>;
-      return Promise.all([
-        getIndicatorDetail({
-          symbol,
-          chain,
-          start_time,
-          end_time,
-          handle_name: handle_name,
-          base_params,
-          extra_params,
-        }),
-        getBasePrice({
-          symbol,
-          chain,
-          start_time,
-          end_time,
-        }),
-      ]);
+        return [] as unknown as Promise<any>;
+      return getIndicatorDetail({
+        symbol,
+        chain,
+        start_time,
+        end_time,
+        handle_name: handle_name,
+        base_params,
+        extra_params,
+      });
     },
     {
       refreshDeps: [
@@ -55,44 +50,72 @@ const EchartsPanel = () => {
         extra_params,
       ],
       onSuccess: (res) => {
-        if (!res.length) return;
-        if (res[0]?.code === 3026) {
-          setHasLevelAuth(false);
-          return;
-        }
-        setHasLevelAuth(true);
-        setChartData({ indicatorData: res[0], klineList: res[1] });
+        setIndicatorDetailList(res);
+      },
+    }
+  );
+
+  const {
+    loading: getBasePriceLoading,
+    error: getBasePriceError,
+    run: runGetBasePrice,
+  } = useRequest(
+    () => {
+      if (!symbol || !chain)
+        return [] as unknown as Promise<any>;
+      return getBasePrice({
+        symbol,
+        chain,
+        start_time,
+        end_time,
+      });
+    },
+    {
+      refreshDeps: [
+        symbol,
+        chain,
+        start_time,
+        end_time,
+      ],
+      onSuccess: (res) => {
+        setPriceList(res);
       },
     }
   );
 
   React.useEffect(() => {
-    const { indicatorData, klineList } = chartData || {};
-    if (indicatorData && klineList && klineType && type) {
+    if (indicatorDetailList && priceList && klineType && type) {
       setOptions(
         generateOptions({
           type,
-          indicatorData,
-          klineList,
+          indicatorDetailList,
+          priceList,
           klineType,
         })
       );
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [chartData, klineType, type]);
+  }, [indicatorDetailList, priceList, klineType, type]);
 
-  console.log("echartsOptions:", options);
   const renderContent = () => {
-    if (loading && !options)
-      return <LoadingOutlined style={{ fontSize: 20 }} />;
-    if (error)
+    if (getIndicatorDetailError || getBasePriceError)
       return (
         <RedoOutlined
           style={{ color: "gray" }}
-          onClick={runGetIndicatorDetail}
+          onClick={() => {
+            runGetIndicatorDetail();
+            runGetBasePrice();
+          }}
         />
       );
-    return <BaseChart options={options} />;
+    return (
+      <>
+        {getIndicatorDetailLoading || getBasePriceLoading ? (
+          <LoadingOutlined style={{ fontSize: 20, position: "absolute" }} />
+        ) : null}
+        <BaseChart options={options} />
+      </>
+    );
   };
 
   return <div className={styles.echartsWrapper}>{renderContent()}</div>;

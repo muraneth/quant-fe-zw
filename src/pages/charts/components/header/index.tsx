@@ -70,17 +70,11 @@ const Header = () => {
   );
 
   const setTokenInfo = useChartStore.use.setTokenInfo();
-  const setOptions = useChartStore.use.setOptions();
-  const setChartData = useChartStore.use.setChartData();
-
-  const resetStoreData = () => {
-    setOptions(null);
-    setChartData(null);
-  };
+  const resetChartPanelData = useChartStore.use.resetChartPanelData();
 
   React.useEffect(() => {
     if (currentToken) {
-      resetStoreData();
+      resetChartPanelData({ refreshChart: true });
       setTokenInfo({
         symbol: currentToken.symbol,
         chain: currentToken.chain,
