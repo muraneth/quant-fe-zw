@@ -58,7 +58,7 @@ const useChartStore = createSelectors(
         end_time: "",
       },
       indicatorInfo: {
-        required_level: 0,
+        required_level: 1,
         handle_name: "",
         name: "",
         description: "",
@@ -71,8 +71,8 @@ const useChartStore = createSelectors(
       klineType: "kline",
       hasLevelAuth: true,
       options: null,
-      priceList: null,
-      indicatorDetailList: null,
+      priceList: [],
+      indicatorDetailList: [],
 
       setTokenInfo: (tokenInfo) =>
         set((draft) => {

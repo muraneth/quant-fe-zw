@@ -6,6 +6,7 @@ import styles from "./index.module.scss";
 
 const ChartInfo = () => {
   const indicatorInfo = useChartStore.use.indicatorInfo();
+
   return (
     <div className={styles.topInfo}>
       <div className={styles.left}>

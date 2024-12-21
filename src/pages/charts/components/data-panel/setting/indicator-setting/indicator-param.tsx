@@ -1,9 +1,11 @@
+import * as React from "react";
 import { Checkbox, Popover } from "antd";
 import FormRender, { useForm } from "form-render";
-import styles from "./index.module.scss";
 import { useChartStore } from "@/store/charts";
 import { svgMap } from "@/constants/svg";
 import type { GetProp } from "antd";
+import styles from "./index.module.scss";
+
 
 const options = [
   { label: "DEX", value: "DEX" },
@@ -18,8 +20,6 @@ const IndicatorParam = () => {
   const setBaseParams = useChartStore.use.setBaseParams();
   const setExtraParams = useChartStore.use.setExtraParams();
   const indicatorInfo = useChartStore.use.indicatorInfo();
-  const setTokenInfo = useChartStore.use.setTokenInfo();
-  const tokenInfo = useChartStore.use.tokenInfo();
   const param_schema = indicatorInfo.param_schema;
   const { use_base_param, extra_params_schema } =
     JSON.parse((param_schema || null) as string) || {};
@@ -42,14 +42,11 @@ const IndicatorParam = () => {
 
   const handleExtraChange = (allValues: Record<string, any>) => {
     setExtraParams(allValues);
-    if (indicatorInfo.handle_name.startsWith("pbv.")) {
-      setTokenInfo({
-        ...tokenInfo,
-        start_time: allValues.time_range[0],
-        end_time: allValues.time_range[1],
-      });
-    }
   };
+
+  React.useEffect(() => {
+    form.resetFields();
+  }, [form, extra_params_schema])
 
   return (
     <div className={styles.setting}>
@@ -77,12 +74,9 @@ const IndicatorParam = () => {
         <FormRender
           form={form}
           schema={extra_params_schema}
-          //   onMount
           watch={{
-            "#": {
-              handler: (allValues) => {
-                handleExtraChange(allValues);
-              },
+            "#": (allValues) => {
+              handleExtraChange(allValues);
             },
           }}
           style={{ marginLeft: 24, width: 300 }}

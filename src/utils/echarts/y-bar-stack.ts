@@ -1,10 +1,19 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 // @ts-nocheck
-import { get } from "http";
-import { getPriceSeries, commonOption, getToolTipFormater,getXAxis } from "./common";
+import {
+  getPriceSeries,
+  commonOption,
+  getToolTipFormater,
+  getXAxis,
+  padPVBArray,
+} from "./common";
 import { formatNumber } from "@/utils/common";
 
-export function yBarStackTransform({ indicatorDetailList, priceList, klineType }) {
+export function yBarStackTransform({
+  indicatorDetailList,
+  priceList,
+  klineType,
+}) {
   const options = {
     ...commonOption,
     tooltip: {
@@ -14,9 +23,7 @@ export function yBarStackTransform({ indicatorDetailList, priceList, klineType }
         return result;
       },
     },
-    xAxis: [
-      getXAxis(priceList),
-    ],
+    xAxis: [getXAxis(priceList)],
     yAxis: [],
     series: [],
   };
@@ -42,18 +49,11 @@ export function yBarStackTransform({ indicatorDetailList, priceList, klineType }
   }
 
   if (indicatorDetailList?.length) {
-    if (options.yAxis.length > 0) {
-      const maxPrice = indicatorDetailList.reduce(
-        (max, p) => (p.price_range_upper > max ? p.price_range_upper : max),
-        indicatorDetailList[0].price_range_upper
-      );
-      const minPrice = indicatorDetailList.reduce(
-        (min, p) => (p.price_range_lower < min ? p.price_range_lower : min),
-        indicatorDetailList[0].price_range_lower
-      );
-      options.yAxis[0].min = formatNumber(minPrice); // set price range
-      options.yAxis[0].max = formatNumber(maxPrice);
-    }
+    const { newIndicatorData, klineMinPrice, klineMaxPrice } =
+      padPVBArray(indicatorDetailList, priceList);
+    options.yAxis[0].min = formatNumber(klineMinPrice); // set price range
+    options.yAxis[0].max = formatNumber(klineMaxPrice);
+
     options.xAxis.push({
       type: "value",
       name: "Volume",
@@ -74,20 +74,25 @@ export function yBarStackTransform({ indicatorDetailList, priceList, klineType }
     });
     options.yAxis.push({
       type: "category",
-      data: indicatorDetailList.map((item) => item.price_range_lower),
+      data: newIndicatorData.map((item) => item.price_range_lower),
       name: "Price Levels",
       nameLocation: "middle",
       position: "left",
+      // offset: -30,
       axisLabel: {
         formatter: function (val) {
           return formatNumber(val);
         },
       },
     });
+    // options.grid ={
+    //   ...options.grid,
+    //   left: '10%',
+    // }
 
     options.series.push({
       name: "positive_value",
-      data: indicatorDetailList.map((item) => item.positive_value),
+      data: newIndicatorData.map((item) => item.positive_value),
       type: "bar",
       stack: "y-bar-stack",
       itemStyle: {
@@ -99,7 +104,7 @@ export function yBarStackTransform({ indicatorDetailList, priceList, klineType }
 
     options.series.push({
       name: "negative_value",
-      data: indicatorDetailList.map((item) => item.negative_value),
+      data: newIndicatorData.map((item) => item.negative_value),
       type: "bar",
       stack: "y-bar-stack",
       itemStyle: {

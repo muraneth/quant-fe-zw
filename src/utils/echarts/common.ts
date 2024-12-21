@@ -24,10 +24,10 @@ export const getPriceSeries = (priceList, klineType) => {
           data: parsePriceToKlineSeriesData(priceList),
           type: "candlestick",
           itemStyle: {
-            color0: "#ef232a",
-            color: "#14b143",
-            borderColor0: "#ef232a",
-            borderColor: "#14b143",
+            color0: "#F63C6B",
+            color: "#0FEDBE",
+            borderColor0: "#F63C6B",
+            borderColor: "#0FEDBE",
           },
           yAxisIndex: 0,
         };
@@ -55,7 +55,7 @@ export const getIndenpendYAxis = () => {
   return {
     type: "value",
     // name: "value",
-    position:"left",
+    position: "left",
     axisLabel: {
       formatter: function (val) {
         return formatNumber(val); // Formatting Y-axis labels
@@ -65,7 +65,7 @@ export const getIndenpendYAxis = () => {
       show: true,
       lineStyle: {
         color: "rgba(200, 200, 200, 0.4)", // Very light gray with transparency
-        width: 0.1, // Thinner line
+        width: 0.3, // Thinner line
         type: "solid", // or 'dashed', 'dotted'
       },
     },
@@ -90,21 +90,19 @@ export const getToolTipFormater = (params) => {
               </div>
               <div>
               <strong>Change:</strong> 
-                <span style="color: ${
-                  percentageChange >= 0 ? "green" : "red"
-                };">${percentageChange}%</span>
+                <span style="color: ${percentageChange >= 0 ? "green" : "red"
+        };">${percentageChange}%</span>
               </div>
             `;
     } else {
       // For other series, just display series name and value
       result += `
               <div style="margin: 5px 0; line-height: 1.5;">
-                <span style="display: inline-block; width: 10px; height: 10px; background-color: ${
-                  param.color
-                }; border-radius: 50%; margin-right: 5px;"></span>
+                <span style="display: inline-block; width: 10px; height: 10px; background-color: ${param.color
+        }; border-radius: 50%; margin-right: 5px;"></span>
                 <strong>${param.seriesName}:</strong> ${formatNumber(
-        param.value
-      )}
+          param.value
+        )}
               </div>
             `;
     }
@@ -112,34 +110,81 @@ export const getToolTipFormater = (params) => {
   return result;
 };
 export const commonOption = {
-    dataZoom: [
-      {
-        type: "slider",
-        xAxisIndex: 0,
-        filterMode: "filter",
-        backgroundColor: "#2d4137",
-        borderColor: "transparent",
-      },
-      {
-        type: "inside",
-        xAxisIndex: 0,
-        filterMode: "filter",
-      },
-    ],
-    grid: {
-      top: "10%",
-      left: "2%",
-      right: "2%",
-      bottom: "12%",
-      containLabel: true,
+  dataZoom: [
+    {
+      type: "slider",
+      xAxisIndex: 0,
+      filterMode: "filter",
+      backgroundColor: "#2d4137",
+      borderColor: "transparent",
     },
-    legend: {},
-    tooltip: {
-      trigger: "axis",
-      axisPointer: {
-        type: "cross",
-      },
+    {
+      type: "inside",
+      xAxisIndex: 0,
+      filterMode: "filter",
     },
-    
-    
+  ],
+  grid: {
+    top: "10%",
+    left: "2%",
+    right: "2%",
+    bottom: "12%",
+    containLabel: true,
+  },
+  legend: {},
+  tooltip: {
+    trigger: "axis",
+    axisPointer: {
+      type: "cross",
+    },
+  },
+
+
 };
+
+export const padPVBArray = (indicatorData, priceList) => {
+  const klineMinPrice = priceList.reduce((min, p) => (p.low < min ? p.low : min), priceList[0].low);
+  const klineMaxPrice = priceList.reduce((max, p) => (p.high > max ? p.high : max), priceList[0].high);
+  const newIndicatorData = [...indicatorData];
+
+
+  const step = indicatorData[0].price_range_upper - indicatorData[0].price_range_lower
+  if (step === 0) {
+    return { newIndicatorData, klineMinPrice, klineMaxPrice }
+  }
+  const maxPrice = indicatorData.reduce(
+    (max, p) => (p.price_range_upper > max ? p.price_range_upper : max),
+    indicatorData[0].price_range_upper
+  );
+  const minPrice = indicatorData.reduce(
+    (min, p) => (p.price_range_lower < min ? p.price_range_lower : min),
+    indicatorData[0].price_range_lower
+  );
+  const toFixedStepsLower = Math.floor((minPrice - klineMinPrice) / step)
+  const toFixedStepsUpper = Math.ceil((klineMaxPrice - maxPrice) / step)
+  console.log("step", step);
+  console.log("klineMinPrice", klineMinPrice, "klineMaxPrice", klineMaxPrice);
+  console.log("minPrice", minPrice, "maxPrice", maxPrice);
+  console.log("toFixedStepsLower", toFixedStepsLower);
+  console.log("toFixedStepsUpper", toFixedStepsUpper);
+
+
+  for (let i = 0; i < toFixedStepsLower; i++) {
+    newIndicatorData.unshift({
+      price_range_lower: minPrice - step * (i + 1),
+      price_range_upper: minPrice - step * (i),
+      positive_value: 0,
+      negative_value: 0,
+    });
+  }
+  for (let i = 0; i < toFixedStepsUpper; i++) {
+    newIndicatorData.push({
+      price_range_lower: maxPrice + step * (i),
+      price_range_upper: maxPrice + step * (i + 1),
+      positive_value: 0,
+      negative_value: 0,
+    });
+  }
+  
+  return { newIndicatorData, klineMinPrice, klineMaxPrice }
+}
