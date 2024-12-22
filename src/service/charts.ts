@@ -123,13 +123,14 @@ interface BasePriceReqDto {
   symbol: string;
   chain: string;
   start_time: string;
-  end_time:string;
+  end_time: string;
 }
 
 interface BasePriceItem {
   time: string;
   timestamp: number;
   avg_price: number;
+  mcp: number;
   high: number;
   low: number;
   open: number;

@@ -1,12 +1,22 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 // @ts-nocheck
-import { getPriceSeries, commonOption, getXAxis, padPVBArray } from "./common";
+import { getPriceSeries, commonOption, getXAxis, padPVBArray, getToolTipFormater } from "./common";
 import { formatNumber } from "@/utils/common";
 
 export function yBarTransform({ indicatorDetailList, priceList, klineType }) {
   const options = {
     ...commonOption,
-    xAxis: [getXAxis(priceList)],
+    tooltip: {
+      trigger: "axis",
+      formatter: function (params) {
+        const result = getToolTipFormater(params);
+        return result;
+      },
+    },
+    xAxis: [
+      getXAxis(indicatorDetailList),
+    ],
+
     yAxis: [],
     series: [],
   };
@@ -58,10 +68,18 @@ export function yBarTransform({ indicatorDetailList, priceList, klineType }) {
       },
     });
     options.series.push({
-      name: "Volume",
+      name: "Indicator Value",
       type: "bar",
       data: newIndicatorData.map((item) => item.total_Value),
       barWidth: "40%",
+      itemStyle: {
+        color: (params) => {
+          // params.value is the value of the bar
+          return params.value < 0
+            ? "rgba(255, 127, 80, 0.4)" // Red with 60% opacity for negative values
+            : "rgba(30, 214, 255, 0.4)";
+        },
+      },
     });
     options.series[options.series.length - 1].xAxisIndex =
       options.series.length - 1;

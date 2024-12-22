@@ -91,24 +91,24 @@ export function yBarStackTransform({
     // }
 
     options.series.push({
-      name: "positive_value",
+      name: "Positive Value",
       data: newIndicatorData.map((item) => item.positive_value),
       type: "bar",
       stack: "y-bar-stack",
       itemStyle: {
-        color: "rgba(144, 238, 144, 0.5)",
+        color: "rgba(30, 214, 255, 0.5)",
       },
       yAxisIndex: 1,
       xAxisIndex: 1,
     });
 
     options.series.push({
-      name: "negative_value",
+      name: "Negative Value",
       data: newIndicatorData.map((item) => item.negative_value),
       type: "bar",
       stack: "y-bar-stack",
       itemStyle: {
-        color: "rgba(255, 111, 97, 0.5)",
+        color: "rgba(255, 127, 80, 0.5)",
       },
       yAxisIndex: 1,
       xAxisIndex: 1,

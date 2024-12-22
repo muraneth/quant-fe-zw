@@ -9,8 +9,6 @@ import {
   getXAxis
 } from "./common";
 
-
-
 export function independentLineTransform({
   indicatorDetailList,
   priceList,
@@ -27,7 +25,7 @@ export function independentLineTransform({
         return result;
       },
     },
-    xAxis: [ getXAxis(priceList) ],
+    xAxis: [getXAxis(priceList)],
     yAxis: [],
     series: [],
   };
@@ -36,7 +34,7 @@ export function independentLineTransform({
     options.yAxis.push({
       type: "value",
       name: "price($)",
-      position:"right",
+      position: "right",
       splitLine: {
         show: false,
       },
@@ -48,15 +46,18 @@ export function independentLineTransform({
   if (indicatorDetailList?.length) {
     options.yAxis.push(getIndenpendYAxis());
     options.series.push({
-      name: "indicator",
+      name: "Indicator Value",
       data: indicatorDetailList.map((item) => item?.value),
       type: "line",
-      areaStyle: {
-        color: "rgba(0, 123, 255, 0.2)",
-      },
+
       smooth: true,
       symbol: "none",
       yAxisIndex: 1,
+
+      // areaStyle: {
+      //   color: "rgba(0, 123, 255, 0.2)", // Static color for the area
+      // }
+
     });
   }
 

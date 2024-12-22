@@ -32,7 +32,7 @@ export function xBarStackTransform({ indicatorDetailList, priceList, klineType }
     options.yAxis.push({
       type: "value",
       name: "price",
-      position:"right",
+      position: "right",
       splitLine: {
         show: false,
       },
@@ -45,26 +45,29 @@ export function xBarStackTransform({ indicatorDetailList, priceList, klineType }
     options.yAxis.push(getIndenpendYAxis());
 
     options.series.push({
-      name: "positive_value",
+      name: "Positive Value",
       data: indicatorDetailList.map((item) => item?.positive_value),
       type: "bar",
       stack: "x-bar-stack",
       itemStyle: {
-        color: "rgba(144, 238, 144, 0.5)",
+        color: "rgba(30, 214, 255, 0.5)",
       },
       tooltip: {
         valueFormatter: (val) => formatNumber(val),
       },
       yAxisIndex: 1,
+      // barWidth: 5
+      barCategoryGap: "60%"
+
     });
 
     options.series.push({
-      name: "negative_value",
+      name: "Negative Value",
       data: indicatorDetailList.map((item) => item?.negative_value),
       type: "bar",
       stack: "x-bar-stack",
       itemStyle: {
-        color: " rgba(255, 111, 97, 0.5)",
+        color: " rgba(255, 127, 80, 0.5)",
       },
       tooltip: {
         valueFormatter: (val) => formatNumber(val),
