@@ -31,7 +31,7 @@ export function xBarTransform({ indicatorData, klineList, klineType }) {
     options.yAxis.push({
       type: "value",
       name: "price",
-      position:"right",
+      position: "right",
       splitLine: {
         show: false,
       },
@@ -43,11 +43,17 @@ export function xBarTransform({ indicatorData, klineList, klineType }) {
   if (indicatorData?.length) {
     options.yAxis.push(getIndenpendYAxis());
     options.series.push({
-      name: "indicator",
+      name: "Indicator Value",
       data: indicatorData.map((item) => item?.value),
       type: "bar",
       smooth: true,
       yAxisIndex: 1,
+      itemStyle: {
+        color: (params) => {
+          // params.value is the value of the bar
+          return params.value < 0 ? "#FF7F50" : "#1ED6FF";// red for negative, green for positive
+        },
+      },
     });
   }
 

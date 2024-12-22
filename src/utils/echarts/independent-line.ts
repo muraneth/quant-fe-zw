@@ -6,10 +6,7 @@ import {
   getToolTipFormater,
   commonOption,
   padArrayAhead,
-  getXAxis
 } from "./common";
-
-
 
 export function independentLineTransform({
   indicatorData,
@@ -17,7 +14,6 @@ export function independentLineTransform({
   klineType,
 }) {
   indicatorData = padArrayAhead(indicatorData, klineList.length);
-
   const options = {
     ...commonOption,
     tooltip: {
@@ -27,7 +23,12 @@ export function independentLineTransform({
         return result;
       },
     },
-    xAxis: [ getXAxis(klineList) ],
+    xAxis: [
+      {
+        type: "category",
+        data: klineList.map((item) => item.time),
+      },
+    ],
     yAxis: [],
     series: [],
   };
@@ -36,7 +37,7 @@ export function independentLineTransform({
     options.yAxis.push({
       type: "value",
       name: "price($)",
-      position:"right",
+      position: "right",
       splitLine: {
         show: false,
       },
@@ -48,15 +49,18 @@ export function independentLineTransform({
   if (indicatorData?.length) {
     options.yAxis.push(getIndenpendYAxis());
     options.series.push({
-      name: "indicator",
+      name: "Indicator Value",
       data: indicatorData.map((item) => item?.value),
       type: "line",
-      areaStyle: {
-        color: "rgba(0, 123, 255, 0.2)",
-      },
+
       smooth: true,
       symbol: "none",
       yAxisIndex: 1,
+
+      // areaStyle: {
+      //   color: "rgba(0, 123, 255, 0.2)", // Static color for the area
+      // }
+
     });
   }
 

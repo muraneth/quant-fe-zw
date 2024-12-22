@@ -32,7 +32,7 @@ export function xBarStackTransform({ indicatorData, klineList, klineType }) {
     options.yAxis.push({
       type: "value",
       name: "price",
-      position:"right",
+      position: "right",
       splitLine: {
         show: false,
       },
@@ -45,7 +45,7 @@ export function xBarStackTransform({ indicatorData, klineList, klineType }) {
     options.yAxis.push(getIndenpendYAxis());
 
     options.series.push({
-      name: "positive_value",
+      name: "Positive Value",
       data: indicatorData.map((item) => item?.positive_value),
       type: "bar",
       stack: "x-bar-stack",
@@ -59,7 +59,7 @@ export function xBarStackTransform({ indicatorData, klineList, klineType }) {
     });
 
     options.series.push({
-      name: "negative_value",
+      name: "Negative Value",
       data: indicatorData.map((item) => item?.negative_value),
       type: "bar",
       stack: "x-bar-stack",

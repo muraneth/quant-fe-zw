@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 // @ts-nocheck
 import { get } from "http";
-import { getPriceSeries, commonOption, getToolTipFormater,getXAxis,padPVBArray } from "./common";
+import { getPriceSeries, commonOption, getToolTipFormater, getXAxis, padPVBArray } from "./common";
 import { formatNumber } from "@/utils/common";
 
 export function yBarStackTransform({ indicatorData, klineList, klineType }) {
@@ -43,11 +43,11 @@ export function yBarStackTransform({ indicatorData, klineList, klineType }) {
   }
 
   if (indicatorData?.length) {
-    
-    const {newIndicatorData ,klineMinPrice,klineMaxPrice}= padPVBArray(indicatorData, klineList);
+
+    const { newIndicatorData, klineMinPrice, klineMaxPrice } = padPVBArray(indicatorData, klineList);
     options.yAxis[0].min = formatNumber(klineMinPrice); // set price range
     options.yAxis[0].max = formatNumber(klineMaxPrice);
-    
+
     options.xAxis.push({
       type: "value",
       name: "Volume",
@@ -85,7 +85,7 @@ export function yBarStackTransform({ indicatorData, klineList, klineType }) {
     // }
 
     options.series.push({
-      name: "positive_value",
+      name: "Positive Value",
       data: newIndicatorData.map((item) => item.positive_value),
       type: "bar",
       stack: "y-bar-stack",
@@ -97,7 +97,7 @@ export function yBarStackTransform({ indicatorData, klineList, klineType }) {
     });
 
     options.series.push({
-      name: "negative_value",
+      name: "Negative Value",
       data: newIndicatorData.map((item) => item.negative_value),
       type: "bar",
       stack: "y-bar-stack",

@@ -75,11 +75,14 @@ export const getIndenpendYAxis = () => {
 export const getToolTipFormater = (params) => {
   // refer to : https://echarts.apache.org/handbook/zh/how-to/interaction/drag/#%E6%B7%BB%E5%8A%A0-tooltip-%E7%BB%84%E4%BB%B6
   let result = `<strong>Date:</strong> ${params[0].axisValue}<br/>`;
+  console.log("params", params);
+
   params.forEach((param) => {
     if (param.seriesType === "candlestick") {
       // Assuming param.value format is [open, close, low, high] for K-line
       const [key, open, close, low, high] = param.value;
       const percentageChange = (((close - open) / open) * 100).toFixed(2);
+      const amplitude = (((high - low) / low) * 100).toFixed(2);
       result += `
               <div style="margin: 5px 0; line-height: 1.5;">
                 <strong>${param.seriesName}:</strong> 
@@ -90,21 +93,35 @@ export const getToolTipFormater = (params) => {
               </div>
               <div>
               <strong>Change:</strong> 
-                <span style="color: ${percentageChange >= 0 ? "green" : "red"
-        };">${percentageChange}%</span>
+              <span style="color: ${percentageChange >= 0 ? "green" : "red"};">${percentageChange}%</span>
+              <strong>Amplitude:</strong>
+              <span">${amplitude}%</span>
               </div>
             `;
     } else {
       // For other series, just display series name and value
-      result += `
-              <div style="margin: 5px 0; line-height: 1.5;">
-                <span style="display: inline-block; width: 10px; height: 10px; background-color: ${param.color
-        }; border-radius: 50%; margin-right: 5px;"></span>
+      if (param.axisType === "yAxis.category") {
+        // for y-axis stacked bar chart
+        result += `
+                <div style="margin: 5px 0; line-height: 1.5;">
+                <span style="display: inline-block; width: 10px; height: 10px; background-color: ${param.color}; border-radius: 50%; margin-right: 5px;"></span>
+                  <strong>${param.seriesName}:</strong> ${formatNumber(param.value)}
+                </div>
+          `;
+      } else if (param.axisType === "xAxis.value") {
+        //skip
+
+      }
+      else {
+        result += `
+                <div style="margin: 5px 0; line-height: 1.5;">
+                <span style="display: inline-block; width: 10px; height: 10px; background-color: ${param.color}; border-radius: 50%; margin-right: 5px;"></span>
                 <strong>${param.seriesName}:</strong> ${formatNumber(
           param.value
         )}
-              </div>
-            `;
+                </div>
+          `;
+      }
     }
   });
   return result;
@@ -150,6 +167,7 @@ export const padPVBArray = (indicatorData, klineList) => {
 
   const step = indicatorData[0].price_range_upper - indicatorData[0].price_range_lower
   if (step === 0) {
+    newIndicatorData = [] // 必须要清空，奇怪
     return { newIndicatorData, klineMinPrice, klineMaxPrice }
   }
   const maxPrice = indicatorData.reduce(
