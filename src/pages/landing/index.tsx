@@ -172,7 +172,7 @@ const LangingPage = () => {
             <button>Get Started</button>
           </a>
         </div>
-        <Carousel className={styles.chartImgList} autoplay autoplaySpeed={1500}>
+        <Carousel className={styles.chartImgList} autoplay autoplaySpeed={3000}>
           {chartImgList.map((item, index) => {
             return (
               <div key={index}>
