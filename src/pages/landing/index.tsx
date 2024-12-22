@@ -43,8 +43,8 @@ const LangingPage = () => {
         <div className={styles.bref}>
           <h1>Make Rational Decision when trading meme</h1>
           <div className={styles.desc}>
-            <h2>We mainly focus on meme coins that</h2>
-            <h2>have 100% token in circulation</h2>
+            <h3>We mainly focus on meme coins that</h3>
+            <h3>have 100% token in circulation</h3>
             <div>
               <Button type="primary" href="/charts">
                 Get Started
