@@ -164,7 +164,7 @@ export const commonOption = {
 export const padPVBArray = (indicatorData, priceList) => {
   const klineMinPrice = priceList.reduce((min, p) => (p.low < min ? p.low : min), priceList[0].low);
   const klineMaxPrice = priceList.reduce((max, p) => (p.high > max ? p.high : max), priceList[0].high);
-  const newIndicatorData = [...indicatorData];
+  let newIndicatorData = [...indicatorData];
 
 
   const step = indicatorData[0].price_range_upper - indicatorData[0].price_range_lower
