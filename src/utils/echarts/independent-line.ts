@@ -6,14 +6,16 @@ import {
   getToolTipFormater,
   commonOption,
   padArrayAhead,
+  getXAxis
 } from "./common";
 
 export function independentLineTransform({
-  indicatorData,
-  klineList,
+  indicatorDetailList,
+  priceList,
   klineType,
 }) {
-  indicatorData = padArrayAhead(indicatorData, klineList.length);
+  indicatorDetailList = padArrayAhead(indicatorDetailList, priceList.length);
+
   const options = {
     ...commonOption,
     tooltip: {
@@ -23,17 +25,12 @@ export function independentLineTransform({
         return result;
       },
     },
-    xAxis: [
-      {
-        type: "category",
-        data: klineList.map((item) => item.time),
-      },
-    ],
+    xAxis: [getXAxis(priceList)],
     yAxis: [],
     series: [],
   };
 
-  if (klineList?.length) {
+  if (priceList?.length) {
     options.yAxis.push({
       type: "value",
       name: "price($)",
@@ -42,15 +39,15 @@ export function independentLineTransform({
         show: false,
       },
     });
-    const ser = getPriceSeries(klineList, klineType);
+    const ser = getPriceSeries(priceList, klineType);
     options.series.push(ser);
   }
 
-  if (indicatorData?.length) {
+  if (indicatorDetailList?.length) {
     options.yAxis.push(getIndenpendYAxis());
     options.series.push({
       name: "Indicator Value",
-      data: indicatorData.map((item) => item?.value),
+      data: indicatorDetailList.map((item) => item?.value),
       type: "line",
 
       smooth: true,

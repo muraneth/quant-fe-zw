@@ -19,6 +19,7 @@
 
     .left {
       width: 212px;
+      padding-left: 12px;
       display: flex;
       flex-direction: column;
       padding-right: 20px;
@@ -96,27 +97,6 @@
           margin-left: 4px;
         }
       }
-    }
-  }
-
-  .personalInfo {
-    display: flex;
-    align-items: center;
-    position: absolute;
-    top: 50%;
-    right: 38px;
-    transform: translateY(-50%);
-    color: rgba(255, 255, 255, 0.85);
-
-    .avatar {
-      width: 16px;
-      height: 16px;
-      margin-right: 12px;
-      border-radius: 50%;
-    }
-
-    .name {
-      margin-right: 8px;
     }
   }
 }

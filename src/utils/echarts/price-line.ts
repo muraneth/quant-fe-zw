@@ -8,8 +8,8 @@ import {
   getXAxis
 } from "./common";
 
-export function priceLineTransform({ indicatorData, klineList, klineType }) {
-  indicatorData = padArrayAhead(indicatorData, klineList.length);
+export function priceLineTransform({ indicatorDetailList, priceList, klineType }) {
+  indicatorDetailList = padArrayAhead(indicatorDetailList, priceList.length);
   const options = {
     ...commonOption,
     tooltip: {
@@ -20,7 +20,7 @@ export function priceLineTransform({ indicatorData, klineList, klineType }) {
       },
     },
     xAxis: [
-      getXAxis(klineList)
+      getXAxis(priceList)
     ],
     yAxis: [
       {
@@ -39,15 +39,15 @@ export function priceLineTransform({ indicatorData, klineList, klineType }) {
     series: [],
   };
 
-  if (klineList?.length) {
-    const ser = getPriceSeries(klineList, klineType);
+  if (priceList?.length) {
+    const ser = getPriceSeries(priceList, klineType);
     options.series.push(ser);
   }
 
-  if (indicatorData?.length) {
+  if (indicatorDetailList?.length) {
     options.series.push({
       name: "Indicator Value",
-      data: indicatorData.map((item) => item?.value),
+      data: indicatorDetailList.map((item) => item?.value),
       type: "line",
       areaStyle: {
         color: "rgba(0, 123, 255, 0.2)", // Adjust the RGB and opacity as needed

@@ -1,10 +1,9 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 // @ts-nocheck
-import { get } from "http";
 import { getPriceSeries, commonOption, getXAxis, padPVBArray, getToolTipFormater } from "./common";
 import { formatNumber } from "@/utils/common";
 
-export function yBarTransform({ indicatorData, klineList, klineType }) {
+export function yBarTransform({ indicatorDetailList, priceList, klineType }) {
   const options = {
     ...commonOption,
     tooltip: {
@@ -22,7 +21,7 @@ export function yBarTransform({ indicatorData, klineList, klineType }) {
     series: [],
   };
 
-  if (klineList?.length) {
+  if (priceList?.length) {
     options.yAxis.push({
       type: "value",
       name: "price",
@@ -32,12 +31,15 @@ export function yBarTransform({ indicatorData, klineList, klineType }) {
       position: "right",
       nameLocation: "middle",
     });
-    const ser = getPriceSeries(klineList, klineType);
+    const ser = getPriceSeries(priceList, klineType);
     options.series.push(ser);
   }
 
-  if (indicatorData?.length) {
-    const { newIndicatorData, klineMinPrice, klineMaxPrice } = padPVBArray(indicatorData, klineList);
+  if (indicatorDetailList?.length) {
+    const { newIndicatorData, klineMinPrice, klineMaxPrice } = padPVBArray(
+      indicatorDetailList,
+      priceList
+    );
     options.yAxis[0].min = klineMinPrice; // set price range
     options.yAxis[0].max = klineMaxPrice;
     options.xAxis.push({

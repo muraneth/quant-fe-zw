@@ -11,8 +11,8 @@ import {
 } from "./common";
 import { formatNumber } from "@/utils/common";
 
-export function xBarStackTransform({ indicatorData, klineList, klineType }) {
-  indicatorData = padArrayAhead(indicatorData, klineList.length);
+export function xBarStackTransform({ indicatorDetailList, priceList, klineType }) {
+  indicatorDetailList = padArrayAhead(indicatorDetailList, priceList.length);
   const options = {
     ...commonOption,
 
@@ -24,11 +24,11 @@ export function xBarStackTransform({ indicatorData, klineList, klineType }) {
       },
     },
 
-    xAxis: getXAxis(klineList),
+    xAxis: getXAxis(priceList),
     yAxis: [],
     series: [],
   };
-  if (klineList?.length) {
+  if (priceList?.length) {
     options.yAxis.push({
       type: "value",
       name: "price",
@@ -37,16 +37,16 @@ export function xBarStackTransform({ indicatorData, klineList, klineType }) {
         show: false,
       },
     });
-    const ser = getPriceSeries(klineList, klineType);
+    const ser = getPriceSeries(priceList, klineType);
     options.series.push(ser);
   }
 
-  if (indicatorData?.length) {
+  if (indicatorDetailList?.length) {
     options.yAxis.push(getIndenpendYAxis());
 
     options.series.push({
       name: "Positive Value",
-      data: indicatorData.map((item) => item?.positive_value),
+      data: indicatorDetailList.map((item) => item?.positive_value),
       type: "bar",
       stack: "x-bar-stack",
       itemStyle: {
@@ -63,7 +63,7 @@ export function xBarStackTransform({ indicatorData, klineList, klineType }) {
 
     options.series.push({
       name: "Negative Value",
-      data: indicatorData.map((item) => item?.negative_value),
+      data: indicatorDetailList.map((item) => item?.negative_value),
       type: "bar",
       stack: "x-bar-stack",
       itemStyle: {

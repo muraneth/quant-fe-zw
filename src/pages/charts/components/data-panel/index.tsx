@@ -1,19 +1,19 @@
-import { useChartStore } from "@/store/charts";
 import EchartsPanel from "./echarts-panel";
 import MaskGuide from "./mask-guide";
 import ChartInfo from "./chart-info";
-import ChartSetting from "./setting"
+import ChartSetting from "./setting";
 import { svgMap } from "@/constants/svg";
+import { getAuth } from '@/utils/common';
 import styles from "./index.module.scss";
 
 const DataPanel = () => {
-  const hasLevelAuth = useChartStore.use.hasLevelAuth();
+  const { indicatorLevelAuth } = getAuth();
 
   return (
     <div className={styles.dataPanel}>
       {
         <>
-          {!hasLevelAuth ? (
+          {!indicatorLevelAuth ? (
             <>
               <div className={styles.maskBackground}>
                 {svgMap["maskBackground"]}

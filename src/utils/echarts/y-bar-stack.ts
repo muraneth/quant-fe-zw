@@ -1,10 +1,19 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 // @ts-nocheck
-import { get } from "http";
-import { getPriceSeries, commonOption, getToolTipFormater, getXAxis, padPVBArray } from "./common";
+import {
+  getPriceSeries,
+  commonOption,
+  getToolTipFormater,
+  getXAxis,
+  padPVBArray,
+} from "./common";
 import { formatNumber } from "@/utils/common";
 
-export function yBarStackTransform({ indicatorData, klineList, klineType }) {
+export function yBarStackTransform({
+  indicatorDetailList,
+  priceList,
+  klineType,
+}) {
   const options = {
     ...commonOption,
     tooltip: {
@@ -14,15 +23,12 @@ export function yBarStackTransform({ indicatorData, klineList, klineType }) {
         return result;
       },
     },
-    xAxis: [
-      getXAxis(klineList),
-    ],
+    xAxis: [getXAxis(priceList)],
     yAxis: [],
     series: [],
   };
 
-
-  if (klineList?.length) {
+  if (priceList?.length) {
     options.yAxis.push({
       type: "value",
       name: "price",
@@ -39,12 +45,12 @@ export function yBarStackTransform({ indicatorData, klineList, klineType }) {
       position: "right",
     });
 
-    options.series.push(getPriceSeries(klineList, klineType));
+    options.series.push(getPriceSeries(priceList, klineType));
   }
 
-  if (indicatorData?.length) {
-
-    const { newIndicatorData, klineMinPrice, klineMaxPrice } = padPVBArray(indicatorData, klineList);
+  if (indicatorDetailList?.length) {
+    const { newIndicatorData, klineMinPrice, klineMaxPrice } =
+      padPVBArray(indicatorDetailList, priceList);
     options.yAxis[0].min = formatNumber(klineMinPrice); // set price range
     options.yAxis[0].max = formatNumber(klineMaxPrice);
 

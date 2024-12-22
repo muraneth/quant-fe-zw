@@ -46,7 +46,11 @@ const BaseChart = ({ options }) => {
   }, []);
 
   React.useEffect(() => {
-    if (!options) return;
+    if (!options) {
+      myChartRef.current.clear();
+      return;
+    };
+    console.log("echartsOptions:", options);
     myChartRef.current.setOption(options);
   }, [options]);
 

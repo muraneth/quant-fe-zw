@@ -3,7 +3,6 @@
   height: 100%;
   background: var(--primary-content-color);
   .filter {
-    // background: var(--primary-content-color);
     padding: 12px;
   }
 
@@ -99,7 +98,12 @@
       padding-top: 12px;
       padding-bottom: 40px;
       background: var(--primary-content-color);
-      overflow-y: auto;
+      overflow-y: hidden;
+      scrollbar-gutter: stable;
+
+      &:hover {
+        overflow-y: auto;
+      }
     }
   }
 

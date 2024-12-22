@@ -11,11 +11,12 @@ interface ChartStore {
   tokenInfo: {
     symbol: string;
     chain: string;
-    start_time : string;
-    end_time : string;
+    start_time: string;
+    end_time: string;
   };
   indicatorInfo: {
-    selectedIndicatorsId?: string;
+    id?: string;
+    category?: string;
     required_level: number;
     handle_name: string;
     name: string;
@@ -24,87 +25,105 @@ interface ChartStore {
     type: IndicatorChartType;
     param_schema: string | null;
   };
+
   base_params: Record<string, any>;
   extra_params: Record<string, any>;
-  klineType: "kline"|"avgPrice";
-  hasLevelAuth: boolean;
+  klineType: "kline" | "avgPrice";
   options: Record<string, any> | null;
-  chartData: {
-    indicatorData: IndicatorListResDto | null;
-    klineList: BasePriceResDto | null;
-  } | null;
+  priceList: BasePriceResDto | null;
+  indicatorDetailList: IndicatorListResDto | null;
 
   setTokenInfo: (tokenInfo: ChartStore["tokenInfo"]) => void;
   setIndicatorInfo: (indicatorInfo: ChartStore["indicatorInfo"]) => void;
   setBaseParams: (base_params: ChartStore["base_params"]) => void;
   setExtraParams: (extra_params: ChartStore["extra_params"]) => void;
   setKlineType: (klineType: ChartStore["klineType"]) => void;
-  setHasLevelAuth: (hasLevelAuth: ChartStore["hasLevelAuth"]) => void;
   setOptions: (options: ChartStore["options"]) => void;
-  setChartData: (chartData: ChartStore["chartData"]) => void;
+  setPriceList: (priceList: ChartStore["priceList"]) => void;
+  setIndicatorDetailList: (
+    indicatorDetailList: ChartStore["indicatorDetailList"]
+  ) => void;
 
+  resetChartPanelData: ({ refreshChart }: { refreshChart: boolean }) => void;
   removeChartStore: () => void;
+}
+
+const initialState = {
+  tokenInfo: {
+    symbol: "",
+    chain: "",
+    start_time: "",
+    end_time: "",
+  },
+  indicatorInfo: {
+    required_level: 1,
+    handle_name: "",
+    name: "",
+    description: "",
+    doc: "",
+    type: null as unknown as IndicatorChartType.INDEPENDENT_LINE,
+    param_schema: null,
+  },
+  base_params: {},
+  extra_params: {},
+  klineType: "kline" as any,
+  hasLevelAuth: true,
+  options: null,
+  priceList: [],
+  indicatorDetailList: [],
 }
 
 const useChartStore = createSelectors(
   create<ChartStore>()(
     immer((set) => ({
-      tokenInfo: {
-        symbol: "",
-        chain: "",
-        start_time : "",
-        end_time : "",
-      },
-      indicatorInfo: {
-        required_level: 0,
-        handle_name: "",
-        name: "",
-        description: "",
-        doc: "",
-        type: null as unknown as IndicatorChartType.INDEPENDENT_LINE,
-        param_schema: null,
-      },
-      base_params: {},
-      extra_params: {},
-      klineType: "kline",
-      hasLevelAuth: true,
-      options: null,
-      chartData: null,
+      ...initialState,
 
       setTokenInfo: (tokenInfo) =>
-        set((state) => {
-          state.tokenInfo = tokenInfo;
+        set((draft) => {
+          draft.tokenInfo = tokenInfo;
         }),
       setIndicatorInfo: (indicatorInfo) =>
-        set((state) => {
-          state.indicatorInfo = indicatorInfo;
+        set((draft) => {
+          draft.indicatorInfo = indicatorInfo;
         }),
       setBaseParams: (base_params) =>
-        set((state) => {
-          state.base_params = base_params;
+        set((draft) => {
+          draft.base_params = base_params;
         }),
       setExtraParams: (extra_params) =>
-        set((state) => {
-          state.extra_params = extra_params;
+        set((draft) => {
+          draft.extra_params = extra_params;
         }),
       setKlineType: (klineType) =>
-        set((state) => {
-          state.klineType = klineType;
-        }),
-      setHasLevelAuth: (hasLevelAuth) =>
-        set((state) => {
-          state.hasLevelAuth = hasLevelAuth;
-        }),
-      setOptions: (options) =>
-        set((state) => {
-          state.options = options;
-        }),
-      setChartData: (chartData) =>
-        set((state) => {
-          state.chartData = chartData;
+        set((draft) => {
+          draft.klineType = klineType;
         }),
 
-      removeChartStore: () => set({}),
+      setOptions: (options) =>
+        set((draft) => {
+          draft.options = options;
+        }),
+      setPriceList: (priceList) =>
+        set((draft) => {
+          draft.priceList = priceList;
+        }),
+      setIndicatorDetailList: (indicatorDetailList) =>
+        set((draft) => {
+          draft.indicatorDetailList = indicatorDetailList;
+        }),
+
+      resetChartPanelData: ({ refreshChart }) =>
+        set((draft) => {
+          draft.base_params = {};
+          draft.extra_params = {};
+          draft.klineType = "kline";
+          draft.indicatorDetailList = null;
+          if (refreshChart) {
+            // options 置空 -> 触发 echarts.clear()
+            draft.options = null;
+          }
+        }),
+      removeChartStore: () => set(initialState),
     }))
   )
 );

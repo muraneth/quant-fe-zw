@@ -1,5 +1,6 @@
 import fetch from "isomorphic-fetch";
 import { getUserInfo } from "@/utils/common";
+import { setAuth } from "@/utils/common";
 
 interface IFetchParams {
   url: string;
@@ -18,16 +19,14 @@ enum ResponseCode {
   // 无权限
   NO_PERMISSION = 3025,
   // 无 level 权限
-  NO_LEVEL_AUTH = 3026
+  NO_LEVEL_AUTH = 3026,
 }
 
 const serverUrl = import.meta.env.VITE_SERVER_URL;
 
 const request = ({ url, method, params = {} }: IFetchParams) => {
   const urlMap = {
-    GET: `${serverUrl}${url}?${new URLSearchParams(
-      params
-    ).toString()}`,
+    GET: `${serverUrl}${url}?${new URLSearchParams(params).toString()}`,
     POST: `${serverUrl}${url}`,
   };
 
@@ -57,16 +56,18 @@ const request = ({ url, method, params = {} }: IFetchParams) => {
       switch (res.code) {
         case ResponseCode.NO_PERMISSION:
         case ResponseCode.SUCCESS:
+          setAuth({ indicatorLevelAuth: true });
           return Promise.resolve(res.data);
         case ResponseCode.NO_LEVEL_AUTH:
-          return Promise.resolve(res);
+          setAuth({ indicatorLevelAuth: false });
+          return Promise.reject();
         case ResponseCode.NOT_SIGN_IN_1:
         case ResponseCode.NOT_SIGN_IN_2:
         case ResponseCode.TOKEN_ERROR:
           window.location.href = "/sign-in";
           return Promise.reject();
       }
-      return Promise.reject(res.msg || 'fetch error');
+      return Promise.reject(res.msg || "fetch error");
     })
     .catch((err) => {
       return Promise.reject(err);

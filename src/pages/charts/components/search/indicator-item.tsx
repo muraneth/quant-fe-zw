@@ -15,40 +15,56 @@ const IndicatorItem: React.FC<IndicatorItemProps> = ({
   type,
   id,
   param_schema,
+  category,
 }) => {
-  const selectedIndicatorsId =
-    useChartStore.use.indicatorInfo().selectedIndicatorsId;
+  const indicatorInfo = useChartStore.use.indicatorInfo();
   const setIndicatorInfo = useChartStore.use.setIndicatorInfo();
-  const setBaseParams = useChartStore.use.setBaseParams();
   const setExtraParams = useChartStore.use.setExtraParams();
-  const setOptions = useChartStore.use.setOptions();
-  const setChartData = useChartStore.use.setChartData();
+  const resetChartPanelData = useChartStore.use.resetChartPanelData();
 
-  const resetStoreData = () => {
-    setBaseParams({});
-    setExtraParams({});
-    setOptions(null);
-    setChartData(null);
+  const getDefaultExtraParams = () => {
+    const { extra_params_schema = {} } =
+      JSON.parse((param_schema || null) as string) || {};
+
+    if (extra_params_schema.properties) {
+      const defaultExtraParams: Record<string, any> = {};
+      const properties = extra_params_schema.properties;
+
+      Object.keys(properties).forEach((key) => {
+        const prop = properties[key];
+        if (prop?.default !== undefined && prop?.default !== null) {
+          defaultExtraParams[key] = prop.default;
+        }
+      });
+
+      return defaultExtraParams;
+    }
+
+    return {};
   };
 
   const chooseIndicator = () => {
-    resetStoreData();
+    resetChartPanelData({
+      refreshChart: indicatorInfo.category !== category,
+    });
     setIndicatorInfo({
       handle_name,
       name,
       description,
-      doc:doc,
-      required_level: required_level - 1,
+      doc,
+      required_level,
       type,
-      selectedIndicatorsId: id,
+      id,
       param_schema,
+      category
     });
+    setExtraParams(getDefaultExtraParams());
   };
 
   return (
     <div
       className={classNames(styles.indicatorItem, [
-        { [styles.indicatorItemActive]: selectedIndicatorsId === id },
+        { [styles.indicatorItemActive]: indicatorInfo.id === id },
       ])}
       onClick={chooseIndicator}
     >

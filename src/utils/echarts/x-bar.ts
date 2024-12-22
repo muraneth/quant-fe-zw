@@ -10,8 +10,8 @@ import {
   getXAxis
 } from "./common";
 
-export function xBarTransform({ indicatorData, klineList, klineType }) {
-  indicatorData = padArrayAhead(indicatorData, klineList.length);
+export function xBarTransform({ indicatorDetailList, priceList, klineType }) {
+  indicatorDetailList = padArrayAhead(indicatorDetailList, priceList.length);
   const options = {
     ...commonOption,
     tooltip: {
@@ -22,12 +22,12 @@ export function xBarTransform({ indicatorData, klineList, klineType }) {
       },
     },
 
-    xAxis: getXAxis(klineList),
+    xAxis: getXAxis(priceList),
     yAxis: [],
     series: [],
   };
 
-  if (klineList?.length) {
+  if (priceList?.length) {
     options.yAxis.push({
       type: "value",
       name: "price",
@@ -36,15 +36,15 @@ export function xBarTransform({ indicatorData, klineList, klineType }) {
         show: false,
       },
     });
-    const ser = getPriceSeries(klineList, klineType);
+    const ser = getPriceSeries(priceList, klineType);
     options.series.push(ser);
   }
 
-  if (indicatorData?.length) {
+  if (indicatorDetailList?.length) {
     options.yAxis.push(getIndenpendYAxis());
     options.series.push({
       name: "Indicator Value",
-      data: indicatorData.map((item) => item?.value),
+      data: indicatorDetailList.map((item) => item?.value),
       type: "bar",
       yAxisIndex: 1,
       barCategoryGap: "60%",

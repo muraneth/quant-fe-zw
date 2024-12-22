@@ -3,8 +3,8 @@
 import { formatNumber } from "../common";
 import dayjs from 'dayjs';
 
-export function parsePriceToKlineSeriesData(klineList) {
-  return klineList.map((item) => [item.open, item.close, item.low, item.high]);
+export function parsePriceToKlineSeriesData(priceList) {
+  return priceList.map((item) => [item.open, item.close, item.low, item.high]);
 }
 
 export const padArrayAhead = (arr, targetLen) => {
@@ -15,13 +15,13 @@ export const padArrayAhead = (arr, targetLen) => {
   return cloneArr;
 };
 
-export const getPriceSeries = (klineList, klineType) => {
-  if (klineList?.length) {
+export const getPriceSeries = (priceList, klineType) => {
+  if (priceList?.length) {
     switch (klineType) {
       case "kline":
         return {
           name: "kline",
-          data: parsePriceToKlineSeriesData(klineList),
+          data: parsePriceToKlineSeriesData(priceList),
           type: "candlestick",
           itemStyle: {
             color0: "#F63C6B",
@@ -36,7 +36,7 @@ export const getPriceSeries = (klineList, klineType) => {
       case "avgPrice":
         return {
           name: "kline",
-          data: klineList.map((item) => item?.avg_price),
+          data: priceList.map((item) => item?.avg_price),
           type: "line",
           smooth: true,
           yAxisIndex: 0,
@@ -47,10 +47,10 @@ export const getPriceSeries = (klineList, klineType) => {
   return {};
 };
 
-export const getXAxis = (klineList) => {
+export const getXAxis = (priceList) => {
   return {
     type: "category",
-    data: klineList.map((item) => dayjs(item.time).format('YYYY-MM-DD')),
+    data: priceList.map((item) => dayjs(item.time).format('YYYY-MM-DD')),
   };
 }
 export const getIndenpendYAxis = () => {
@@ -161,10 +161,10 @@ export const commonOption = {
 
 };
 
-export const padPVBArray = (indicatorData, klineList) => {
-  const klineMinPrice = klineList.reduce((min, p) => (p.low < min ? p.low : min), klineList[0].low);
-  const klineMaxPrice = klineList.reduce((max, p) => (p.high > max ? p.high : max), klineList[0].high);
-  let newIndicatorData = [...indicatorData];
+export const padPVBArray = (indicatorData, priceList) => {
+  const klineMinPrice = priceList.reduce((min, p) => (p.low < min ? p.low : min), priceList[0].low);
+  const klineMaxPrice = priceList.reduce((max, p) => (p.high > max ? p.high : max), priceList[0].high);
+  const newIndicatorData = [...indicatorData];
 
 
   const step = indicatorData[0].price_range_upper - indicatorData[0].price_range_lower
@@ -205,5 +205,6 @@ export const padPVBArray = (indicatorData, klineList) => {
       negative_value: 0,
     });
   }
+  
   return { newIndicatorData, klineMinPrice, klineMaxPrice }
 }

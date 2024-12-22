@@ -38,6 +38,35 @@ export function getUserInfo(): SignInResDto {
   }
 }
 
+interface Auth {
+  indicatorLevelAuth?: boolean;
+}
+
+export function setAuth({ indicatorLevelAuth }: Auth) {
+  if (indicatorLevelAuth !== null && indicatorLevelAuth !== undefined) {
+    localStorage.setItem(
+      storageKey["indicatorLevelAuth"],
+      JSON.stringify(indicatorLevelAuth)
+    );
+  }
+}
+
+interface Auth {
+  indicatorLevelAuth?: boolean;
+}
+
+export function getAuth(): Auth {
+  try {
+    const auth = {} as Auth;
+    auth.indicatorLevelAuth = JSON.parse(
+      localStorage.getItem(storageKey["indicatorLevelAuth"]) || "{}"
+    );
+    return auth;
+  } catch {
+    return {};
+  }
+}
+
 export function findKeyByValueFromMapping<T>(mapping: Record<any, Array<T>>) {
   return function (value: T) {
     for (const key in mapping) {
@@ -76,24 +105,23 @@ export function extractedTokenMarketInfo(
     });
 }
 
-
-export const formatNumber = (data:any) => {
+export const formatNumber = (data: any) => {
   if (data === undefined) {
-    return 'N/A';
+    return "N/A";
   }
   const numData = Number(data);
 
   // Check if conversion resulted in a valid number
   if (isNaN(numData)) {
-    console.error('Invalid input to formatBigNumber:', data);
-    return 'N/A';
+    console.error("Invalid input to formatBigNumber:", data);
+    return "N/A";
   }
   if (Math.abs(numData) > 1000000000) {
-    return (numData / 1000000000).toFixed(1) + 'B';
+    return (numData / 1000000000).toFixed(1) + "B";
   } else if (Math.abs(numData) > 1000000) {
-    return (numData / 1000000).toFixed(1) + 'M';
+    return (numData / 1000000).toFixed(1) + "M";
   } else if (Math.abs(numData) > 1000) {
-    return (numData / 1000).toFixed(1) + 'K';
+    return (numData / 1000).toFixed(1) + "K";
   } else if (Math.abs(numData) > 1) {
     return numData.toFixed(2);
   } else if (Math.abs(numData) > 0.01) {
@@ -102,20 +130,20 @@ export const formatNumber = (data:any) => {
     return numData.toFixed(4);
   } else if (Math.abs(numData) > 0.0001) {
     return numData.toFixed(5);
-  }else if (Math.abs(numData) > 0.00001) {
+  } else if (Math.abs(numData) > 0.00001) {
     return numData.toFixed(6);
   } else if (Math.abs(numData) > 0.000001) {
     return numData.toFixed(7);
   } else if (Math.abs(numData) > 0.0000001) {
     return numData.toFixed(8);
-  }else if (Math.abs(numData) > 0.00000001) {
+  } else if (Math.abs(numData) > 0.00000001) {
     return numData.toFixed(9);
-  }else if (Math.abs(numData) == 0.0) {
-    return 0
+  } else if (Math.abs(numData) == 0.0) {
+    return 0;
   }
-  return numData
+  return numData;
 };
 
-export const numberToPercentage = (value:number) => {
-  return (value * 100).toFixed(1) + '%';
+export const numberToPercentage = (value: number) => {
+  return (value * 100).toFixed(1) + "%";
 };
