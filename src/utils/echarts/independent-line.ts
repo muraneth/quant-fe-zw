@@ -54,6 +54,7 @@ export function independentLineTransform({
       symbol: "none",
       yAxisIndex: 1,
 
+
       // areaStyle: {
       //   color: "rgba(0, 123, 255, 0.2)", // Static color for the area
       // }

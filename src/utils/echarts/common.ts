@@ -151,13 +151,28 @@ export const commonOption = {
     containLabel: true,
   },
   legend: {},
-  tooltip: {
-    trigger: "axis",
-    axisPointer: {
-      type: "cross",
-    },
+  graphic: [
+    {
+      type: 'text',
+      // left: 200, // pixels from left
+      // top: 100,
+      left: 'center',
+      top: 'center',
+      style: {
+        text: 'tokenalytic.com',
+        fontSize: 60,
+        // fontWeight: 'bold',
+        fill: 'rgba(100, 100, 0, 0.2)', // Semi-transparent watermark
+        textAlign: 'center'
+      }
+    }
+  ],
+  legend: {
+    // backgroundColor: '#ccc',
+    textStyle: {
+      color: '#ccc'
+    }
   },
-
 
 };
 
@@ -205,6 +220,6 @@ export const padPVBArray = (indicatorData, priceList) => {
       negative_value: 0,
     });
   }
-  
+
   return { newIndicatorData, klineMinPrice, klineMaxPrice }
 }

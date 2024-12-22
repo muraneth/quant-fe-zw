@@ -1,21 +1,13 @@
 import { request } from "@/utils/request";
 import { TokenBaseInfo } from "./charts";
+export interface IndicatorUnit {
+    name: string;
+    value: number;
+    value_chg: number;
+}
 export interface TokenDetailInfo {
     base_info: TokenBaseInfo;
-    mcp: number;
-    holders: number;
-    hhi: number;
-    trade_count: number;
-    avg_trade_size: number;
-    transaction_count: number;
-    votility: number;
-    pool_size: number;
-    pooled_token_ratio: number;
-    volume: number;
-    price: number;
-    price_chg: number;
-    avg_cost: number;
-    avg_cost_to_price: number;
+    indicator_snaps: Array<IndicatorUnit>;
 }
 type TokenInfoListResDto = Array<TokenDetailInfo>;
 
