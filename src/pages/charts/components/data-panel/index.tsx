@@ -3,13 +3,11 @@ import MaskGuide from "./mask-guide";
 import ChartInfo from "./chart-info";
 import ChartSetting from "./setting";
 import { svgMap } from "@/constants/svg";
-import { storageKey } from "@/constants/common";
+import { getAuth } from '@/utils/common';
 import styles from "./index.module.scss";
 
 const DataPanel = () => {
-  const indicatorLevelAuth = localStorage.getItem(
-    storageKey["indicatorLevelAuth"]
-  );
+  const { indicatorLevelAuth } = getAuth();
 
   return (
     <div className={styles.dataPanel}>

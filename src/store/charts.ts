@@ -48,31 +48,35 @@ interface ChartStore {
   removeChartStore: () => void;
 }
 
+const initialState = {
+  tokenInfo: {
+    symbol: "",
+    chain: "",
+    start_time: "",
+    end_time: "",
+  },
+  indicatorInfo: {
+    required_level: 1,
+    handle_name: "",
+    name: "",
+    description: "",
+    doc: "",
+    type: null as unknown as IndicatorChartType.INDEPENDENT_LINE,
+    param_schema: null,
+  },
+  base_params: {},
+  extra_params: {},
+  klineType: "kline" as any,
+  hasLevelAuth: true,
+  options: null,
+  priceList: [],
+  indicatorDetailList: [],
+}
+
 const useChartStore = createSelectors(
   create<ChartStore>()(
     immer((set) => ({
-      tokenInfo: {
-        symbol: "",
-        chain: "",
-        start_time: "",
-        end_time: "",
-      },
-      indicatorInfo: {
-        required_level: 1,
-        handle_name: "",
-        name: "",
-        description: "",
-        doc: "",
-        type: null as unknown as IndicatorChartType.INDEPENDENT_LINE,
-        param_schema: null,
-      },
-      base_params: {},
-      extra_params: {},
-      klineType: "kline",
-      hasLevelAuth: true,
-      options: null,
-      priceList: [],
-      indicatorDetailList: [],
+      ...initialState,
 
       setTokenInfo: (tokenInfo) =>
         set((draft) => {
@@ -119,7 +123,7 @@ const useChartStore = createSelectors(
             draft.options = null;
           }
         }),
-      removeChartStore: () => set({}),
+      removeChartStore: () => set(initialState),
     }))
   )
 );

@@ -1,41 +1,68 @@
-// import { useImmer } from "use-immer";
-// import { MenuUnfoldOutlined, MenuFoldOutlined } from "@ant-design/icons";
-import { Outlet } from "react-router-dom";
-// import Menu from "./menu";
-// import { menuChangeEvent } from "@/utils/event";
-// import classNames from "classnames";
+import { Outlet, useLocation } from "react-router-dom";
+import { Link } from "react-router-dom";
+import { Divider } from "antd";
+import PersonalInfo from "./personal-info";
+import ErrorBoundary from "@/components/error-boundary";
 import styles from "./index.module.scss";
 
+const menuList = [
+  {
+    name: "Chart",
+    path: "/charts",
+  },
+  {
+    name: "Document",
+    path: "https://www.google.com",
+  },
+  {
+    name: "Pricing",
+    path: "/priceing",
+  },
+];
+
 const Layout = () => {
-  // const [menuFold, setMenuFold] = useImmer<boolean>(true);
-
-  // const handleMenuFold = () => {
-  //   setMenuFold(!menuFold);
-  //   window.dispatchEvent(menuChangeEvent);
-  // };
-
-  // const jumpToHome = () => {
-  //   window.location.href = "/";
-  // };
+  const location = useLocation();
+  const landingPage = location.pathname === "/landing";
 
   return (
     <div className={styles.layout}>
-      {/* <div className={classNames(styles.left, { [styles.menuFold]: menuFold })}>
-        <div className={styles.title} onClick={jumpToHome}>
-          {menuFold ? "T" : "Tokenalytic"}
+      <div className={styles.header}>
+        <a className={styles.left} href="/landing">
+          Tokenalytic
+        </a>
+        <div className={styles.menu}>
+          {menuList.map((item, index) => {
+            const outsidePath = item.path.startsWith("http");
+            if (outsidePath) {
+              return (
+                <a
+                  className={styles.menuItem}
+                  key={index}
+                  href={item.path}
+                  target="_blank"
+                >
+                  {item.name}
+                </a>
+              );
+            }
+            return (
+              <Link className={styles.menuItem} key={index} to={item.path}>
+                {item.name}
+              </Link>
+            );
+          })}
         </div>
-        <Menu menuFold={menuFold} />
-        <div className={styles.leftBottom}>
-          <div className={styles.control} onClick={handleMenuFold}>
-            {menuFold ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
-            <span className={styles.controlText}>
-              {menuFold ? null : "menuFold"}
-            </span>
-          </div>
-        </div>
-      </div> */}
+        {landingPage ? (
+          <div className={styles.right}>Get Started</div>
+        ) : (
+          <PersonalInfo />
+        )}
+      </div>
+      <Divider style={{ margin: 0 }} />
       <main className={styles.main}>
-        <Outlet />
+        <ErrorBoundary>
+          <Outlet />
+        </ErrorBoundary>
       </main>
     </div>
   );

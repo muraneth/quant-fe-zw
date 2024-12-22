@@ -1,6 +1,6 @@
 import fetch from "isomorphic-fetch";
 import { getUserInfo } from "@/utils/common";
-import { storageKey } from "@/constants/common";
+import { setAuth } from "@/utils/common";
 
 interface IFetchParams {
   url: string;
@@ -56,16 +56,10 @@ const request = ({ url, method, params = {} }: IFetchParams) => {
       switch (res.code) {
         case ResponseCode.NO_PERMISSION:
         case ResponseCode.SUCCESS:
-          localStorage.setItem(
-            storageKey["indicatorLevelAuth"],
-            JSON.stringify(true)
-          );
+          setAuth({ indicatorLevelAuth: true });
           return Promise.resolve(res.data);
         case ResponseCode.NO_LEVEL_AUTH:
-          localStorage.setItem(
-            storageKey["indicatorLevelAuth"],
-            JSON.stringify(false)
-          );
+          setAuth({ indicatorLevelAuth: false });
           return Promise.reject();
         case ResponseCode.NOT_SIGN_IN_1:
         case ResponseCode.NOT_SIGN_IN_2:

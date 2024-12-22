@@ -1,7 +1,7 @@
 .dataPanel {
   flex: 1;
   position: relative;
-  height: calc(100vh - 45px);
+  height: calc(100vh - 85px);
   margin-left: 1px;
 
   .maskBackground {
@@ -40,7 +40,7 @@
     }
 
     .echartsWrapper {
-      height: calc(100vh - 135px);
+      height: calc(100vh - 175px);
       margin-top: 1px;
       display: flex;
       align-items: center;

@@ -5,7 +5,6 @@ import { useDebounceFn, useRequest } from "ahooks";
 import { getTokenList, getTokenMarketInfo } from "@/service/charts";
 import { DownOutlined, SearchOutlined } from "@ant-design/icons";
 import EllipsisMiddle from "@/components/ellipsis-middle";
-import PersonalInfo from "./personal-info";
 import {
   extractedTokenMarketInfo,
   ExtractedTokenMarketInfoItem,
@@ -135,7 +134,6 @@ const Header = () => {
   return (
     <div className={styles.header}>
       <div className={styles.leftWrapper}>
-        <span className={styles.title}>T</span>
         <Popover
           open={openPopover}
           onOpenChange={(v) => {
@@ -214,7 +212,6 @@ const Header = () => {
           );
         })}
       </div>
-      <PersonalInfo />
     </div>
   );
 };
