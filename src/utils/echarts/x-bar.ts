@@ -46,12 +46,14 @@ export function xBarTransform({ indicatorData, klineList, klineType }) {
       name: "Indicator Value",
       data: indicatorData.map((item) => item?.value),
       type: "bar",
-      smooth: true,
       yAxisIndex: 1,
+      barCategoryGap: "60%",
       itemStyle: {
         color: (params) => {
           // params.value is the value of the bar
-          return params.value < 0 ? "#FF7F50" : "#1ED6FF";// red for negative, green for positive
+          return params.value < 0
+            ? "rgba(255, 127, 80, 0.4)" // Red with 60% opacity for negative values
+            : "rgba(30, 214, 255, 0.4)";
         },
       },
     });

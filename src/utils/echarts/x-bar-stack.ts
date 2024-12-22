@@ -50,12 +50,15 @@ export function xBarStackTransform({ indicatorData, klineList, klineType }) {
       type: "bar",
       stack: "x-bar-stack",
       itemStyle: {
-        color: "rgba(144, 238, 144, 0.5)",
+        color: "rgba(30, 214, 255, 0.5)",
       },
       tooltip: {
         valueFormatter: (val) => formatNumber(val),
       },
       yAxisIndex: 1,
+      // barWidth: 5
+      barCategoryGap: "60%"
+
     });
 
     options.series.push({
@@ -64,7 +67,7 @@ export function xBarStackTransform({ indicatorData, klineList, klineType }) {
       type: "bar",
       stack: "x-bar-stack",
       itemStyle: {
-        color: " rgba(255, 111, 97, 0.5)",
+        color: " rgba(255, 127, 80, 0.5)",
       },
       tooltip: {
         valueFormatter: (val) => formatNumber(val),

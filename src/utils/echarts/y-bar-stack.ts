@@ -90,7 +90,7 @@ export function yBarStackTransform({ indicatorData, klineList, klineType }) {
       type: "bar",
       stack: "y-bar-stack",
       itemStyle: {
-        color: "rgba(144, 238, 144, 0.5)",
+        color: "rgba(30, 214, 255, 0.5)",
       },
       yAxisIndex: 1,
       xAxisIndex: 1,
@@ -102,7 +102,7 @@ export function yBarStackTransform({ indicatorData, klineList, klineType }) {
       type: "bar",
       stack: "y-bar-stack",
       itemStyle: {
-        color: "rgba(255, 111, 97, 0.5)",
+        color: "rgba(255, 127, 80, 0.5)",
       },
       yAxisIndex: 1,
       xAxisIndex: 1,

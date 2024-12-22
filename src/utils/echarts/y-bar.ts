@@ -70,6 +70,14 @@ export function yBarTransform({ indicatorData, klineList, klineType }) {
       type: "bar",
       data: newIndicatorData.map((item) => item.total_Value),
       barWidth: "40%",
+      itemStyle: {
+        color: (params) => {
+          // params.value is the value of the bar
+          return params.value < 0
+            ? "rgba(255, 127, 80, 0.4)" // Red with 60% opacity for negative values
+            : "rgba(30, 214, 255, 0.4)";
+        },
+      },
     });
     options.series[options.series.length - 1].xAxisIndex =
       options.series.length - 1;
