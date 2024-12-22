@@ -146,7 +146,7 @@ const buttomList = [
   },
   {
     icon: svgMap["x"],
-    link: "",
+    link: "https://x.com/tokenalytic",
   },
 ];
 
