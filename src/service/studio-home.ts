@@ -1,14 +1,6 @@
 import { request } from "@/utils/request";
-import { TokenBaseInfo } from "./charts";
-export interface IndicatorUnit {
-    name: string;
-    value: number;
-    value_chg: number;
-}
-export interface TokenDetailInfo {
-    base_info: TokenBaseInfo;
-    indicator_snaps: Array<IndicatorUnit>;
-}
+import { TokenDetailInfo } from "./charts";
+
 type TokenInfoListResDto = Array<TokenDetailInfo>;
 
 export function getTokenDetailList(

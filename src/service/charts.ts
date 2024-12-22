@@ -23,6 +23,16 @@ export interface TokenBaseInfo {
   total_supply: number;
   create_time: string;
 }
+export interface TokenDetailInfo {
+  base_info: TokenBaseInfo;
+  indicator_snaps: Array<IndicatorUnit>;
+}
+export interface IndicatorUnit {
+  name: string;
+  value: number;
+  value_chg: number;
+}
+
 
 type TokenListResDto = Array<TokenBaseInfo>;
 
@@ -49,7 +59,7 @@ interface TokenMarketInfoReqDto {
  */
 export function getTokenMarketInfo(
   params: TokenMarketInfoReqDto
-): Promise<Record<string, any>> {
+): Promise<TokenDetailInfo | null> {
   return request({
     url: "/data/api/token/getTokenMarketInfo",
     method: "GET",

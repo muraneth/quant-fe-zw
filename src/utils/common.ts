@@ -1,5 +1,6 @@
 import { SignInResDto } from "@/service/sign-in-up";
 import { storageKey } from "@/constants/common";
+import { TokenDetailInfo } from "@/service/charts";
 
 export function removeSpaces(str: string) {
   return (str || "").replace(/\s+/g, "");
@@ -85,24 +86,33 @@ export interface ExtractedTokenMarketInfoItem {
 }
 
 export function extractedTokenMarketInfo(
-  tokenMarketInfo?: Record<string, any>
+  tokenMarketInfo?: TokenDetailInfo
 ): Array<ExtractedTokenMarketInfoItem> {
   if (!tokenMarketInfo) return [];
-  return Object.entries(tokenMarketInfo)
-    .filter(([key]) => key.endsWith("_daily_chg"))
-    .map(([key, value]) => {
-      const baseKey = key.replace("_daily_chg", "");
-      const title = baseKey
-        .replace(/_/g, " ")
-        .replace(/\b\w/g, (char) => char.toUpperCase());
+  return tokenMarketInfo.indicator_snaps.map((item) => {
 
-      return {
-        title,
-        value: tokenMarketInfo[baseKey] ?? null,
-        type: value > 0 ? "rise" : value < 0 ? "fall" : "neutral",
-        percentage: `${numberToPercentage(value)}`,
-      };
-    });
+    return {
+      title: item.name,
+      value: item.value,
+      type: item.value_chg > 0 ? "rise" : item.value_chg < 0 ? "fall" : "neutral",
+      percentage: numberToPercentage(item.value_chg),
+    };
+  })
+  // return Object.entries(tokenMarketInfo)
+  //   .filter(([key]) => key.endsWith("_daily_chg"))
+  //   .map(([key, value]) => {
+  //     const baseKey = key.replace("_daily_chg", "");
+  //     const title = baseKey
+  //       .replace(/_/g, " ")
+  //       .replace(/\b\w/g, (char) => char.toUpperCase());
+
+  //     return {
+  //       title,
+  //       value: tokenMarketInfo[baseKey] ?? null,
+  //       type: value > 0 ? "rise" : value < 0 ? "fall" : "neutral",
+  //       percentage: `${numberToPercentage(value)}`,
+  //     };
+  //   });
 }
 
 export const formatNumber = (data: any) => {

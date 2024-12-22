@@ -2,7 +2,11 @@ import * as React from "react";
 import { useImmer } from "use-immer";
 import { Input, Popover, Skeleton } from "antd";
 import { useDebounceFn, useRequest } from "ahooks";
-import { getTokenList, getTokenMarketInfo } from "@/service/charts";
+import {
+  getTokenList,
+  getTokenMarketInfo,
+  TokenDetailInfo,
+} from "@/service/charts";
 import { DownOutlined, SearchOutlined } from "@ant-design/icons";
 import EllipsisMiddle from "@/components/ellipsis-middle";
 import {
@@ -47,10 +51,12 @@ const Header = () => {
     },
     {
       refreshDeps: [currentToken],
-      pollingInterval: 10 * 60 * 1000, // 10分钟轮询
-      onSuccess: (tokenMarketInfo) => {
+      // pollingInterval: 10 * 60 * 1000, // 10分钟轮询
+      onSuccess: (tokenMarketInfo: TokenDetailInfo) => {
         if (tokenMarketInfo) {
           setTokenMarketInfoList(extractedTokenMarketInfo(tokenMarketInfo));
+        } else {
+          setTokenMarketInfoList([]);
         }
       },
       onError: () => {

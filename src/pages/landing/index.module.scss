@@ -9,8 +9,12 @@
     flex-direction: column;
     width: fit-content;
     position: relative;
-    transform: translateX(-25%);
+    justify-content: space-between; /* Distribute items horizontally */
 
+    transform: translateX(-25%);
+    .bref{
+      flex: 1
+    }
     h1 {
       letter-spacing: 2px;
       color: #fbfaff;
@@ -23,20 +27,14 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      color: rgba(255, 255, 255, 0.85);
+      color: rgba(162, 160, 160, 0.85);
 
       > h2 {
         margin: 5px;
         z-index: 1;
       }
 
-      > a button {
-        padding: 2px 4px;
-        margin-top: 80px;
-        width: fit-content;
-        background: #d9d9d9;
-        border-radius: 2px;
-      }
+  
     }
 
     .chartImgList {

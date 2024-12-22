@@ -32,6 +32,25 @@
   border-radius: 10px;
 }
 
+.ant-btn-primary {
+  background-color: #7451ff !important;
+  border-color: #7451ff !important;
+  color: #fff !important;
+  transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+/* Hover state */
+.ant-btn-primary:hover {
+  background-color: #8a6eff !important; /* Lighter color */
+  border-color: #8a6eff !important;
+}
+
+/* Optional focus state for accessibility */
+.ant-btn-primary:focus {
+  background-color: #8a6eff !important;
+  border-color: #8a6eff !important;
+}
+
 a {
   font-weight: 500;
   color: #646cff;
