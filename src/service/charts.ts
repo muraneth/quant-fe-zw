@@ -14,7 +14,7 @@ interface TokenListReqDto {
   key: string;
 }
 
-export interface TokenListItem {
+export interface TokenBaseInfo {
   symbol: string;
   name: string;
   contract_address: string;
@@ -24,7 +24,7 @@ export interface TokenListItem {
   create_time: string;
 }
 
-type TokenListResDto = Array<TokenListItem>;
+type TokenListResDto = Array<TokenBaseInfo>;
 
 /**
  * 搜索 token

@@ -10,7 +10,7 @@ import {
   ExtractedTokenMarketInfoItem,
 } from "@/utils/common";
 import { useChartStore } from "@/store/charts";
-import type { TokenListItem } from "@/service/charts";
+import type { TokenBaseInfo } from "@/service/charts";
 import classNames from "classnames";
 import styles from "./index.module.scss";
 import { formatNumber } from "@/utils/common";
@@ -18,8 +18,8 @@ import { formatNumber } from "@/utils/common";
 const Header = () => {
   const [openPopover, setOpenPopover] = useImmer(false);
   const [keywords, setKeywords] = useImmer("");
-  const [currentToken, setCurrentToken] = useImmer<TokenListItem>(
-    null as unknown as TokenListItem
+  const [currentToken, setCurrentToken] = useImmer<TokenBaseInfo>(
+    null as unknown as TokenBaseInfo
   );
   const [tokenMarketInfoList, setTokenMarketInfoList] = useImmer<
     Array<ExtractedTokenMarketInfoItem>
