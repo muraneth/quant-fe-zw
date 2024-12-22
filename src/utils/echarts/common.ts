@@ -30,6 +30,7 @@ export const getPriceSeries = (klineList, klineType) => {
             borderColor: "#0FEDBE",
           },
           yAxisIndex: 0,
+          z: 0
         };
 
       case "avgPrice":
@@ -39,6 +40,7 @@ export const getPriceSeries = (klineList, klineType) => {
           type: "line",
           smooth: true,
           yAxisIndex: 0,
+          z: 0
         };
     }
   }
