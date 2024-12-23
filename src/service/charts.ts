@@ -29,6 +29,7 @@ export interface TokenDetailInfo {
 }
 export interface IndicatorUnit {
   name: string;
+  handle_name:string;
   value: number;
   value_chg: number;
 }

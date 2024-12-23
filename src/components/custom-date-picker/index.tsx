@@ -3,24 +3,37 @@ import dayjs from "dayjs";
 import MuiHOC from "@/components/mui-hoc";
 import type { WidgetProps } from "form-render";
 import styles from "./index.module.scss";
+import {QuestionCircleOutlined } from "@ant-design/icons";
+import {Tooltip} from "antd";
+
+
+
 
 const CustomDatePicker = (props: WidgetProps) => {
-  const { title, value, defaultValue, onChange } = props;
-  // console.log('custom widget props:', props);
+  const { title, value, default_value, tooltip, onChange } = props;
+
+
+  const selectedDate = value ? dayjs(value) : dayjs(default_value)
 
   const handleChange = (e: dayjs.Dayjs | null) => {
-    const formatTime = dayjs(e).format("YYYY-MM-DD");
-    onChange(formatTime);
+    if (e) {
+      const formatTime = dayjs(e).format("YYYY-MM-DD");
+      onChange(formatTime);
+    }
   };
 
   return (
     <MuiHOC>
-      <div style={{ marginTop: 50, display: "flex" }}>
+      <div style={{ marginTop: 5, display: "flex" }}>
+        {tooltip && (
+          <Tooltip title={tooltip}>
+            <QuestionCircleOutlined />
+          </Tooltip>
+        )}
         <div className={styles.customDatePicker}>
           <DatePicker
             label={title}
-            defaultValue={dayjs(defaultValue)}
-            value={dayjs(value)}
+            value={selectedDate}
             onChange={handleChange}
             slotProps={{
               popper: {

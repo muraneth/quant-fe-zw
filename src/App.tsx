@@ -5,6 +5,7 @@ import LandingPage from "./pages/landing";
 import SignIn from "./pages/sign-in";
 import SignUp from "./pages/sign-up";
 import Home from "@/pages/home";
+import Explorer from "@/pages/explorer";
 import Charts from "@/pages/charts";
 import Studio from "./pages/studio";
 import Compare from "./pages/compare";
@@ -36,6 +37,7 @@ function App() {
         <Route path="/" element={<Layout />}>
           {/* 核心的路由页面直接打进主包，非核心路由页面动态加载分包 */}
           <Route path="/home" element={<Home />} />
+          <Route path="/explorer" element={<Explorer />} />
           <Route path="/landing" element={<LandingPage />} />
           <Route path="/sign-in" element={<SignIn />} />
           <Route path="/sign-up" element={<SignUp />} />

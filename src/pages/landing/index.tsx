@@ -14,7 +14,7 @@ const chartImgList = [
 const buttomList = [
   {
     icon: svgMap["email"],
-    link: "",
+    link: "tokenalytic@gmail.com",
   },
   {
     icon: svgMap["telegram"],
@@ -46,7 +46,7 @@ const LangingPage = () => {
             <h3>We mainly focus on meme coins that</h3>
             <h3>have 100% token in circulation</h3>
             <div>
-              <Button type="primary" href="/charts">
+              <Button type="primary" href="/explorer">
                 Get Started
               </Button>
             </div>

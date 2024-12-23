@@ -7,6 +7,10 @@ import styles from "./index.module.scss";
 
 const menuList = [
   {
+    name: "Explorer",
+    path: "/explorer",
+  },
+  {
     name: "Chart",
     path: "/charts",
   },
@@ -54,8 +58,8 @@ const Layout = () => {
         </div>
         {landingPage ? (
           <div className={styles.right}>
-            <Button type="primary" href="/charts">
-              Get Started
+            <Button type="primary" href="/explorer">
+              Explore
             </Button>
           </div>
         ) : (

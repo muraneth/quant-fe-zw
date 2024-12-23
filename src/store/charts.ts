@@ -20,10 +20,10 @@ interface ChartStore {
     required_level: number;
     handle_name: string;
     name: string;
-    description: string;
-    doc: string;
-    type: IndicatorChartType;
-    param_schema: string | null;
+    description?: string;
+    doc?: string;
+    type?: IndicatorChartType;
+    param_schema?: string | null;
   };
 
   base_params: Record<string, any>;

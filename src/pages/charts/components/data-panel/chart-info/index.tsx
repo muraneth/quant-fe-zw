@@ -1,6 +1,6 @@
 import { Tooltip } from "antd";
 import classNames from "classnames";
-import { ExclamationCircleOutlined } from "@ant-design/icons";
+import { QuestionCircleOutlined } from "@ant-design/icons";
 import { useChartStore } from "@/store/charts";
 import styles from "./index.module.scss";
 
@@ -37,7 +37,7 @@ const ChartInfo = () => {
           }
           placement="right"
         >
-          <ExclamationCircleOutlined />
+          <QuestionCircleOutlined />
         </Tooltip>
       </div>
     </div>
