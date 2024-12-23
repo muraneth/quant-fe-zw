@@ -35,7 +35,7 @@ function App() {
       <Routes>
         <Route path="/" element={<Layout />}>
           {/* 核心的路由页面直接打进主包，非核心路由页面动态加载分包 */}
-          <Route path="/" element={<Home />} />
+          <Route path="/home" element={<Home />} />
           <Route path="/landing" element={<LandingPage />} />
           <Route path="/sign-in" element={<SignIn />} />
           <Route path="/sign-up" element={<SignUp />} />
