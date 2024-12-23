@@ -14,11 +14,9 @@
 
   /* 全局 css 变量 */
   /* 黑色主题 */
-  /* --primary-theme-color: #1c1d1e; */
-  --primary-theme-color: #111215;
+  --primary-theme-color: #0b0e1b;
   /* 主要内容背景暗灰 */
-  /* --primary-content-color: #222324; */
-  --primary-content-color: #121212;
+  --primary-content-color: #0b0e1b;
   /* 主要蓝 */
   --primary-blue-color: #2255ff;
 }
@@ -32,6 +30,25 @@
 ::-webkit-scrollbar-thumb {
   background: #2d2e30;
   border-radius: 10px;
+}
+
+.ant-btn-primary {
+  background-color: #7451ff !important;
+  border-color: #7451ff !important;
+  color: #fff !important;
+  transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+/* Hover state */
+.ant-btn-primary:hover {
+  background-color: #8a6eff !important; /* Lighter color */
+  border-color: #8a6eff !important;
+}
+
+/* Optional focus state for accessibility */
+.ant-btn-primary:focus {
+  background-color: #8a6eff !important;
+  border-color: #8a6eff !important;
 }
 
 a {

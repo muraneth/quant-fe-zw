@@ -14,7 +14,7 @@ interface TokenListReqDto {
   key: string;
 }
 
-export interface TokenListItem {
+export interface TokenBaseInfo {
   symbol: string;
   name: string;
   contract_address: string;
@@ -23,8 +23,19 @@ export interface TokenListItem {
   total_supply: number;
   create_time: string;
 }
+export interface TokenDetailInfo {
+  base_info: TokenBaseInfo;
+  indicator_snaps: Array<IndicatorUnit>;
+}
+export interface IndicatorUnit {
+  name: string;
+  handle_name:string;
+  value: number;
+  value_chg: number;
+}
 
-type TokenListResDto = Array<TokenListItem>;
+
+type TokenListResDto = Array<TokenBaseInfo>;
 
 /**
  * 搜索 token
@@ -49,7 +60,7 @@ interface TokenMarketInfoReqDto {
  */
 export function getTokenMarketInfo(
   params: TokenMarketInfoReqDto
-): Promise<Record<string, any>> {
+): Promise<TokenDetailInfo | null> {
   return request({
     url: "/data/api/token/getTokenMarketInfo",
     method: "GET",

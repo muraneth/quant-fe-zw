@@ -1,11 +1,15 @@
 import { Outlet, useLocation } from "react-router-dom";
 import { Link } from "react-router-dom";
-import { Divider } from "antd";
+import { Divider, Button } from "antd";
 import PersonalInfo from "./personal-info";
 import ErrorBoundary from "@/components/error-boundary";
 import styles from "./index.module.scss";
 
 const menuList = [
+  {
+    name: "Explorer",
+    path: "/explorer",
+  },
   {
     name: "Chart",
     path: "/charts",
@@ -53,7 +57,11 @@ const Layout = () => {
           })}
         </div>
         {landingPage ? (
-          <div className={styles.right}>Get Started</div>
+          <div className={styles.right}>
+            <Button type="primary" href="/explorer">
+              Explore
+            </Button>
+          </div>
         ) : (
           <PersonalInfo />
         )}

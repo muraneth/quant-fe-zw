@@ -5,6 +5,7 @@ import { useChartStore } from "@/store/charts";
 import { svgMap } from "@/constants/svg";
 import type { GetProp } from "antd";
 import styles from "./index.module.scss";
+import CustomDatePicker from "@/components/custom-date-picker";
 
 
 const options = [
@@ -74,12 +75,13 @@ const IndicatorParam = () => {
         <FormRender
           form={form}
           schema={extra_params_schema}
+          widgets={{ CustomDatePicker }}
           watch={{
             "#": (allValues) => {
               handleExtraChange(allValues);
             },
           }}
-          style={{ marginLeft: 24, width: 300 }}
+          style={{ marginLeft: 24, width: 200 }}
           fieldCol={17}
         />
       ) : null}
