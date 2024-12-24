@@ -162,3 +162,36 @@ export function getBasePrice(
     params,
   });
 }
+
+interface CollectIndicatorReqDto {
+  handle_name: string;
+  base_params?: string;
+  extra_params?: string;
+}
+export function collectIndicator(
+  params: CollectIndicatorReqDto
+): Promise<void> {
+  return request({
+    url: "/data/api/userIndicator/collectInd",
+    method: "POST",
+    params,
+  });
+}
+export function unCollectIndicator(
+  params: CollectIndicatorReqDto
+): Promise<void> {
+  return request({
+    url: "/data/api/userIndicator/uncollectInd",
+    method: "POST",
+    params,
+  });
+} 
+export function saveIndicatorParam(
+  params: CollectIndicatorReqDto
+): Promise<void> {
+  return request({
+    url: "/data/api/userIndicator/saveIndParam",
+    method: "POST",
+    params,
+  });
+}

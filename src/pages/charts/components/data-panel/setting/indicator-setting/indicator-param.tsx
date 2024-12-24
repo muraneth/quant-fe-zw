@@ -1,12 +1,13 @@
 import * as React from "react";
-import { Checkbox, Popover } from "antd";
+import { Button, Checkbox, Popover } from "antd";
 import FormRender, { useForm } from "form-render";
 import { useChartStore } from "@/store/charts";
 import { svgMap } from "@/constants/svg";
 import type { GetProp } from "antd";
 import styles from "./index.module.scss";
 import CustomDatePicker from "@/components/custom-date-picker";
-
+import { saveIndicatorParam } from "@/service/charts";
+import { useRequest } from "ahooks";
 
 const options = [
   { label: "DEX", value: "DEX" },
@@ -17,7 +18,10 @@ const options = [
 ];
 
 const IndicatorParam = () => {
+  const { handle_name } = useChartStore.use.indicatorInfo();
+
   const base_params = useChartStore.use.base_params();
+  const extra_params = useChartStore.use.extra_params();
   const setBaseParams = useChartStore.use.setBaseParams();
   const setExtraParams = useChartStore.use.setExtraParams();
   const indicatorInfo = useChartStore.use.indicatorInfo();
@@ -44,6 +48,14 @@ const IndicatorParam = () => {
   const handleExtraChange = (allValues: Record<string, any>) => {
     setExtraParams(allValues);
   };
+  const { runAsync: runSaveIndicator, loading: collectLoading } = useRequest(
+    () => saveIndicatorParam({
+        handle_name,
+        base_params: JSON.stringify(base_params),
+        extra_params: JSON.stringify(extra_params),
+    }), 
+    { manual: true }
+);
 
   React.useEffect(() => {
     form.resetFields();
@@ -72,18 +84,23 @@ const IndicatorParam = () => {
         </Popover>
       ) : null}
       {extra_params_schema ? (
-        <FormRender
-          form={form}
-          schema={extra_params_schema}
-          widgets={{ CustomDatePicker }}
-          watch={{
-            "#": (allValues) => {
-              handleExtraChange(allValues);
-            },
-          }}
-          style={{ marginLeft: 24, width: 200 }}
-          fieldCol={17}
-        />
+        <div style={{alignItems: "center",display: "flex"}}>
+          <FormRender
+            form={form}
+            schema={extra_params_schema}
+            widgets={{ CustomDatePicker }}
+            watch={{
+              "#": (allValues) => {
+                handleExtraChange(allValues);
+              },
+            }}
+            style={{ marginLeft: 24, width: 200 }}
+            fieldCol={17}
+          />
+          <Button onClick={runSaveIndicator}>
+            save
+          </Button>
+        </div>
       ) : null}
     </div>
   );

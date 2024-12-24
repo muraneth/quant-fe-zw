@@ -24,6 +24,7 @@ interface ChartStore {
     doc?: string;
     type?: IndicatorChartType;
     param_schema?: string | null;
+    collected?: boolean;
   };
 
   base_params: Record<string, any>;
