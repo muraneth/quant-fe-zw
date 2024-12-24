@@ -9,12 +9,15 @@ import {
 } from "@/service/charts";
 
 interface ChartStore {
+  // 用户当前选择的左上 token 数据
   tokenInfo: {
     symbol: string;
     chain: string;
     start_time: string;
     end_time: string;
   };
+
+  // 用户当前选择的左侧某个 indicator 数据
   indicatorInfo: {
     category?: string;
     required_level: number;
@@ -26,14 +29,31 @@ interface ChartStore {
     param_schema?: string | null;
     collected?: boolean;
   };
+
+  // 用户当前选择的左侧某个 indicator 的详情数据
+  indicatorDetailList: Array<Record<string, any>> | null;
+
+  // chart 设置数据
   base_params: Record<string, any>;
   extra_params: Record<string, any>;
   klineType: "kline" | "avgPrice";
-  options: Record<string, any> | null;
+
+  // 价格列表
   priceList: BasePriceResDto | null;
-  indicatorDetailList: IndicatorListResDto | null;
+
+  // 根据当前选择的 indicator 数据以及 chart 设置的数据，构造出的 echarts options
+  options: Record<string, any> | null;
+
+  // 左侧全量 indicator 数据
+  indicatorList: IndicatorListResDto;
+
+  // 重置 chart 部分数据 
   resetChartPanelData: ({ refreshChart }: { refreshChart: boolean }) => void;
+
+  // 重置当前 store 所有数据
   removeChartStore: () => void;
+
+  // 数据更新统一方法
   setDraftData: (callback: (draft: WritableDraft<ChartStore>) => void) => void;
 }
 
@@ -60,6 +80,7 @@ const initialState = {
   options: null,
   priceList: [],
   indicatorDetailList: [],
+  indicatorList: []
 }
 
 const useChartStore = createSelectors(

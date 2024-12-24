@@ -1,12 +1,26 @@
 import { StarOutlined, StarFilled } from "@ant-design/icons";
 import { useRequest } from "ahooks";
-import { collectIndicator, unCollectIndicator } from "@/service/charts";
+import {
+  collectIndicator,
+  unCollectIndicator,
+  getIndicatorList,
+} from "@/service/charts";
 import { useChartStore } from "@/store/charts";
+
 const ChartOperation = () => {
   const { handle_name, collected } = useChartStore.use.indicatorInfo();
   const base_params = useChartStore.use.base_params();
   const extra_params = useChartStore.use.extra_params();
   const setDraftData = useChartStore.use.setDraftData();
+
+  const { run: runGetIndicatorList } = useRequest(getIndicatorList, {
+    manual: true,
+    onSuccess: (res) => {
+      setDraftData((draft) => {
+        draft.indicatorList = res;
+      });
+    },
+  });
 
   const { runAsync: runCollect, loading: collectLoading } = useRequest(
     collectIndicator,
@@ -16,6 +30,7 @@ const ChartOperation = () => {
         setDraftData((draft) => {
           draft.indicatorInfo.collected = true;
         });
+        runGetIndicatorList();
       },
       onError: (error) => {
         console.error("Failed to toggle collection status:", error);
@@ -31,6 +46,7 @@ const ChartOperation = () => {
         setDraftData((draft) => {
           draft.indicatorInfo.collected = false;
         });
+        runGetIndicatorList();
       },
       onError: (error) => {
         console.error("Failed to toggle collection status:", error);
