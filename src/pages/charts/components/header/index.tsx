@@ -74,17 +74,19 @@ const Header = () => {
     }
   );
 
-  const setTokenInfo = useChartStore.use.setTokenInfo();
+  const setDraftData = useChartStore.use.setDraftData();
   const resetChartPanelData = useChartStore.use.resetChartPanelData();
 
   React.useEffect(() => {
     if (currentToken) {
       resetChartPanelData({ refreshChart: true });
-      setTokenInfo({
-        symbol: currentToken.symbol,
-        chain: currentToken.chain,
-        start_time: "",
-        end_time: "",
+      setDraftData((draft) => {
+        draft.tokenInfo = {
+          symbol: currentToken.symbol,
+          chain: currentToken.chain,
+          start_time: "",
+          end_time: "",
+        };
       });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps

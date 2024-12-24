@@ -18,14 +18,14 @@ const options = [
 ];
 
 const IndicatorParam = () => {
+  const setDraftData = useChartStore.use.setDraftData();
+  
   const { handle_name } = useChartStore.use.indicatorInfo();
 
   const base_params = useChartStore.use.base_params();
   const extra_params = useChartStore.use.extra_params();
-  const setBaseParams = useChartStore.use.setBaseParams();
-  const setExtraParams = useChartStore.use.setExtraParams();
-  const indicatorInfo = useChartStore.use.indicatorInfo();
-  const param_schema = indicatorInfo.param_schema;
+
+  const { param_schema } = useChartStore.use.indicatorInfo();
   const { use_base_param, extra_params_schema } =
     JSON.parse((param_schema || null) as string) || {};
   if (extra_params_schema) {
@@ -38,28 +38,33 @@ const IndicatorParam = () => {
   const handleBaseChange: GetProp<typeof Checkbox.Group, "onChange"> = (
     checkedValues
   ) => {
-    setBaseParams({
-      exclude_wallets: {
-        by_labels: checkedValues,
-      },
+    setDraftData((draft) => {
+      draft.base_params = {
+        exclude_wallets: {
+          by_labels: checkedValues,
+        },
+      };
     });
   };
 
   const handleExtraChange = (allValues: Record<string, any>) => {
-    setExtraParams(allValues);
+    setDraftData(draft => {
+      draft.extra_params = allValues;
+    })
   };
   const { runAsync: runSaveIndicator, loading: collectLoading } = useRequest(
-    () => saveIndicatorParam({
+    () =>
+      saveIndicatorParam({
         handle_name,
         base_params: JSON.stringify(base_params),
         extra_params: JSON.stringify(extra_params),
-    }), 
+      }),
     { manual: true }
-);
+  );
 
   React.useEffect(() => {
     form.resetFields();
-  }, [form, extra_params_schema])
+  }, [form, extra_params_schema]);
 
   return (
     <div className={styles.setting}>
@@ -84,7 +89,7 @@ const IndicatorParam = () => {
         </Popover>
       ) : null}
       {extra_params_schema ? (
-        <div style={{alignItems: "center",display: "flex"}}>
+        <div style={{ alignItems: "center", display: "flex" }}>
           <FormRender
             form={form}
             schema={extra_params_schema}
@@ -97,9 +102,7 @@ const IndicatorParam = () => {
             style={{ marginLeft: 24, width: 200 }}
             fieldCol={17}
           />
-          <Button onClick={runSaveIndicator}>
-            save
-          </Button>
+          <Button onClick={runSaveIndicator}>save</Button>
         </div>
       ) : null}
     </div>

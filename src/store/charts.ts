@@ -1,4 +1,5 @@
 import { create } from "zustand";
+import { WritableDraft } from 'immer';
 import { immer } from "zustand/middleware/immer";
 import { createSelectors } from "@/utils/store";
 import {
@@ -15,7 +16,6 @@ interface ChartStore {
     end_time: string;
   };
   indicatorInfo: {
-    id?: string;
     category?: string;
     required_level: number;
     handle_name: string;
@@ -26,27 +26,15 @@ interface ChartStore {
     param_schema?: string | null;
     collected?: boolean;
   };
-
   base_params: Record<string, any>;
   extra_params: Record<string, any>;
   klineType: "kline" | "avgPrice";
   options: Record<string, any> | null;
   priceList: BasePriceResDto | null;
   indicatorDetailList: IndicatorListResDto | null;
-
-  setTokenInfo: (tokenInfo: ChartStore["tokenInfo"]) => void;
-  setIndicatorInfo: (indicatorInfo: ChartStore["indicatorInfo"]) => void;
-  setBaseParams: (base_params: ChartStore["base_params"]) => void;
-  setExtraParams: (extra_params: ChartStore["extra_params"]) => void;
-  setKlineType: (klineType: ChartStore["klineType"]) => void;
-  setOptions: (options: ChartStore["options"]) => void;
-  setPriceList: (priceList: ChartStore["priceList"]) => void;
-  setIndicatorDetailList: (
-    indicatorDetailList: ChartStore["indicatorDetailList"]
-  ) => void;
-
   resetChartPanelData: ({ refreshChart }: { refreshChart: boolean }) => void;
   removeChartStore: () => void;
+  setDraftData: (callback: (draft: WritableDraft<ChartStore>) => void) => void;
 }
 
 const initialState = {
@@ -78,41 +66,6 @@ const useChartStore = createSelectors(
   create<ChartStore>()(
     immer((set) => ({
       ...initialState,
-
-      setTokenInfo: (tokenInfo) =>
-        set((draft) => {
-          draft.tokenInfo = tokenInfo;
-        }),
-      setIndicatorInfo: (indicatorInfo) =>
-        set((draft) => {
-          draft.indicatorInfo = indicatorInfo;
-        }),
-      setBaseParams: (base_params) =>
-        set((draft) => {
-          draft.base_params = base_params;
-        }),
-      setExtraParams: (extra_params) =>
-        set((draft) => {
-          draft.extra_params = extra_params;
-        }),
-      setKlineType: (klineType) =>
-        set((draft) => {
-          draft.klineType = klineType;
-        }),
-
-      setOptions: (options) =>
-        set((draft) => {
-          draft.options = options;
-        }),
-      setPriceList: (priceList) =>
-        set((draft) => {
-          draft.priceList = priceList;
-        }),
-      setIndicatorDetailList: (indicatorDetailList) =>
-        set((draft) => {
-          draft.indicatorDetailList = indicatorDetailList;
-        }),
-
       resetChartPanelData: ({ refreshChart }) =>
         set((draft) => {
           draft.base_params = {};
@@ -125,6 +78,10 @@ const useChartStore = createSelectors(
           }
         }),
       removeChartStore: () => set(initialState),
+      setDraftData: (callback) =>
+        set((draft) => {
+          callback(draft);
+        }),
     }))
   )
 );

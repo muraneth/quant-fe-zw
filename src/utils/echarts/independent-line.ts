@@ -25,7 +25,7 @@ export function independentLineTransform({
         return result;
       },
     },
-    xAxis: [getXAxis(priceList)],
+    xAxis: priceList?.length ? [getXAxis(priceList)] : [],
     yAxis: [],
     series: [],
   };

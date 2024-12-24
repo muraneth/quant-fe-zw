@@ -17,9 +17,7 @@ const EchartsPanel = () => {
   const extra_params = useChartStore.use.extra_params();
   const options = useChartStore.use.options();
 
-  const setOptions = useChartStore.use.setOptions();
-  const setIndicatorDetailList = useChartStore.use.setIndicatorDetailList();
-  const setPriceList = useChartStore.use.setPriceList();
+  const setDraftData = useChartStore.use.setDraftData();
 
   const {
     loading: getIndicatorDetailLoading,
@@ -34,7 +32,7 @@ const EchartsPanel = () => {
         chain,
         start_time,
         end_time,
-        handle_name: handle_name,
+        handle_name,
         base_params,
         extra_params,
       });
@@ -50,7 +48,9 @@ const EchartsPanel = () => {
         extra_params,
       ],
       onSuccess: (res) => {
-        setIndicatorDetailList(res);
+        setDraftData(draft => {
+          draft.indicatorDetailList = res;
+        })
       },
     }
   );
@@ -61,8 +61,7 @@ const EchartsPanel = () => {
     run: runGetBasePrice,
   } = useRequest(
     () => {
-      if (!symbol || !chain)
-        return [] as unknown as Promise<any>;
+      if (!symbol || !chain) return [] as unknown as Promise<any>;
       return getBasePrice({
         symbol,
         chain,
@@ -71,28 +70,25 @@ const EchartsPanel = () => {
       });
     },
     {
-      refreshDeps: [
-        symbol,
-        chain,
-        start_time,
-        end_time,
-      ],
+      refreshDeps: [symbol, chain, start_time, end_time],
       onSuccess: (res) => {
-        setPriceList(res);
+        setDraftData(draft => {
+          draft.priceList = res;
+        })
       },
     }
   );
 
   React.useEffect(() => {
-    if (indicatorDetailList && priceList && klineType && type) {
-      setOptions(
-        generateOptions({
+    if (indicatorDetailList?.length && priceList?.length && klineType && type) {
+      setDraftData(draft => {
+        draft.options = generateOptions({
           type,
           indicatorDetailList,
           priceList,
           klineType,
         })
-      );
+      })
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [indicatorDetailList, priceList, klineType, type]);

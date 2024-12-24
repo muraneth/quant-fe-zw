@@ -9,30 +9,28 @@ import { useLocation } from "react-router-dom";
 
 
 const Charts = () => {
-  const removeChartStore = useChartStore.use.removeChartStore();
-  const setIndicatorInfo = useChartStore.use.setIndicatorInfo();
   const location = useLocation();
-
-  // Parse query parameters
   const queryParams = new URLSearchParams(location.search);
   const symbol = queryParams.get("symbol");
-  const handleName = queryParams.get("handle_name");
+  const handle_name = queryParams.get("handle_name");
+  const type = queryParams.get("type") as any;
+
+  const removeChartStore = useChartStore.use.removeChartStore();
+  const setDraftData = useChartStore.use.setDraftData();
+
+  
   React.useEffect(() => {
-    if (symbol && handleName) {
-      setIndicatorInfo({
-        handle_name: handleName,
-        name:"",
-        description:"",
-        doc:"",
-        required_level:0,
-        // type:"",
-        id:"",
-        param_schema:"",
-        category:""
-      });
+    if (symbol && handle_name && type) {
+      // url参数解析设置
+      setDraftData(draft => {
+        draft.tokenInfo.symbol = symbol;
+        draft.indicatorInfo.handle_name = handle_name;
+        draft.indicatorInfo.type = type;
+      })
     }
    
-  }, [symbol, handleName]);
+  }, [symbol, handle_name, type, setDraftData]);
+
   React.useEffect(() => {
     return () => {
       removeChartStore();

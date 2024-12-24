@@ -13,13 +13,11 @@ const IndicatorItem: React.FC<IndicatorItemProps> = ({
   description = "",
   doc,
   type,
-  id,
   param_schema,
   category,
 }) => {
+  const setDraftData = useChartStore.use.setDraftData();
   const indicatorInfo = useChartStore.use.indicatorInfo();
-  const setIndicatorInfo = useChartStore.use.setIndicatorInfo();
-  const setExtraParams = useChartStore.use.setExtraParams();
   const resetChartPanelData = useChartStore.use.resetChartPanelData();
 
   const getDefaultExtraParams = () => {
@@ -47,24 +45,27 @@ const IndicatorItem: React.FC<IndicatorItemProps> = ({
     resetChartPanelData({
       refreshChart: indicatorInfo.category !== category,
     });
-    setIndicatorInfo({
-      handle_name,
-      name,
-      description,
-      doc,
-      required_level,
-      type,
-      id,
-      param_schema,
-      category
+    setDraftData((draft) => {
+      draft.indicatorInfo = {
+        handle_name,
+        name,
+        description,
+        doc,
+        required_level,
+        type,
+        param_schema,
+        category,
+      };
     });
-    setExtraParams(getDefaultExtraParams());
+    setDraftData(draft => {
+      draft.extra_params = getDefaultExtraParams();
+    })
   };
 
   return (
     <div
       className={classNames(styles.indicatorItem, [
-        { [styles.indicatorItemActive]: indicatorInfo.id === id },
+        { [styles.indicatorItemActive]: indicatorInfo.handle_name === handle_name },
       ])}
       onClick={chooseIndicator}
     >
