@@ -4,8 +4,10 @@
   display: flex;
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
   background: var(--primary-content-color);
+  justify-content: space-between;
+  align-items: center;
 
-  .left {
+  .info {
     display: flex;
     align-items: center;
 
