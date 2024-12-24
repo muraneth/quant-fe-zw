@@ -186,3 +186,12 @@ export function unCollectIndicator(
     params,
   });
 } 
+export function saveIndicatorParam(
+  params: CollectIndicatorReqDto
+): Promise<void> {
+  return request({
+    url: "/data/api/userIndicator/saveIndParam",
+    method: "POST",
+    params,
+  });
+}
