@@ -22,29 +22,6 @@ const Explorer :React.FC = () =>{
     { name: "AvgCost", description: "The average cost of token..." },
   ];
 
-  const columns = [
-    {
-      title: "Column 1",
-      dataIndex: "col1",
-      key: "col1",
-    },
-    {
-      title: "Column 2",
-      dataIndex: "col2",
-      key: "col2",
-    },
-    {
-      title: "Column 3",
-      dataIndex: "col3",
-      key: "col3",
-    },
-  ];
-
-  const data = [
-    { key: "1", col1: "Row 1", col2: "Data", col3: "Data" },
-    { key: "2", col1: "Row 2", col2: "Data", col3: "Data" },
-    { key: "3", col1: "Row 3", col2: "Data", col3: "Data" },
-  ];
 
   const handleTokenChange = (e: CheckboxChangeEvent) => {
     console.log(`${e.target.value} is ${e.target.checked ? "selected" : "deselected"}`);
