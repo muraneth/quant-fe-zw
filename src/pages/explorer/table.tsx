@@ -12,10 +12,8 @@ const TokenTable = () => {
     Array<TokenDetailInfo>
   >([]);
   const [userConfig, setUserConfig] = useImmer<UserConfig>({} as UserConfig);
-  const [indReq, setIndReq] = useImmer<Array<IndicatorDetailReqDto>>({} as Array<IndicatorDetailReqDto>);
   const navigate = useNavigate();
-
-  const { loading: getConfigLoading } = useRequest(
+ useRequest(
     () => {
       return getUserConfig();
     },
@@ -36,20 +34,18 @@ const TokenTable = () => {
           // extra_params: ind.extra_params,
         });
       }
-      setIndReq(() => indReqTemp);
-    }
-    if (userConfig.tokens) {
+      if (userConfig.tokens) {
       
-      for (const token of userConfig.tokens) {
-        const  tokenReq = {
-          symbol: token,
-          indicators: indReq,
-        } as TokenSnapReq;
-        runGetTokenSnap(tokenReq);
-        
+        for (const token of userConfig.tokens) {
+          const  tokenReq = {
+            symbol: token,
+            indicators: indReqTemp,
+          } as TokenSnapReq;
+          runGetTokenSnap(tokenReq); 
+        }
       }
-      
     }
+    
   }, [userConfig]);
 
   const { runAsync: runGetTokenSnap, loading: tokenIndLoading } = useRequest(
@@ -60,11 +56,12 @@ const TokenTable = () => {
         console.log("res",res);
         
         setTokenDetailList((prev) => {
-          // Append the new response to the existing list
+        
           return [...prev, res];
         });
       },
       onError: (error) => {
+
         console.error("Failed to fetch token data:", error);
       },
     }
