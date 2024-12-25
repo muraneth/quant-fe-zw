@@ -82,6 +82,7 @@ export interface Indicator {
   doc: string;
   is_active: boolean;
   param_schema: string;
+  collected: boolean;
 }
 
 export interface Group {
@@ -107,13 +108,13 @@ export function getIndicatorList(): Promise<IndicatorListResDto> {
   });
 }
 
-interface IndicatorDetailReqDto {
-  symbol: string;
-  chain: string;
-  start_time: string;
-  end_time: string;
-  handle_name: string;
-  base_params: Record<string, any>;
+export interface IndicatorDetailReqDto {
+  symbol?: string;
+  chain?: string;
+  start_time?: string;
+  end_time?: string;
+  handle_name?: string;
+  base_params?: Record<string, any>;
   extra_params?: Record<string, any>;
 }
 

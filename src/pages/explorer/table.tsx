@@ -1,31 +1,79 @@
 import { useMemo } from "react";
 import { Table } from "antd";
 import { useRequest } from "ahooks";
-import { getTokenDetailList } from "@/service/studio-home";
-import { TokenDetailInfo, TokenBaseInfo } from "@/service/charts";
+import { getUserConfig,getTokenSnap,UserConfig,TokenSnapReq } from "@/service/explorer";
+import { TokenDetailInfo, TokenBaseInfo,IndicatorDetailReqDto } from "@/service/charts";
 import { useImmer } from "use-immer";
 import { formatNumber } from "@/utils/common";
 import { useNavigate } from "react-router-dom";
+import { useEffect } from "react";
 const TokenTable = () => {
   const [tokenDetailList, setTokenDetailList] = useImmer<
     Array<TokenDetailInfo>
   >([]);
+  const [userConfig, setUserConfig] = useImmer<UserConfig>({} as UserConfig);
+  const [indReq, setIndReq] = useImmer<Array<IndicatorDetailReqDto>>({} as Array<IndicatorDetailReqDto>);
   const navigate = useNavigate();
 
-  const { loading: getTableLoading } = useRequest(
+  const { loading: getConfigLoading } = useRequest(
     () => {
-      return getTokenDetailList();
+      return getUserConfig();
     },
     {
       refreshDeps: [],
       onSuccess: (res) => {
-        setTokenDetailList(res);
+        setUserConfig(res);
+      },
+    }
+  );
+  useEffect(() => {
+    if (userConfig.indicators) {
+      const indReqTemp = [] as Array<IndicatorDetailReqDto>;
+      for (const ind of userConfig.indicators) {
+        indReqTemp.push({
+          handle_name:ind.handle_name,
+          // todo 如何从schema中获取默认的extra_params
+          // extra_params: ind.extra_params,
+        });
+      }
+      setIndReq(() => indReqTemp);
+    }
+    if (userConfig.tokens) {
+      
+      for (const token of userConfig.tokens) {
+        const  tokenReq = {
+          symbol: token,
+          indicators: indReq,
+        } as TokenSnapReq;
+        runGetTokenSnap(tokenReq);
+        
+      }
+      
+    }
+  }, [userConfig]);
+
+  const { runAsync: runGetTokenSnap, loading: tokenIndLoading } = useRequest(
+    getTokenSnap,
+    {
+      manual: true,
+      onSuccess: (res) => {
+        console.log("res",res);
+        
+        setTokenDetailList((prev) => {
+          // Append the new response to the existing list
+          return [...prev, res];
+        });
+      },
+      onError: (error) => {
+        console.error("Failed to fetch token data:", error);
       },
     }
   );
 
   const columns = useMemo(() => {
     // Base columns for token info
+    console.log("tokenDetailList",tokenDetailList);
+    
     const baseColumns = [
       {
         title: "Token",
@@ -51,6 +99,9 @@ const TokenTable = () => {
               }}
             />
             <span>{baseInfo.symbol}</span>
+            <span style={{ color: "gray", marginLeft: 8 }}>
+              {baseInfo.name}
+            </span>
           </div>
         ),
       },
@@ -118,7 +169,7 @@ const TokenTable = () => {
         columns={columns}
         dataSource={tokenDetailList}
         rowKey={(record) => record.base_info.contract_address}
-        loading={getTableLoading}
+        loading={tokenIndLoading}
         bordered
         scroll={{ x: "max-content" }}
       />
