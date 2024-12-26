@@ -8,6 +8,7 @@ export enum IndicatorChartType {
   Y_BAR = "y_bar",
   Y_BAR_STACK = "y_bar_stack",
   AREA_STACK = "area_stack",
+  AREA_SEPERATED = "area_seperated",
 }
 
 interface TokenListReqDto {

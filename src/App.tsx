@@ -12,7 +12,7 @@ import Compare from "./pages/compare";
 import Wallet from "./pages/wallet";
 import Subscribe from "./pages/subscribe";
 import Payment from "./pages/payment";
-
+import TestComp from "./pages/test";
 function App() {
   return (
     <ConfigProvider
@@ -47,6 +47,7 @@ function App() {
           <Route path="/wallet" element={<Wallet />} />
           <Route path="/pricing" element={<Subscribe />} />
           <Route path="/payment" element={<Payment />} />
+          <Route path="/test" element={<TestComp/>} />
         </Route>
         <Route path="*" element={<Navigate to="/" />} />
       </Routes>

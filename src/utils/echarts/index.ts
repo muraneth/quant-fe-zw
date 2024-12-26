@@ -8,6 +8,7 @@ import { yBarTransform } from "./y-bar";
 import { yBarStackTransform } from "./y-bar-stack";
 import { IndicatorChartType } from "@/service/charts";
 import {areaStackTransform} from "./area-stack";
+import {areaSeperatedTransform} from "./area-seperated";
 export function generateOptions({
   type,
   indicatorDetailList = [] as any,
@@ -34,6 +35,8 @@ export function generateOptions({
       return yBarStackTransform({ indicatorDetailList, priceList, klineType });
     case IndicatorChartType.AREA_STACK:
       return areaStackTransform({ indicatorDetailList, priceList, klineType });
+    case IndicatorChartType.AREA_SEPERATED:
+      return areaSeperatedTransform({ indicatorDetailList, priceList, klineType });
     default:
       return {};
   }
