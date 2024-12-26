@@ -24,8 +24,15 @@ const IndicatorItem: React.FC<IndicatorItemProps> = (indicatorInfoItem) => {
 
       Object.keys(properties).forEach((key) => {
         const prop = properties[key];
-        if (prop?.default !== undefined && prop?.default !== null) {
+        const defaultValue = prop?.default;
+        const customWidgetDefaultValue = prop?.props?.default_value;
+        if (defaultValue !== undefined && defaultValue !== null) {
           defaultExtraParams[key] = prop.default;
+        } else if (
+          customWidgetDefaultValue !== undefined &&
+          customWidgetDefaultValue !== null
+        ) {
+          defaultExtraParams[key] = prop.props.default_value;
         }
       });
 

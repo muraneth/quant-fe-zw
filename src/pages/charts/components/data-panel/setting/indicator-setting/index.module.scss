@@ -38,6 +38,21 @@
       }
     }
 
+    .saveParam {
+      margin-left: 24px;
+      color: #a0aec0;
+      font-size: 12px;
+      :global {
+        .ant-btn-variant-outlined {
+          border-color: none;
+        }
+        .ant-btn-sm {
+          height: 20px;
+          padding: 2px 5px; 
+        }
+      }
+    }
+
     :global {
       .ant-form-item {
         margin-bottom: 0;
