@@ -6,16 +6,10 @@ import styles from "./index.module.scss";
 
 type IndicatorItemProps = Indicator;
 
-const IndicatorItem: React.FC<IndicatorItemProps> = ({
-  required_level = 1,
-  name = "",
-  handle_name = "",
-  description = "",
-  doc,
-  type,
-  param_schema,
-  category,
-}) => {
+const IndicatorItem: React.FC<IndicatorItemProps> = (indicatorInfoItem) => {
+  const { param_schema, category, handle_name, required_level, name } =
+    indicatorInfoItem || {};
+
   const setDraftData = useChartStore.use.setDraftData();
   const indicatorInfo = useChartStore.use.indicatorInfo();
   const resetChartPanelData = useChartStore.use.resetChartPanelData();
@@ -46,26 +40,20 @@ const IndicatorItem: React.FC<IndicatorItemProps> = ({
       refreshChart: indicatorInfo.category !== category,
     });
     setDraftData((draft) => {
-      draft.indicatorInfo = {
-        handle_name,
-        name,
-        description,
-        doc,
-        required_level,
-        type,
-        param_schema,
-        category,
-      };
+      draft.indicatorInfo = indicatorInfoItem;
     });
-    setDraftData(draft => {
+    setDraftData((draft) => {
       draft.extra_params = getDefaultExtraParams();
-    })
+    });
   };
 
   return (
     <div
       className={classNames(styles.indicatorItem, [
-        { [styles.indicatorItemActive]: indicatorInfo.handle_name === handle_name },
+        {
+          [styles.indicatorItemActive]:
+            indicatorInfo.handle_name === handle_name,
+        },
       ])}
       onClick={chooseIndicator}
     >

@@ -3,6 +3,7 @@ import { WritableDraft } from 'immer';
 import { immer } from "zustand/middleware/immer";
 import { createSelectors } from "@/utils/store";
 import {
+  Indicator,
   IndicatorChartType,
   IndicatorListResDto,
   BasePriceResDto,
@@ -18,17 +19,7 @@ interface ChartStore {
   };
 
   // 用户当前选择的左侧某个 indicator 数据
-  indicatorInfo: {
-    category?: string;
-    required_level: number;
-    handle_name: string;
-    name: string;
-    description?: string;
-    doc?: string;
-    type?: IndicatorChartType;
-    param_schema?: string | null;
-    collected?: boolean;
-  };
+  indicatorInfo: Indicator;
 
   // 用户当前选择的左侧某个 indicator 的详情数据
   indicatorDetailList: Array<Record<string, any>> | null;
@@ -72,7 +63,7 @@ const initialState = {
     doc: "",
     type: null as unknown as IndicatorChartType.INDEPENDENT_LINE,
     param_schema: null,
-  },
+  } as unknown as Indicator,
   base_params: {},
   extra_params: {},
   klineType: "kline" as any,

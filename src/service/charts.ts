@@ -82,6 +82,7 @@ export interface Indicator {
   doc: string;
   is_active: boolean;
   param_schema: string;
+  collected: boolean;
 }
 
 export interface Group {
