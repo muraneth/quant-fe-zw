@@ -10,7 +10,7 @@ const { Header, Content,Sider } = Layout;
 const Explorer :React.FC = () =>{
   const [isDrawerOpen, setDrawerOpen] = useState(false);
 
-  const drawerWidth = 300; // Width of the drawer
+  const drawerWidth = 240; // Width of the drawer
 
   const tokens = [
     { name: "DOGE", description: "Department of Government", address: "0x1234" },
