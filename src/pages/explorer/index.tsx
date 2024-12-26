@@ -4,13 +4,13 @@ import React, { useState } from "react";
 import { Layout, Input, Checkbox, List, Table, Button } from "antd";
 import { MenuOutlined } from "@ant-design/icons";
 import type { CheckboxChangeEvent } from "antd/es/checkbox";
-
+import Search from './search';
 const { Header, Content,Sider } = Layout;
 
 const Explorer :React.FC = () =>{
   const [isDrawerOpen, setDrawerOpen] = useState(false);
 
-  const drawerWidth = 300; // Width of the drawer
+  const drawerWidth = 230; // Width of the drawer
 
   const tokens = [
     { name: "DOGE", description: "Department of Government", address: "0x1234" },
@@ -44,11 +44,11 @@ const Explorer :React.FC = () =>{
           // background: "#f0f2f5",
           zIndex: 1000,
           display: isDrawerOpen ? "block" : "none",
-          padding: "16px",
+          padding: "3px",
           marginTop: "41px",
         }}
       >
-        <div>
+        {/* <div>
           <h3>Token</h3>
           <Input.Search placeholder="Search token" style={{ marginBottom: "16px" }} />
           <List
@@ -61,11 +61,11 @@ const Explorer :React.FC = () =>{
               </List.Item>
             )}
           />
-        </div>
+        </div> */}
         <div style={{ marginTop: "32px" }}>
-          <h3>Indicator</h3>
-          <Input.Search placeholder="Search indicator" style={{ marginBottom: "16px" }} />
-          <List
+          {/* <h3>Indicator</h3> */}
+          <Search />
+          {/* <List
             dataSource={indicators}
             renderItem={(indicator) => (
               <List.Item>
@@ -74,7 +74,7 @@ const Explorer :React.FC = () =>{
                 </Checkbox>
               </List.Item>
             )}
-          />
+          /> */}
         </div>
       </Sider>
 
