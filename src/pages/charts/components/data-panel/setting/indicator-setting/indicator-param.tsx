@@ -9,7 +9,7 @@ import CustomDatePicker from "@/components/custom-date-picker";
 import { saveIndicatorParam } from "@/service/charts";
 import { useRequest } from "ahooks";
 
-const options = [
+const label_options = [
   { label: "DEX", value: "DEX" },
   { label: "CEX", value: "CEX" },
   { label: "MEV Bot", value: "MEV Bot" },
@@ -22,7 +22,7 @@ const IndicatorParam = () => {
 
   const base_params = useChartStore.use.base_params();
   const extra_params = useChartStore.use.extra_params();
-
+  const  chart_options  = useChartStore.use.options();
   const { param_schema, handle_name } = useChartStore.use.indicatorInfo();
   const { use_base_param, extra_params_schema } =
     JSON.parse((param_schema || null) as string) || {};
@@ -54,6 +54,16 @@ const IndicatorParam = () => {
     });
 
   };
+  const onSmoothChange = () => {
+    if (chart_options) {
+      chart_options.series.forEach((item:any) => {
+        if (item.name =="Indicator" && item.type == "line")
+        {
+          item.smooth = !item.smooth;
+        }
+      });
+    }
+  }
 
   const { runAsync: runSaveIndicator, loading: runSaveIndicatorLoading } =
     useRequest(
@@ -77,7 +87,7 @@ const IndicatorParam = () => {
           placement="bottomLeft"
           content={
             <Checkbox.Group
-              options={options}
+              options={label_options}
               value={base_params?.exclude_wallets?.by_labels || []}
               onChange={handleBaseChange}
               className={styles.checkboxGrop}
@@ -92,6 +102,13 @@ const IndicatorParam = () => {
           </span>
         </Popover>
       ) : null}
+       <Button
+            className={styles.saveParam}
+            onClick={onSmoothChange}
+            size="small"
+          >
+            Smooth
+          </Button>
       {extra_params_schema ? (
         <div style={{ alignItems: "center", display: "flex" }}>
           <FormRender

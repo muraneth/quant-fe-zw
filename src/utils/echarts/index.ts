@@ -35,6 +35,6 @@ export function generateOptions({
     case IndicatorChartType.AREA_STACK:
       return areaStackTransform({ indicatorDetailList, priceList, klineType });
     default:
-      return {};
+      return independentLineTransform({ indicatorDetailList, priceList, klineType });
   }
 }
