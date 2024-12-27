@@ -6,6 +6,7 @@ import { svgMap } from "@/constants/svg";
 import Category from "./category";
 import Group from "./group";
 import Result from "./result";
+import { useChartStore } from "@/store/charts";
 import styles from "./index.module.scss";
 
 enum View {
@@ -15,12 +16,20 @@ enum View {
 }
 
 const Search = () => {
+  const setDraftData = useChartStore.use.setDraftData();
+  const indicatorList = useChartStore.use.indicatorList();
+  
   const [searchKeyword, setSearchKeyword] = useImmer<string>("");
-
   const [viewStack, setViewStack] = useImmer<Array<View>>([View.Category]);
   const curView = viewStack[viewStack.length - 1];
 
-  const { data: indicatorList = [] } = useRequest(getIndicatorList);
+  useRequest(getIndicatorList, {
+    onSuccess: (res) => {
+      setDraftData(draft => {
+        draft.indicatorList = res;
+      });
+    }
+  });
   const [selectedCategoryIndex, setSelectedCategoryIndex] = useImmer<number>(0);
 
   const toNextView = (nextView: View) => {
