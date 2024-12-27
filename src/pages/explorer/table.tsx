@@ -40,55 +40,7 @@ const TokenTable = () => {
         indReqTemp.push({
           handle_name: ind.handle_name,
         });
-        setDyColumns((prev) => {
-          return [
-            ...prev,
-            {
-              title: ind.name,
-              key: ind.handle_name,
-              // sorter: (a, b) => {
-              //   const snapA = a.indicator_snaps?.find((snap) => snap.name === indicator.name);
-              //   const snapB = b.indicator_snaps?.find((snap) => snap.name === indicator.name);
-              //   return (snapA?.value || 0) - (snapB?.value || 0);
-              // },
-              render: (_: any, record: TokenDetailInfo) => {
-                const snap = record.indicator_snaps?.find(
-                  (snap) => snap.name === ind.name
-                );
-                const baseInfo = record.base_info;
-                return snap ? (
-                  <div
-                    style={{
-                      cursor: snap.handle_name ? "pointer" : "default",
-                      color: snap.handle_name ? "gray" : "inherit",
-                    }}
-                    onClick={() => {
-                      if (snap.handle_name) {
-                        navigate(
-                          `/charts?symbol=${baseInfo.symbol}&handle_name=${
-                            snap.handle_name
-                          }&type=${"independent_line"}`
-                        );
-                      }
-                    }}
-                  >
-                    <div>{formatNumber(snap.value)}</div>
-                    {snap.value_chg !== undefined && snap.value_chg !== 0.0 && (
-                      <div
-                        style={{
-                          color: snap.value_chg > 0 ? "#36F097" : "#EB5757",
-                        }}
-                      >
-                        {snap.value_chg >= 0 ? "+" : ""}
-                        {formatNumber(snap.value_chg * 100)}%
-                      </div>
-                    )}
-                  </div>
-                ) : null;
-              },
-            },
-          ];
-        });
+        
       }
 
       const processTokens = async () => {
@@ -129,6 +81,11 @@ const TokenTable = () => {
       manual: true,
     }
   );
+  const cellStyle = {
+    padding: '8px',
+    borderRadius: '4px',
+    transition: 'background-color 0.3s',
+  };
 
   const columns = useMemo(() => {
     // Base columns for token info
@@ -139,29 +96,37 @@ const TokenTable = () => {
         title: "Token",
         dataIndex: "base_info",
         key: "token",
+        width: "240px",
         render: (baseInfo: TokenBaseInfo) => (
           <div
-            style={{ display: "flex", alignItems: "center", cursor: "pointer" }}
+            style={{ display: "flex", alignItems: "center", cursor: "pointer"}}
             onClick={() => {
               navigate(
                 `/charts?symbol=${baseInfo.symbol}&handle_name=holder.all&type=independent_line`
               );
             }}
           >
-            <img
-              src={baseInfo.icon_url}
-              alt={baseInfo.symbol}
-              style={{
-                width: 24,
-                height: 24,
-                marginRight: 8,
-                borderRadius: "50%",
-              }}
-            />
-            <span>{baseInfo.symbol}</span>
-            <span style={{ color: "gray", marginLeft: 8 }}>
-              {baseInfo.name}
-            </span>
+            <div style={{ display: "flex", flexDirection: "column" }}>
+              <div style={{ display: "flex", flexDirection: "row" }}>
+              <img
+                src={baseInfo.icon_url}
+                alt={baseInfo.symbol}
+                style={{
+                  width: 24,
+                  height: 24,
+                  marginRight: 8,
+                  borderRadius: "50%",
+                }}
+              />
+                <span>{baseInfo.symbol}</span>
+                <span style={{ color: "gray", fontSize: "12px", marginLeft: "10px" }}>
+                {baseInfo.contract_address.slice(0, 6) + "..." + baseInfo.contract_address.slice(-6)}
+              </span>
+                </div>
+              <span style={{ color: "gray", fontSize: "12px",marginLeft:"30px" }}>
+                {baseInfo.name}
+              </span>
+            </div>
           </div>
         ),
       },
@@ -169,7 +134,8 @@ const TokenTable = () => {
         title: "Create Time",
         dataIndex: ["base_info", "create_time"],
         key: "create_time",
-        render: (createTime: string) => new Date(createTime).toLocaleString(),
+        width: "120px", 
+        render: (createTime: string) =>  new Date(createTime).toLocaleDateString(),
       },
     ];
     const dynamicColumns =
