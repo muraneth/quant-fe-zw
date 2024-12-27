@@ -1,6 +1,8 @@
-.studio {
+.header {
   width: 100%;
-  height: 100%;
   background: var(--primary-content-color);
   color: #FFF;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }

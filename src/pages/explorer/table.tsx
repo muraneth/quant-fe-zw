@@ -110,7 +110,7 @@ const TokenTable = () => {
               <div style={{ display: "flex", flexDirection: "row" }}>
               <img
                 src={baseInfo.icon_url}
-                alt={baseInfo.symbol}
+                alt={baseInfo.symbol}       
                 style={{
                   width: 24,
                   height: 24,
