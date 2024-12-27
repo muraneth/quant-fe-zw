@@ -23,22 +23,22 @@ const MyDrawer :React.FC = () =>{
   };
     return (
         <div>
-            <div>
+            {/* <div>
             <h3>Token</h3>
-            <Input.Search placeholder="Search token" style={{ marginBottom: "16px" }} />
-            <List
-                dataSource={tokens}
-                renderItem={(token) => (
-                <List.Item>
-                    <Checkbox value={token.name} onChange={handleTokenChange}>
-                    {token.name} <span style={{ fontSize: "12px" }}>{token.description}</span>
-                    </Checkbox>
-                </List.Item>
-                )}
-            />
-            </div>
-            <div style={{ marginTop: "32px" }}>
-            <h3>Indicator</h3>
+                <Input.Search placeholder="Search token" style={{ marginBottom: "16px" }} />
+                <List
+                    dataSource={tokens}
+                    renderItem={(token) => (
+                    <List.Item>
+                        <Checkbox value={token.name} onChange={handleTokenChange}>
+                        {token.name} <span style={{ fontSize: "12px" }}>{token.description}</span>
+                        </Checkbox>
+                    </List.Item>
+                    )}
+                />
+            </div> */}
+            <div style={{ marginTop: "1px" }}>
+            <h3>Choose Indicator</h3>
             <Input.Search placeholder="Search indicator" style={{ marginBottom: "16px" }} />
             <List
                 dataSource={indicators}
