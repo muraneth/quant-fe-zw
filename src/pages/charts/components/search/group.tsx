@@ -17,7 +17,7 @@ const Group: React.FC<GroupProps> = ({
   selectedCategoryIndex,
 }) => {
   const { items, defaultActiveKey } = React.useMemo(() => {
-    const items = (indicatorList[selectedCategoryIndex].groups || []).map(
+    const items = (indicatorList[selectedCategoryIndex]?.groups || []).map(
       (groupItem) => {
         const children = groupItem.indicators.map((indicatorItem, index) => (
           <IndicatorItem key={index} {...indicatorItem} />

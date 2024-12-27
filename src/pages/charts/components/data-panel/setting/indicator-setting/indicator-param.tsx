@@ -9,7 +9,7 @@ import CustomDatePicker from "@/components/custom-date-picker";
 import { saveIndicatorParam } from "@/service/charts";
 import { useRequest } from "ahooks";
 
-const options = [
+const label_options = [
   { label: "DEX", value: "DEX" },
   { label: "CEX", value: "CEX" },
   { label: "MEV Bot", value: "MEV Bot" },
@@ -19,18 +19,15 @@ const options = [
 
 const IndicatorParam = () => {
   const setDraftData = useChartStore.use.setDraftData();
-  
-  const { handle_name } = useChartStore.use.indicatorInfo();
 
   const base_params = useChartStore.use.base_params();
   const extra_params = useChartStore.use.extra_params();
-
-  const { param_schema } = useChartStore.use.indicatorInfo();
+  const  chart_options  = useChartStore.use.options();
+  const { param_schema, handle_name } = useChartStore.use.indicatorInfo();
   const { use_base_param, extra_params_schema } =
     JSON.parse((param_schema || null) as string) || {};
   if (extra_params_schema) {
-    extra_params_schema.displayType = "row";
-    extra_params_schema.column = 1;
+    extra_params_schema.displayType = "inline";
   }
 
   const form = useForm();
@@ -48,19 +45,36 @@ const IndicatorParam = () => {
   };
 
   const handleExtraChange = (allValues: Record<string, any>) => {
-    setDraftData(draft => {
-      draft.extra_params = allValues;
-    })
+
+    setDraftData((draft) => {
+      draft.extra_params = {
+        ...extra_params,
+        ...allValues,
+      };
+    });
+
   };
-  const { runAsync: runSaveIndicator, loading: collectLoading } = useRequest(
-    () =>
-      saveIndicatorParam({
-        handle_name,
-        base_params: JSON.stringify(base_params),
-        extra_params: JSON.stringify(extra_params),
-      }),
-    { manual: true }
-  );
+  const onSmoothChange = () => {
+    if (chart_options) {
+      chart_options.series.forEach((item:any) => {
+        if (item.name =="Indicator" && item.type == "line")
+        {
+          item.smooth = !item.smooth;
+        }
+      });
+    }
+  }
+
+  const { runAsync: runSaveIndicator, loading: runSaveIndicatorLoading } =
+    useRequest(
+      () =>
+        saveIndicatorParam({
+          handle_name,
+          base_params: JSON.stringify(base_params),
+          extra_params: JSON.stringify(extra_params),
+        }),
+      { manual: true }
+    );
 
   React.useEffect(() => {
     form.resetFields();
@@ -73,7 +87,7 @@ const IndicatorParam = () => {
           placement="bottomLeft"
           content={
             <Checkbox.Group
-              options={options}
+              options={label_options}
               value={base_params?.exclude_wallets?.by_labels || []}
               onChange={handleBaseChange}
               className={styles.checkboxGrop}
@@ -88,6 +102,13 @@ const IndicatorParam = () => {
           </span>
         </Popover>
       ) : null}
+       <Button
+            className={styles.saveParam}
+            onClick={onSmoothChange}
+            size="small"
+          >
+            Smooth
+          </Button>
       {extra_params_schema ? (
         <div style={{ alignItems: "center", display: "flex" }}>
           <FormRender
@@ -99,10 +120,16 @@ const IndicatorParam = () => {
                 handleExtraChange(allValues);
               },
             }}
-            style={{ marginLeft: 24, width: 200 }}
-            fieldCol={17}
+            style={{ marginLeft: 24 }}
           />
-          <Button onClick={runSaveIndicator}>save</Button>
+          <Button
+            className={styles.saveParam}
+            onClick={runSaveIndicator}
+            loading={runSaveIndicatorLoading}
+            size="small"
+          >
+            save
+          </Button>
         </div>
       ) : null}
     </div>

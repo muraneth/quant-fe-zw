@@ -1,16 +1,15 @@
 import styles from './index.module.scss';
 import TokenTable from './table';
 import React, { useState } from "react";
-import { Layout, Input, Checkbox, List, Table, Button } from "antd";
+import { Layout, Input, Checkbox, List, Table, Button, Drawer } from "antd";
 import { MenuOutlined } from "@ant-design/icons";
 import type { CheckboxChangeEvent } from "antd/es/checkbox";
-import Search from './search';
-const { Header, Content,Sider } = Layout;
+const {  Content } = Layout;
 
 const Explorer :React.FC = () =>{
   const [isDrawerOpen, setDrawerOpen] = useState(false);
 
-  const drawerWidth = 230; // Width of the drawer
+  const drawerWidth = 240; // Width of the drawer
 
   const tokens = [
     { name: "DOGE", description: "Department of Government", address: "0x1234" },
@@ -34,14 +33,14 @@ const Explorer :React.FC = () =>{
   return (
     <Layout style={{ height: "100vh", transition: "margin-left 0.3s ease" }}>
       {/* Drawer */}
-      <Sider
+      <Drawer
         width={drawerWidth}
         style={{
           height: "100%",
-          position: "fixed",
+          // position: "fixed",
           left: 0,
           top: 0,
-          // background: "#f0f2f5",
+          background: "#f0f2f5",
           zIndex: 1000,
           display: isDrawerOpen ? "block" : "none",
           padding: "3px",
@@ -64,7 +63,7 @@ const Explorer :React.FC = () =>{
         </div> */}
         <div style={{ marginTop: "32px" }}>
           {/* <h3>Indicator</h3> */}
-          <Search />
+          {/* <Search /> */}
           {/* <List
             dataSource={indicators}
             renderItem={(indicator) => (
@@ -76,7 +75,7 @@ const Explorer :React.FC = () =>{
             )}
           /> */}
         </div>
-      </Sider>
+      </Drawer>
 
 
       {/* Main Layout */}
@@ -87,8 +86,8 @@ const Explorer :React.FC = () =>{
         }}
       >
       
-        <Header style={{ padding: "0 16px" }}>
-        <Button
+        {/* <Header style={{ padding: "0 16px" }}> */}
+        {/* <Button
         type="primary"
         icon={<MenuOutlined />}
         style={{
@@ -100,9 +99,9 @@ const Explorer :React.FC = () =>{
           zIndex: 1100,
         }}
         onClick={() => setDrawerOpen(!isDrawerOpen)}
-      />
+      /> */}
           {/* <h2>Table</h2> */}
-        </Header>
+        {/* </Header> */}
         <Content style={{ padding: "16px" }}>
           {/* <Table columns={columns} dataSource={data} pagination={false} /> */}
           <TokenTable />

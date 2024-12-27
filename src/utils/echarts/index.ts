@@ -38,6 +38,6 @@ export function generateOptions({
     case IndicatorChartType.AREA_SEPERATED:
       return areaSeperatedTransform({ indicatorDetailList, priceList, klineType });
     default:
-      return {};
+      return independentLineTransform({ indicatorDetailList, priceList, klineType });
   }
 }
