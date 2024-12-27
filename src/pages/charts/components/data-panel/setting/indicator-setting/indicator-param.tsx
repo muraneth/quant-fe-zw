@@ -45,9 +45,14 @@ const IndicatorParam = () => {
   };
 
   const handleExtraChange = (allValues: Record<string, any>) => {
+
     setDraftData((draft) => {
-      draft.extra_params = allValues;
+      draft.extra_params = {
+        ...extra_params,
+        ...allValues,
+      };
     });
+
   };
 
   const { runAsync: runSaveIndicator, loading: runSaveIndicatorLoading } =

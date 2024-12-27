@@ -68,7 +68,7 @@ export function yBarTransform({ indicatorDetailList, priceList, klineType }) {
       },
     });
     options.series.push({
-      name: "Indicator Value",
+      name: "Indicator",
       type: "bar",
       data: newIndicatorData.map((item) => item.total_Value),
       barWidth: "40%",

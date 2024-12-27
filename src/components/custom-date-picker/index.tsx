@@ -8,12 +8,15 @@ import { Tooltip } from "antd";
 
 const CustomDatePicker = (props: WidgetProps) => {
   const { title, value, default_value, tooltip, onChange } = props;
-
+  console.log("value", value, "default_value", default_value);
+  
   const selectedDate = value ? dayjs(value) : dayjs(default_value);
 
   const handleChange = (e: dayjs.Dayjs | null) => {
     if (e) {
       const formatTime = dayjs(e).format("YYYY-MM-DD");
+      console.log("formatTime on change", formatTime);
+      
       onChange(formatTime);
     }
   };
