@@ -77,7 +77,7 @@ export const getIndenpendYAxis = () => {
 export const getToolTipFormater = (params) => {
   // refer to : https://echarts.apache.org/handbook/zh/how-to/interaction/drag/#%E6%B7%BB%E5%8A%A0-tooltip-%E7%BB%84%E4%BB%B6
   let result = `<strong>Date:</strong> ${params[0].axisValue}<br/>`;
-  console.log("params", params);
+  // console.log("params", params);
 
   params.forEach((param) => {
     if (param.seriesType === "candlestick") {

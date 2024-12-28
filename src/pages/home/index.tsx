@@ -3,40 +3,29 @@ import CustomDatePicker from "@/components/custom-date-picker";
 
 const schema = {
   type: "object",
-  displayType: "inline",
-  // column: 2,
   properties: {
-    startTime: {
+    end_time: {
       type: "string",
-      widget: "CustomDatePicker",
-      props: {
-        title: "Start Time",
-        default_value: "2022-04-17",
-        tooltip:
-          "Specify the day before the day you want to get the average cost of wallets",
-        required: true,
-      },
-    },
-    endTime: {
-      type: "string",
-      widget: "CustomDatePicker",
+      default: '2024-12-17',
       props: {
         title: "End Time",
-        default_value: "2023-04-17",
+        tooltip: "Specify the day range EndTime",
+        required: true,
       },
+      widget: "CustomDatePicker",
     },
     start_time: {
       type: "string",
+      default: '2024-08-15',
       props: {
-        title: "Date",
-        tooltip:
-          "Specify the day before the day you want to get the average cost of wallets",
+        title: "Start Time",
+        tooltip: "Specify the day range StartTime",
         required: true,
-        defaultv_value: "2024-04-17",
       },
       widget: "CustomDatePicker",
     },
   },
+  displayType: "inline",
 };
 
 export default function Home() {
