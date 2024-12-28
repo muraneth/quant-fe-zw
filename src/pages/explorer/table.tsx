@@ -40,7 +40,6 @@ const TokenTable = () => {
         indReqTemp.push({
           handle_name: ind.handle_name,
         });
-        
       }
 
       const processTokens = async () => {
@@ -82,9 +81,9 @@ const TokenTable = () => {
     }
   );
   const cellStyle = {
-    padding: '8px',
-    borderRadius: '4px',
-    transition: 'background-color 0.3s',
+    padding: "8px",
+    borderRadius: "4px",
+    transition: "background-color 0.3s",
   };
 
   const columns = useMemo(() => {
@@ -99,7 +98,7 @@ const TokenTable = () => {
         width: "240px",
         render: (baseInfo: TokenBaseInfo) => (
           <div
-            style={{ display: "flex", alignItems: "center", cursor: "pointer"}}
+            style={{ display: "flex", alignItems: "center", cursor: "pointer" }}
             onClick={() => {
               navigate(
                 `/charts?symbol=${baseInfo.symbol}&handle_name=holder.all&type=independent_line`
@@ -108,22 +107,32 @@ const TokenTable = () => {
           >
             <div style={{ display: "flex", flexDirection: "column" }}>
               <div style={{ display: "flex", flexDirection: "row" }}>
-              <img
-                src={baseInfo.icon_url}
-                alt={baseInfo.symbol}       
-                style={{
-                  width: 24,
-                  height: 24,
-                  marginRight: 8,
-                  borderRadius: "50%",
-                }}
-              />
+                <img
+                  src={baseInfo.icon_url}
+                  alt={baseInfo.symbol}
+                  style={{
+                    width: 24,
+                    height: 24,
+                    marginRight: 8,
+                    borderRadius: "50%",
+                  }}
+                />
                 <span>{baseInfo.symbol}</span>
-                <span style={{ color: "gray", fontSize: "12px", marginLeft: "10px" }}>
-                {baseInfo.contract_address.slice(0, 6) + "..." + baseInfo.contract_address.slice(-6)}
-              </span>
-                </div>
-              <span style={{ color: "gray", fontSize: "12px",marginLeft:"30px" }}>
+                <span
+                  style={{
+                    color: "gray",
+                    fontSize: "12px",
+                    marginLeft: "10px",
+                  }}
+                >
+                  {baseInfo.contract_address.slice(0, 6) +
+                    "..." +
+                    baseInfo.contract_address.slice(-6)}
+                </span>
+              </div>
+              <span
+                style={{ color: "gray", fontSize: "12px", marginLeft: "30px" }}
+              >
                 {baseInfo.name}
               </span>
             </div>
@@ -134,8 +143,9 @@ const TokenTable = () => {
         title: "Create Time",
         dataIndex: ["base_info", "create_time"],
         key: "create_time",
-        width: "120px", 
-        render: (createTime: string) =>  new Date(createTime).toLocaleDateString(),
+        width: "120px",
+        render: (createTime: string) =>
+          new Date(createTime).toLocaleDateString(),
       },
     ];
     const dynamicColumns =
