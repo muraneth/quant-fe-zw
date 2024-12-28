@@ -2,7 +2,7 @@ import * as React from "react";
 import type { Indicator } from "@/service/charts";
 import { useChartStore } from "@/store/charts";
 import classNames from "classnames";
-import styles from "./index.module.scss";
+import styles from "../index.module.scss";
 
 type IndicatorItemProps = Indicator;
 

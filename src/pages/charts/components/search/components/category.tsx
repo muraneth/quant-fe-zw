@@ -1,20 +1,20 @@
 import * as React from "react";
 import { Tooltip } from "antd";
 import { IndicatorListResDto } from "@/service/charts";
+import { useChartStore } from "@/store/charts";
 import classNames from "classnames";
-import styles from "./index.module.scss";
+import styles from "../index.module.scss";
 
 interface CategoryProps {
   indicatorList: IndicatorListResDto;
   selectCategory: (category: number) => void;
-  selectedCategoryIndex: number;
 }
 
 const Category: React.FC<CategoryProps> = ({
   indicatorList,
   selectCategory,
-  selectedCategoryIndex,
 }) => {
+  const indicatorInfo = useChartStore.use.indicatorInfo();
   return (
     <div className={styles.category}>
       {(indicatorList || []).map(({ category, groups }, index) => {
@@ -25,7 +25,8 @@ const Category: React.FC<CategoryProps> = ({
         return (
           <div
             className={classNames(styles.categoryItem, {
-              [styles.categoryItemSelected]: selectedCategoryIndex === index,
+              [styles.categoryItemSelected]:
+                indicatorInfo.category === category,
             })}
             key={index}
             onClick={() => selectCategory(index)}

@@ -3,7 +3,7 @@ import { ArrowLeftOutlined } from "@ant-design/icons";
 import IndicatorItem from "./indicator-item";
 import type { IndicatorListResDto } from "@/service/charts";
 import type { Indicator } from "@/service/charts";
-import styles from "./index.module.scss";
+import styles from "../index.module.scss";
 
 interface ResultProps {
   backPreView: () => void;

@@ -90,7 +90,7 @@ export interface Group {
   indicators: Indicator[];
 }
 
-interface IndicatorListItem {
+export interface IndicatorListItem {
   category: string;
   order: number;
   groups: Group[];
