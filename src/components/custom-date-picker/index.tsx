@@ -7,9 +7,7 @@ import { QuestionCircleOutlined } from "@ant-design/icons";
 import { Tooltip } from "antd";
 
 const CustomDatePicker = (props: WidgetProps) => {
-  const { title, value, default_value, tooltip, onChange } = props;
-
-  const selectedDate = value ? dayjs(value) : dayjs(default_value);
+  const { title, value, tooltip, onChange } = props;
 
   const handleChange = (e: dayjs.Dayjs | null) => {
     if (e) {
@@ -29,7 +27,7 @@ const CustomDatePicker = (props: WidgetProps) => {
         <div className={styles.customDatePicker}>
           <DatePicker
             label={title}
-            value={selectedDate}
+            value={dayjs(value)}
             onChange={handleChange}
             slotProps={{
               popper: {
