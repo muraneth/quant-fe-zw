@@ -4,8 +4,8 @@ import { useRequest } from "ahooks";
 import {
   getUserConfig,
   getTokenSnap,
-  UserConfig,
   TokenSnapReq,
+  getTokenByPage,
 } from "@/service/explorer";
 import {
   TokenDetailInfo,
@@ -16,19 +16,50 @@ import { useImmer } from "use-immer";
 import { formatNumber } from "@/utils/common";
 import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
+import type { TablePaginationConfig } from "antd/es/table";
+import { useExplorerStore } from "@/store/explorer";
 
 const TokenTable = () => {
   const [tokenDetailList, setTokenDetailList] = useImmer<
     Array<TokenDetailInfo>
   >([]);
-  const [userConfig, setUserConfig] = useImmer<UserConfig>({} as UserConfig);
+  const [currentPage, setCurrentPage] = useImmer(1);
+  const [tokenList, setTokenList] = useImmer<Array<TokenBaseInfo>>([]);
+  const [totalToken, setTotalToken] = useImmer(0);
+  // const [userConfig, setUserConfig] = useImmer<UserConfig>({} as UserConfig);
+  const userConfig = useExplorerStore.use.userConfig;
+  const setDraftData = useExplorerStore.use.setDraftData;
   const navigate = useNavigate();
-  const [dyColumns, setDyColumns] = useImmer([]);
+
   useRequest(() => getUserConfig(), {
     onSuccess: (res) => {
-      setUserConfig(res);
+      setDraftData((draft) => {
+        draft.userConfig = res;
+      });
     },
   });
+  useRequest(() => getTokenByPage({ page: currentPage, page_size: 20 }), {
+    onSuccess: (res) => {
+      setTotalToken(res.total);
+      setTokenList(res.tokens);
+    },
+    refreshDeps: [currentPage],
+  });
+
+  const handlePageChange = (page: number, pageSize: number) => {
+    setCurrentPage(page);
+  };
+
+  const paginationConfig: TablePaginationConfig = {
+    total: totalToken,
+    pageSize: 20,
+    current: currentPage,
+    onChange: handlePageChange,
+    showSizeChanger: false, // Disable page size changing
+    showTotal: (total) => `Total ${total} items`,
+    position: ["bottomCenter"],
+    // showQuickJumper: true, // Allow quick jump to page
+  };
 
   const sleep = (ms: number) =>
     new Promise((resolve) => setTimeout(resolve, ms));
@@ -72,7 +103,7 @@ const TokenTable = () => {
 
       processTokens();
     }
-  }, [userConfig]);
+  }, [userConfig, tokenList]);
 
   const { runAsync: runGetTokenSnap, loading: tokenIndLoading } = useRequest(
     getTokenSnap,
@@ -80,11 +111,6 @@ const TokenTable = () => {
       manual: true,
     }
   );
-  const cellStyle = {
-    padding: "8px",
-    borderRadius: "4px",
-    transition: "background-color 0.3s",
-  };
 
   const columns = useMemo(() => {
     // Base columns for token info
@@ -101,7 +127,7 @@ const TokenTable = () => {
             style={{ display: "flex", alignItems: "center", cursor: "pointer" }}
             onClick={() => {
               navigate(
-                `/charts?symbol=${baseInfo.symbol}&handle_name=holder.all&type=independent_line`
+                `/charts?symbol=${baseInfo.symbol}&handle_name=holder.all&type=independent_line&chain=${baseInfo.chain}`
               );
             }}
           >
@@ -175,7 +201,7 @@ const TokenTable = () => {
               onClick={() => {
                 if (snap.handle_name) {
                   navigate(
-                    `/charts?symbol=${baseInfo.symbol}&handle_name=${snap.handle_name}`
+                    `/charts?symbol=${baseInfo.symbol}&handle_name=${snap.handle_name}&type=${snap.type}&chain=${baseInfo.chain}`
                   );
                 }
               }}
@@ -194,15 +220,14 @@ const TokenTable = () => {
   }, [tokenDetailList]);
 
   return (
-    <div style={{ marginLeft: "10px", marginRight: "10px" }}>
+    <div>
       <Table
         columns={columns}
         dataSource={tokenDetailList}
         rowKey={(record) => record.base_info.contract_address}
-        // loading={tokenIndLoading}
         bordered
-        scroll={{ x: "max-content", y: 800 }}
-        pagination={false}
+        scroll={{ x: "max-content" }}
+        pagination={paginationConfig}
       />
     </div>
   );

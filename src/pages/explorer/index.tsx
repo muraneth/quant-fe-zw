@@ -1,17 +1,16 @@
 import styles from "./index.module.scss";
-import classNames from "classnames";
-
-import TokenTable from "./table";
+import UserTokenTable from "./user-table";
 import React, { useState } from "react";
 import { Layout, Drawer, Button } from "antd";
 import MyDrawer from "./drawer";
+
 const { Header, Content } = Layout;
 
 const Explorer: React.FC = () => {
   const [isDrawerOpen, setDrawerOpen] = useState(false);
 
   return (
-    <Layout style={{ height: "100vh", transition: "margin-left 0.3s ease" }}>
+    <Layout style={{ height: "100vh" }}>
       <Drawer
         title="Explorer Setting"
         placement="right"
@@ -29,7 +28,7 @@ const Explorer: React.FC = () => {
       >
         <Header className={styles.header}>
           <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-            <h3>Subscribe user will get all token list</h3>
+            <h3>Subscribe user will get more than 100 token list</h3>
             <Button>Get Subscribed</Button>
           </div>
           <div>
@@ -43,8 +42,24 @@ const Explorer: React.FC = () => {
           </div>
         </Header>
 
-        <Content style={{ padding: "16px" }}>
-          <TokenTable />
+        <Content
+          style={{
+            paddingLeft: "16px",
+            paddingRight: "16px",
+            height: "calc(100vh - 64px)", // Subtract header height
+            overflow: "auto", // Enable content scrolling
+          }}
+        >
+          <div
+            style={{
+              marginBottom: "120px", // Add space for footer and pagination
+              display: "flex",
+              flexDirection: "column",
+              minHeight: "100%",
+            }}
+          >
+            <UserTokenTable />
+          </div>
         </Content>
       </Layout>
     </Layout>

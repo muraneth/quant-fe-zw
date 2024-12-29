@@ -1,29 +1,32 @@
 import { request } from "@/utils/request";
-import { TokenDetailInfo ,Indicator,IndicatorDetailReqDto} from "./charts";
+import { TokenDetailInfo, TokenBaseInfo, Indicator, IndicatorDetailReqDto, IndicatorListResDto } from "./charts";
 
 
 export interface UserConfig {
-    tokens : Array<string>;
-    indicators : Array<Indicator>;
+    tokens: Array<string>;
+    indicators: Array<Indicator>;
 }
 export interface SaveUserConfig {
-    tokens : Array<string>;
-    indicators : Array<string>;
+    tokens?: Array<string>;
+    indicators: Array<string>;
 }
-export interface TokenSnapReq{
+export interface TokenSnapReq {
     symbol: string;
     chain?: string;
-    indicators : Array<IndicatorDetailReqDto>;
+    indicators: Array<IndicatorDetailReqDto>;
 }
-export function getTokenDetailList(): Promise<Array<TokenDetailInfo>> {
+export interface TokenPageResponse {
+    tokens: Array<TokenBaseInfo>;
+    total: number;
+}
+export function getIndicatorList(): Promise<IndicatorListResDto> {
     return request({
-        url: "/data/api/token/getTokenTable",
+        url: "/data/api/explorer/getIndicatorList",
         method: "GET",
-        // params,
     });
 }
 
-export function getUserConfig():Promise<UserConfig> {
+export function getUserConfig(): Promise<UserConfig> {
     return request({
         url: "/data/api/explorer/getUserConfig",
         method: "GET",
@@ -40,6 +43,13 @@ export function saveUserConfig(params: SaveUserConfig): Promise<any> {
 export function getTokenSnap(params: TokenSnapReq): Promise<TokenDetailInfo> {
     return request({
         url: "/data/api/explorer/getTokenSnaps",
+        method: "POST",
+        params,
+    });
+}
+export function getTokenByPage(params: { page: number; page_size: number }): Promise<TokenPageResponse> {
+    return request({
+        url: "/data/api/explorer/getTokenByPage",
         method: "POST",
         params,
     });

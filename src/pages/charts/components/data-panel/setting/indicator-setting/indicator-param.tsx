@@ -103,13 +103,13 @@ const IndicatorParam = () => {
           </span>
         </Popover>
       ) : null}
-      <Button
+      {/* <Button
         className={styles.saveParam}
         onClick={onSmoothChange}
         size="small"
       >
         Smooth
-      </Button>
+      </Button> */}
       {extra_params_schema ? (
         <div style={{ alignItems: "center", display: "flex" }}>
           <FormRender
