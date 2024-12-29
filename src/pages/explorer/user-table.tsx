@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import { Table } from "antd";
+import { Table, Button } from "antd";
 import { useRequest } from "ahooks";
 import { getUserConfig, getTokenSnap, TokenSnapReq } from "@/service/explorer";
 import {
@@ -21,8 +21,8 @@ const UserTokenTable = () => {
   const [currentPage, setCurrentPage] = useImmer(1);
 
   // const [userConfig, setUserConfig] = useImmer<UserConfig>({} as UserConfig);
-  const userConfig = useExplorerStore.use.userConfig;
-  const setDraftData = useExplorerStore.use.setDraftData;
+  const userConfig = useExplorerStore.use.userConfig();
+  const setDraftData = useExplorerStore.use.setDraftData();
   const navigate = useNavigate();
 
   useRequest(() => getUserConfig(), {
@@ -35,6 +35,11 @@ const UserTokenTable = () => {
 
   const handlePageChange = (page: number, pageSize: number) => {
     setCurrentPage(page);
+  };
+  const handleRemoveRow = (contractAddress: string) => {
+    setTokenDetailList((prev) =>
+      prev.filter((item) => item.base_info.contract_address !== contractAddress)
+    );
   };
 
   const paginationConfig: TablePaginationConfig = {
@@ -90,7 +95,7 @@ const UserTokenTable = () => {
 
       processTokens();
     }
-  }, [userConfig, tokenList]);
+  }, [userConfig]);
 
   const { runAsync: runGetTokenSnap, loading: tokenIndLoading } = useRequest(
     getTokenSnap,
@@ -203,7 +208,23 @@ const UserTokenTable = () => {
           ) : null;
         },
       })) || [];
-    return [...baseColumns, ...dynamicColumns];
+    return [
+      ...baseColumns,
+      ...dynamicColumns,
+      {
+        title: "Actions",
+        key: "actions",
+        width: "120px",
+        render: (_: any, record: TokenDetailInfo) => (
+          <Button
+            danger
+            onClick={() => handleRemoveRow(record.base_info.contract_address)}
+          >
+            Remove
+          </Button>
+        ),
+      },
+    ];
   }, [tokenDetailList]);
 
   return (

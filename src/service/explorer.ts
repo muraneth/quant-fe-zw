@@ -54,3 +54,9 @@ export function getTokenByPage(params: { page: number; page_size: number }): Pro
         params,
     });
 }
+export function getDefaultIndList(): Promise<Array<Indicator>> {
+    return request({
+        url: "/data/api/explorer/getDefaultIndList",
+        method: "GET",
+    });
+}

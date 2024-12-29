@@ -1,5 +1,6 @@
 import styles from "./index.module.scss";
 import UserTokenTable from "./user-table";
+import TokenTable from "./global-table";
 import React, { useState } from "react";
 import { Layout, Drawer, Button } from "antd";
 import MyDrawer from "./drawer";
@@ -31,15 +32,7 @@ const Explorer: React.FC = () => {
             <h3>Subscribe user will get more than 100 token list</h3>
             <Button>Get Subscribed</Button>
           </div>
-          <div>
-            <Button
-              onClick={() => {
-                setDrawerOpen(!isDrawerOpen);
-              }}
-            >
-              Set Indicator List
-            </Button>
-          </div>
+          <div></div>
         </Header>
 
         <Content
@@ -52,13 +45,34 @@ const Explorer: React.FC = () => {
         >
           <div
             style={{
+              display: "flex",
+              flexDirection: "column",
+              // minHeight: "100%",
+            }}
+          >
+            <div style={{ display: "flex", justifyContent: "flex-end" }}>
+              <Button
+                onClick={() => {
+                  setDrawerOpen(!isDrawerOpen);
+                }}
+              >
+                Set Indicator List
+              </Button>
+            </div>
+            <UserTokenTable />
+          </div>
+          <div>
+            <h3>Explore Token List</h3>
+          </div>
+          <div
+            style={{
               marginBottom: "120px", // Add space for footer and pagination
               display: "flex",
               flexDirection: "column",
               minHeight: "100%",
             }}
           >
-            <UserTokenTable />
+            <TokenTable />
           </div>
         </Content>
       </Layout>

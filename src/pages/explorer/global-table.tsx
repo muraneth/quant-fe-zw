@@ -6,18 +6,19 @@ import {
   getTokenSnap,
   TokenSnapReq,
   getTokenByPage,
+  getDefaultIndList,
 } from "@/service/explorer";
 import {
   TokenDetailInfo,
   TokenBaseInfo,
   IndicatorDetailReqDto,
+  Indicator,
 } from "@/service/charts";
 import { useImmer } from "use-immer";
 import { formatNumber } from "@/utils/common";
 import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
 import type { TablePaginationConfig } from "antd/es/table";
-import { useExplorerStore } from "@/store/explorer";
 
 const TokenTable = () => {
   const [tokenDetailList, setTokenDetailList] = useImmer<
@@ -26,24 +27,22 @@ const TokenTable = () => {
   const [currentPage, setCurrentPage] = useImmer(1);
   const [tokenList, setTokenList] = useImmer<Array<TokenBaseInfo>>([]);
   const [totalToken, setTotalToken] = useImmer(0);
-  // const [userConfig, setUserConfig] = useImmer<UserConfig>({} as UserConfig);
-  const userConfig = useExplorerStore.use.userConfig;
-  const setDraftData = useExplorerStore.use.setDraftData;
+  const [indicatorList, setIndicatorList] = useImmer<Array<Indicator>>([]);
+  const [selectedRowKeys, setSelectedRowKeys] = useImmer<string[]>([]);
+
   const navigate = useNavigate();
 
-  useRequest(() => getUserConfig(), {
-    onSuccess: (res) => {
-      setDraftData((draft) => {
-        draft.userConfig = res;
-      });
-    },
-  });
-  useRequest(() => getTokenByPage({ page: currentPage, page_size: 20 }), {
+  useRequest(() => getTokenByPage({ page: currentPage, page_size: 10 }), {
     onSuccess: (res) => {
       setTotalToken(res.total);
       setTokenList(res.tokens);
     },
     refreshDeps: [currentPage],
+  });
+  useRequest(() => getDefaultIndList(), {
+    onSuccess: (res) => {
+      setIndicatorList(res);
+    },
   });
 
   const handlePageChange = (page: number, pageSize: number) => {
@@ -63,21 +62,26 @@ const TokenTable = () => {
 
   const sleep = (ms: number) =>
     new Promise((resolve) => setTimeout(resolve, ms));
-
+  const rowSelection = {
+    selectedRowKeys,
+    onChange: (newSelectedRowKeys: React.Key[]) => {
+      setSelectedRowKeys(newSelectedRowKeys as string[]);
+    },
+  };
   useEffect(() => {
-    if (userConfig.indicators && userConfig.tokens) {
+    if (indicatorList && tokenList) {
       const indReqTemp = [] as Array<IndicatorDetailReqDto>;
-      for (const ind of userConfig.indicators) {
+      for (const ind of indicatorList) {
         indReqTemp.push({
           handle_name: ind.handle_name,
         });
       }
 
       const processTokens = async () => {
-        for (const token of userConfig.tokens) {
+        for (const token of tokenList) {
           try {
             const result = await runGetTokenSnap({
-              symbol: token,
+              symbol: token.symbol,
               indicators: indReqTemp,
             } as TokenSnapReq);
 
@@ -103,7 +107,7 @@ const TokenTable = () => {
 
       processTokens();
     }
-  }, [userConfig, tokenList]);
+  }, [indicatorList, tokenList]);
 
   const { runAsync: runGetTokenSnap, loading: tokenIndLoading } = useRequest(
     getTokenSnap,
@@ -175,7 +179,7 @@ const TokenTable = () => {
       },
     ];
     const dynamicColumns =
-      tokenDetailList[0]?.indicator_snaps?.map((indicator, index) => ({
+      tokenDetailList[1]?.indicator_snaps?.map((indicator, index) => ({
         title: indicator.name,
         key: `indicator_${index}`,
         sorter: (a: TokenDetailInfo, b: TokenDetailInfo) => {
@@ -222,6 +226,7 @@ const TokenTable = () => {
   return (
     <div>
       <Table
+        rowSelection={rowSelection}
         columns={columns}
         dataSource={tokenDetailList}
         rowKey={(record) => record.base_info.contract_address}
