@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import React, { useMemo } from "react";
 import { Table } from "antd";
 import { useRequest } from "ahooks";
 import {
@@ -7,6 +7,8 @@ import {
   TokenSnapReq,
   getTokenByPage,
   getDefaultIndList,
+  saveUserConfig,
+  SaveUserConfig,
 } from "@/service/explorer";
 import {
   TokenDetailInfo,
@@ -19,6 +21,8 @@ import { formatNumber } from "@/utils/common";
 import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
 import type { TablePaginationConfig } from "antd/es/table";
+import { useExplorerStore } from "@/store/explorer";
+import { set } from "lodash-es";
 
 const TokenTable = () => {
   const [tokenDetailList, setTokenDetailList] = useImmer<
@@ -29,7 +33,8 @@ const TokenTable = () => {
   const [totalToken, setTotalToken] = useImmer(0);
   const [indicatorList, setIndicatorList] = useImmer<Array<Indicator>>([]);
   const [selectedRowKeys, setSelectedRowKeys] = useImmer<string[]>([]);
-
+  const userConfig = useExplorerStore.use.userConfig();
+  const setDraftData = useExplorerStore.use.setDraftData();
   const navigate = useNavigate();
 
   useRequest(() => getTokenByPage({ page: currentPage, page_size: 10 }), {
@@ -44,6 +49,16 @@ const TokenTable = () => {
       setIndicatorList(res);
     },
   });
+  useRequest(
+    () =>
+      saveUserConfig({
+        tokens: [...userConfig.tokens, ...selectedRowKeys],
+        indicators: indicatorList.map((ind) => ind.handle_name),
+      } as SaveUserConfig),
+    {
+      refreshDeps: [selectedRowKeys],
+    }
+  );
 
   const handlePageChange = (page: number, pageSize: number) => {
     setCurrentPage(page);
@@ -60,12 +75,21 @@ const TokenTable = () => {
     // showQuickJumper: true, // Allow quick jump to page
   };
 
+  React.useEffect(() => {
+    setSelectedRowKeys(userConfig.tokens);
+  }, [userConfig]);
   const sleep = (ms: number) =>
     new Promise((resolve) => setTimeout(resolve, ms));
   const rowSelection = {
     selectedRowKeys,
     onChange: (newSelectedRowKeys: React.Key[]) => {
       setSelectedRowKeys(newSelectedRowKeys as string[]);
+      //   setDraftData((draft) => {
+      //     draft.userConfig.tokens = [
+      //       ...userConfig.tokens,
+      //       ...newSelectedRowKeys,
+      //     ] as Array<string>;
+      //   });
     },
   };
   useEffect(() => {
@@ -179,7 +203,7 @@ const TokenTable = () => {
       },
     ];
     const dynamicColumns =
-      tokenDetailList[1]?.indicator_snaps?.map((indicator, index) => ({
+      tokenDetailList[0]?.indicator_snaps?.map((indicator, index) => ({
         title: indicator.name,
         key: `indicator_${index}`,
         sorter: (a: TokenDetailInfo, b: TokenDetailInfo) => {
@@ -229,7 +253,7 @@ const TokenTable = () => {
         rowSelection={rowSelection}
         columns={columns}
         dataSource={tokenDetailList}
-        rowKey={(record) => record.base_info.contract_address}
+        rowKey={(record) => record.base_info.symbol}
         bordered
         scroll={{ x: "max-content" }}
         pagination={paginationConfig}

@@ -1,7 +1,12 @@
 import { useMemo } from "react";
 import { Table, Button } from "antd";
 import { useRequest } from "ahooks";
-import { getUserConfig, getTokenSnap, TokenSnapReq } from "@/service/explorer";
+import {
+  getUserConfig,
+  getTokenSnap,
+  TokenSnapReq,
+  saveUserConfig,
+} from "@/service/explorer";
 import {
   TokenDetailInfo,
   TokenBaseInfo,
@@ -19,9 +24,12 @@ const UserTokenTable = () => {
     Array<TokenDetailInfo>
   >([]);
   const [currentPage, setCurrentPage] = useImmer(1);
-
   // const [userConfig, setUserConfig] = useImmer<UserConfig>({} as UserConfig);
   const userConfig = useExplorerStore.use.userConfig();
+  const [existingToken, setExistingToken] = useImmer<Array<string>>(
+    userConfig.tokens
+  );
+
   const setDraftData = useExplorerStore.use.setDraftData();
   const navigate = useNavigate();
 
@@ -33,13 +41,25 @@ const UserTokenTable = () => {
     },
   });
 
+  // useRequest(
+  //   () =>
+  //     saveUserConfig({
+  //       tokens: existingToken,
+  //       indicators: userConfig.indicators.map((ind) => ind.handle_name),
+  //     }),
+  //   {
+  //     refreshDeps: [existingToken],
+  //   }
+  // );
+
   const handlePageChange = (page: number, pageSize: number) => {
     setCurrentPage(page);
   };
-  const handleRemoveRow = (contractAddress: string) => {
+  const handleRemoveRow = (symbol: string) => {
     setTokenDetailList((prev) =>
-      prev.filter((item) => item.base_info.contract_address !== contractAddress)
+      prev.filter((item) => item.base_info.symbol !== symbol)
     );
+    setExistingToken((prev) => prev.filter((item) => item !== symbol));
   };
 
   const paginationConfig: TablePaginationConfig = {
@@ -76,9 +96,7 @@ const UserTokenTable = () => {
             setTokenDetailList((prev) => {
               if (
                 !prev.some(
-                  (item) =>
-                    item.base_info.contract_address ===
-                    result.base_info.contract_address
+                  (item) => item.base_info.symbol === result.base_info.symbol
                 )
               ) {
                 return [...prev, result];
@@ -218,7 +236,7 @@ const UserTokenTable = () => {
         render: (_: any, record: TokenDetailInfo) => (
           <Button
             danger
-            onClick={() => handleRemoveRow(record.base_info.contract_address)}
+            onClick={() => handleRemoveRow(record.base_info.symbol)}
           >
             Remove
           </Button>
@@ -232,7 +250,7 @@ const UserTokenTable = () => {
       <Table
         columns={columns}
         dataSource={tokenDetailList}
-        rowKey={(record) => record.base_info.contract_address}
+        rowKey={(record) => record.base_info.symbol}
         bordered
         scroll={{ x: "max-content" }}
         pagination={paginationConfig}
