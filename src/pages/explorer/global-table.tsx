@@ -1,5 +1,5 @@
 import React, { useMemo } from "react";
-import { Table } from "antd";
+import { Table ,Alert} from "antd";
 import { useRequest } from "ahooks";
 import {
   getUserConfig,
@@ -49,16 +49,16 @@ const TokenTable = () => {
       setIndicatorList(res);
     },
   });
-  useRequest(
-    () =>
-      saveUserConfig({
-        tokens: selectedRowKeys,
-        indicators: indicatorList.map((ind) => ind.handle_name),
-      } as SaveUserConfigReq),
-    {
-      refreshDeps: [selectedRowKeys],
-    }
-  );
+  // useRequest(
+  //   () =>
+  //     saveUserConfig({
+  //       tokens: selectedRowKeys,
+  //       indicators: indicatorList.map((ind) => ind.handle_name),
+  //     } as SaveUserConfigReq),
+  //   {
+  //     refreshDeps: [selectedRowKeys],
+  //   }
+  // );
 
   const handlePageChange = (page: number, pageSize: number) => {
     setCurrentPage(page);
@@ -80,15 +80,39 @@ const TokenTable = () => {
   }, [userConfig]);
   const sleep = (ms: number) =>
     new Promise((resolve) => setTimeout(resolve, ms));
+
   const rowSelection = {
-    selectedRowKeys,
-    onChange: (newSelectedRowKeys: React.Key[]) => {
-      setSelectedRowKeys(newSelectedRowKeys as string[]);
-        setDraftData((draft) => {
-          draft.userConfig.tokens = newSelectedRowKeys as Array<string>;
+  selectedRowKeys,
+  onChange: async (newSelectedRowKeys: React.Key[]) => {
+    try {
+      // Update UI immediately for responsiveness
+        setSelectedRowKeys(newSelectedRowKeys as string[]);
+
+        // Attempt to save to server
+        const response = await saveUserConfig({
+          tokens: newSelectedRowKeys as string[],
+          indicators: userConfig.indicators.map((ind) => ind.handle_name),
         });
-    },
-  };
+
+        // If save was successful, update draft
+        if (response) {  // adjust this condition based on your API response structure
+          setDraftData((draft) => {
+            draft.userConfig.tokens = newSelectedRowKeys as Array<string>;
+          });
+        } else {
+          // If save failed, revert UI and show error
+          setSelectedRowKeys(selectedRowKeys);  // revert to previous state
+          alert("save error")
+          
+      }
+    } catch (error) {
+      // Handle any errors during save
+      setSelectedRowKeys(selectedRowKeys);  // revert to previous state
+      alert("save error 2")
+  
+    }
+  },
+};
   useEffect(() => {
     if (indicatorList && tokenList) {
       const indReqTemp = [] as Array<IndicatorDetailReqDto>;
@@ -139,7 +163,7 @@ const TokenTable = () => {
 
   const columns = useMemo(() => {
     // Base columns for token info
-    console.log("tokenDetailList", tokenDetailList);
+    console.log("user tokenDetailList", tokenDetailList);
 
     const baseColumns = [
       {

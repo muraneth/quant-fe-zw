@@ -200,14 +200,7 @@ const UserTokenTable = () => {
           </div>
         ),
       },
-      // {
-      //   title: "Create Time",
-      //   dataIndex: ["base_info", "create_time"],
-      //   key: "create_time",
-      //   width: "120px",
-      //   render: (createTime: string) =>
-      //     new Date(createTime).toLocaleDateString(),
-      // },
+    
     ];
     const dynamicColumns =
       tokenDetailList[0]?.indicator_snaps?.map((indicator, index) => ({
