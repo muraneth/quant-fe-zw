@@ -75,7 +75,7 @@ const Header = () => {
   );
   const handleChainChange = (chain: string) => {
     setSelectedChain(chain);
-    setKeywords(""); // Reset search when changing chains
+    setKeywords(""); 
   };
   const { run: onSearch } = useDebounceFn(
     (v: string) => {
