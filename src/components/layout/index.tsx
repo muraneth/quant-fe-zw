@@ -20,7 +20,7 @@ const menuList = [
   },
   {
     name: "Pricing",
-    path: "/priceing",
+    path: "/pricing",
   },
 ];
 

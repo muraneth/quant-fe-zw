@@ -20,7 +20,7 @@ export const getPriceSeries = (priceList, klineType) => {
     switch (klineType) {
       case "kline":
         return {
-          name: "kline",
+          name: "KLine",
           data: parsePriceToKlineSeriesData(priceList),
           type: "candlestick",
           itemStyle: {
@@ -35,7 +35,7 @@ export const getPriceSeries = (priceList, klineType) => {
 
       case "avgPrice":
         return {
-          name: "kline",
+          name: "Avg Price",
           data: priceList.map((item) => item?.avg_price),
           type: "line",
           smooth: true,
@@ -88,16 +88,20 @@ export const getToolTipFormater = (params) => {
       result += `
               <div style="margin: 5px 0; line-height: 1.5;">
                 <strong>${param.seriesName}:</strong> 
-                <span style="color: #999;">Open:</span> ${formatNumber(open)} 
-                <span style="color: #999;">Close:</span> ${formatNumber(close)} 
-                <span style="color: #999;">Low:</span> ${formatNumber(low)} 
-                <span style="color: #999;">High:</span> ${formatNumber(high)}
+                <span style="color: #999;">O:</span> ${formatNumber(open)} 
+                <span style="color: #999;">C:</span> ${formatNumber(close)} 
+                <span style="color: #999;">L:</span> ${formatNumber(low)} 
+                <span style="color: #999;">H:</span> ${formatNumber(high)}
               </div>
+              <div>
               <div>
               <strong>Change:</strong> 
               <span style="color: ${percentageChange >= 0 ? "green" : "red"};">${percentageChange}%</span>
+              </div>
+              <div>
               <strong>Amplitude:</strong>
               <span">${amplitude}%</span>
+              </div>
               </div>
             `;
     } else {
@@ -105,8 +109,7 @@ export const getToolTipFormater = (params) => {
       if (param.axisType === "yAxis.category") {
         // for y-axis stacked bar chart
         result += `
-                <div style="margin: 5px 0; line-height: 1.5;">
-                <span style="display: inline-block; width: 10px; height: 10px; background-color: ${param.color}; border-radius: 50%; margin-right: 5px;"></span>
+                <div>
                   <strong>${param.seriesName}:</strong> ${formatNumber(param.value)}
                 </div>
           `;
@@ -116,11 +119,8 @@ export const getToolTipFormater = (params) => {
       }
       else {
         result += `
-                <div style="margin: 5px 0; line-height: 1.5;">
-                <span style="display: inline-block; width: 10px; height: 10px; background-color: ${param.color}; border-radius: 50%; margin-right: 5px;"></span>
-                <strong>${param.seriesName}:</strong> ${formatNumber(
-          param.value
-        )}
+                <div >
+                <strong>${param.seriesName}:</strong> ${formatNumber(param.value)}
                 </div>
           `;
       }

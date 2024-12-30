@@ -22,7 +22,7 @@ export function signInSuccessAction(userInfo: SignInResDto) {
     );
     const searchIns = new URLSearchParams(location.search);
     const redirectUrl = searchIns.get("redirectUrl");
-    window.location.href = redirectUrl || "/charts";
+    window.location.href = redirectUrl || "/explorer";
   } catch (err) {
     console.error(err);
   }
@@ -81,6 +81,8 @@ export function findKeyByValueFromMapping<T>(mapping: Record<any, Array<T>>) {
 export interface ExtractedTokenMarketInfoItem {
   percentage: string;
   title: string;
+  handle_name?: string;
+  chart_type?: string;
   type: "rise" | "fall" | "neutral";
   value: number;
 }
@@ -94,6 +96,8 @@ export function extractedTokenMarketInfo(
     return {
       title: item.name,
       value: item.value,
+      handle_name: item.handle_name,
+      chart_type: item.type,
       type: item.value_chg > 0 ? "rise" : item.value_chg < 0 ? "fall" : "neutral",
       percentage: numberToPercentage(item.value_chg),
     };

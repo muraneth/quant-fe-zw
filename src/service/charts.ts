@@ -12,6 +12,7 @@ export enum IndicatorChartType {
 
 interface TokenListReqDto {
   key: string;
+  chain?:string;
 }
 
 export interface TokenBaseInfo {
@@ -29,7 +30,8 @@ export interface TokenDetailInfo {
 }
 export interface IndicatorUnit {
   name: string;
-  handle_name:string;
+  handle_name: string;
+  type: IndicatorChartType;
   value: number;
   value_chg: number;
 }
@@ -90,13 +92,13 @@ export interface Group {
   indicators: Indicator[];
 }
 
-export interface IndicatorListItem {
+export interface IndicatorCategory {
   category: string;
   order: number;
   groups: Group[];
 }
 
-export type IndicatorListResDto = Array<IndicatorListItem>;
+export type IndicatorListResDto = Array<IndicatorCategory>;
 
 /**
  * 获取指标列表
@@ -108,13 +110,13 @@ export function getIndicatorList(): Promise<IndicatorListResDto> {
   });
 }
 
-interface IndicatorDetailReqDto {
-  symbol: string;
-  chain: string;
-  start_time: string;
-  end_time: string;
-  handle_name: string;
-  base_params: Record<string, any>;
+export interface IndicatorDetailReqDto {
+  symbol?: string;
+  chain?: string;
+  start_time?: string;
+  end_time?: string;
+  handle_name?: string;
+  base_params?: Record<string, any>;
   extra_params?: Record<string, any>;
 }
 
@@ -186,7 +188,7 @@ export function unCollectIndicator(
     method: "POST",
     params,
   });
-} 
+}
 export function saveIndicatorParam(
   params: CollectIndicatorReqDto
 ): Promise<void> {

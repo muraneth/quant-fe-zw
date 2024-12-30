@@ -1,6 +1,7 @@
 import * as React from "react";
 import { useImmer } from "use-immer";
-import { Input, Popover, Skeleton } from "antd";
+import { Input, Popover, Skeleton,Tabs } from "antd";
+import type { TabsProps } from "antd";
 import { useDebounceFn, useRequest } from "ahooks";
 import {
   getTokenList,
@@ -19,20 +20,28 @@ import classNames from "classnames";
 import styles from "./index.module.scss";
 import { formatNumber } from "@/utils/common";
 
+
+const chains = [
+  { key: "ethereum", label: "Ethereum" },
+  { key: "base", label: "Base" },
+];
+
 const Header = () => {
   const [openPopover, setOpenPopover] = useImmer(false);
   const [keywords, setKeywords] = useImmer("");
   const [currentToken, setCurrentToken] = useImmer<TokenBaseInfo>(
     null as unknown as TokenBaseInfo
   );
+  const [selectedChain, setSelectedChain] = useImmer("ethereum"); 
+
   const [tokenMarketInfoList, setTokenMarketInfoList] = useImmer<
     Array<ExtractedTokenMarketInfoItem>
   >([]);
-
+  
   const { data: tokenList = [] } = useRequest(
-    () => getTokenList({ key: keywords }),
+    () => getTokenList({ key: keywords, chain: selectedChain }),
     {
-      refreshDeps: [keywords],
+      refreshDeps: [keywords, selectedChain],
       onSuccess: (res) => {
         if (res?.[0] && !currentToken) {
           setCurrentToken(res[0]);
@@ -40,7 +49,7 @@ const Header = () => {
       },
     }
   );
-
+  
   useRequest(
     () => {
       if (!currentToken) return null as any;
@@ -64,7 +73,10 @@ const Header = () => {
       },
     }
   );
-
+  const handleChainChange = (chain: string) => {
+    setSelectedChain(chain);
+    setKeywords(""); 
+  };
   const { run: onSearch } = useDebounceFn(
     (v: string) => {
       setKeywords(v);
@@ -92,8 +104,20 @@ const Header = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentToken]);
 
+  const handleItemClick = (item:ExtractedTokenMarketInfoItem) => {
+
+    if (item) {
+      window.location.href =`/charts?symbol=${currentToken.symbol}&handle_name=${item.handle_name}&type=${item.chart_type}`;``
+    }
+  };
   const tokenContent = (
     <div className={styles.tokenContent}>
+      <Tabs 
+        defaultActiveKey={selectedChain}
+        onChange={handleChainChange}
+        items={chains}
+        className={styles.chainTabs}
+      />
       <div className={styles.search}>
         <Input
           onChange={(v) => {
@@ -124,7 +148,7 @@ const Header = () => {
                 <span className={styles.itemHeaderDesc}>{i.name}</span>
               </div>
               <div className={styles.rightBottom}>
-                <img src={i.icon_url} alt="" />
+                {/* <img src={i.icon_url} alt="" /> */}
                 <EllipsisMiddle
                   className={styles.contract_address}
                   title={i.contract_address}
@@ -203,7 +227,7 @@ const Header = () => {
       <div className={styles.right}>
         {tokenMarketInfoList?.map((i, index) => {
           return (
-            <div key={index} className={styles.itemInfo}>
+            <div key={index} className={styles.itemInfo} onClick={() => handleItemClick(i)}>
               <div className={styles.title}>{i.title}</div>
               <div className={styles.valueInfo}>
                 <span>{formatNumber(i.value)}</span>

@@ -46,7 +46,7 @@ export function independentLineTransform({
   if (indicatorDetailList?.length) {
     options.yAxis.push(getIndenpendYAxis());
     options.series.push({
-      name: "Indicator Value",
+      name: "Indicator",
       data: indicatorDetailList.map((item) => item?.value),
       type: "line",
 
