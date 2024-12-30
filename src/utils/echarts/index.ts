@@ -7,13 +7,15 @@ import { xBarStackTransform } from "./x-bar-stack";
 import { yBarTransform } from "./y-bar";
 import { yBarStackTransform } from "./y-bar-stack";
 import { IndicatorChartType } from "@/service/charts";
-import {areaStackTransform} from "./area-stack";
+import { areaStackTransform } from "./area-stack";
 export function generateOptions({
   type,
   indicatorDetailList = [] as any,
   priceList = [] as any,
   klineType = '',
 }) {
+  console.log('type', type);
+
   switch (type) {
     case IndicatorChartType.PRICE_LINE:
       return priceLineTransform({ indicatorDetailList, priceList, klineType });
@@ -35,6 +37,6 @@ export function generateOptions({
     case IndicatorChartType.AREA_STACK:
       return areaStackTransform({ indicatorDetailList, priceList, klineType });
     default:
-      return {};
+      return independentLineTransform({ indicatorDetailList, priceList, klineType });
   }
 }

@@ -1,10 +1,25 @@
 .searchWrapper {
   :global {
-    .ant-tabs-nav {
-      height: 45px;
-      padding-left: 12px;
+    .ant-tabs-card > .ant-tabs-nav .ant-tabs-tab {
+      border-radius: 1;
+      margin: 0;
+      width: 50%;
+      justify-content: center;
+      padding: 8px 16px;
     }
 
+    .ant-tabs-nav {
+      margin-bottom: 0;
+    }
+
+    .ant-tabs-nav-list {
+      width: 100%;
+    }
+
+    .ant-tabs-tab + .ant-tabs-tab {
+      margin: 0;
+    }
+    
     .ant-tabs .ant-tabs-ink-bar {
       background: transparent;
     }

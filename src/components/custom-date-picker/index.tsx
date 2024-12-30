@@ -12,6 +12,8 @@ const CustomDatePicker = (props: WidgetProps) => {
   const handleChange = (e: dayjs.Dayjs | null) => {
     if (e) {
       const formatTime = dayjs(e).format("YYYY-MM-DD");
+      console.log("formatTime on change", formatTime);
+
       onChange(formatTime);
     }
   };

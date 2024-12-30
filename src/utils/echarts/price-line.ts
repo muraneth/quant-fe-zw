@@ -46,7 +46,7 @@ export function priceLineTransform({ indicatorDetailList, priceList, klineType }
 
   if (indicatorDetailList?.length) {
     options.series.push({
-      name: "Indicator Value",
+      name: "Indicator",
       data: indicatorDetailList.map((item) => item?.value),
       type: "line",
       areaStyle: {

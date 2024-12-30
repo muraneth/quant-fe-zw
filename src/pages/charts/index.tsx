@@ -7,10 +7,10 @@ import { useChartStore } from "@/store/charts";
 import styles from "./index.module.scss";
 import { useLocation } from "react-router-dom";
 
-
 const Charts = () => {
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
+  const chain = queryParams.get("chain") as string;
   const symbol = queryParams.get("symbol");
   const handle_name = queryParams.get("handle_name");
   const type = queryParams.get("type") as any;
@@ -18,17 +18,21 @@ const Charts = () => {
   const removeChartStore = useChartStore.use.removeChartStore();
   const setDraftData = useChartStore.use.setDraftData();
 
-  
   React.useEffect(() => {
     if (symbol && handle_name && type) {
       // url参数解析设置
-      setDraftData(draft => {
-        draft.tokenInfo.symbol = symbol;
+      setDraftData((draft) => {
+        // draft.tokenInfo.symbol = symbol;
+        draft.tokenInfo = {
+          symbol: symbol,
+          chain: chain,
+          start_time: "",
+          end_time: "",
+        };
         draft.indicatorInfo.handle_name = handle_name;
         draft.indicatorInfo.type = type;
-      })
+      });
     }
-   
   }, [symbol, handle_name, type, setDraftData]);
 
   React.useEffect(() => {

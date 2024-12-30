@@ -10,12 +10,12 @@ import styles from "./index.module.scss";
 const items: TabsProps["items"] = [
   {
     key: "1",
-    label: "Full",
+    label: "All Indicators",
     children: <FullSearch />,
   },
   {
     key: "2",
-    label: "Collected",
+    label: "My Collected",
     children: <CollectedSearch />,
   },
 ];
@@ -33,7 +33,12 @@ const Search = () => {
 
   return (
     <div className={styles.searchWrapper}>
-      <Tabs destroyInactiveTabPane defaultActiveKey="1" items={items} />
+      <Tabs
+        type="card"
+        destroyInactiveTabPane
+        defaultActiveKey="1"
+        items={items}
+      />
     </div>
   );
 };

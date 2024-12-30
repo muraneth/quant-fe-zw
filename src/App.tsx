@@ -45,7 +45,7 @@ function App() {
           <Route path="/studio" element={<Studio />} />
           <Route path="/compare" element={<Compare />} />
           <Route path="/wallet" element={<Wallet />} />
-          <Route path="/priceing" element={<Subscribe />} />
+          <Route path="/pricing" element={<Subscribe />} />
           <Route path="/payment" element={<Payment />} />
         </Route>
         <Route path="*" element={<Navigate to="/" />} />

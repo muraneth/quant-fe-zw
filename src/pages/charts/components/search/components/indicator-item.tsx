@@ -7,7 +7,7 @@ import styles from "../index.module.scss";
 type IndicatorItemProps = Indicator;
 
 const IndicatorItem: React.FC<IndicatorItemProps> = (indicatorInfoItem) => {
-  const { param_schema, category, handle_name, required_level, name } =
+  const { param_schema, category, handle_name, required_level, name, type } =
     indicatorInfoItem || {};
 
   const setDraftData = useChartStore.use.setDraftData();
@@ -44,7 +44,8 @@ const IndicatorItem: React.FC<IndicatorItemProps> = (indicatorInfoItem) => {
 
   const chooseIndicator = () => {
     resetChartPanelData({
-      refreshChart: indicatorInfo.category !== category,
+      refreshChart:
+        indicatorInfo.category !== category || type !== indicatorInfo.type,
     });
     setDraftData((draft) => {
       draft.indicatorInfo = indicatorInfoItem;
