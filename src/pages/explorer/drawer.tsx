@@ -9,7 +9,7 @@ import {
 } from "@/service/explorer";
 import { useRequest } from "ahooks";
 import { Indicator, IndicatorCategory } from "@/service/charts";
-
+import { useExplorerStore } from "@/store/explorer";
 const MyDrawer: React.FC = () => {
   const [selectedIndicators, setSelectedIndicators] = useImmer<
     Array<Indicator>
@@ -17,7 +17,8 @@ const MyDrawer: React.FC = () => {
 
   const [categories, setCategories] = useImmer<Array<IndicatorCategory>>([]);
   const [checkedKeys, setCheckedKeys] = useImmer<React.Key[]>([]);
-
+  const  setDraftData  = useExplorerStore.use.setDraftData();
+  const userConfig = useExplorerStore.use.userConfig();
   useRequest(() => getUserConfig(), {
     onSuccess: (res) => {
       setSelectedIndicators(res.indicators);
@@ -98,9 +99,7 @@ const MyDrawer: React.FC = () => {
           title: (
             <div>
               <span>{indicator.name}</span>
-              {/* <span >
-                {indicator.description}
-              </span> */}
+              
             </div>
           ),
           key: indicator.handle_name,
@@ -129,11 +128,21 @@ const MyDrawer: React.FC = () => {
     useRequest(
       () =>
         saveUserConfig({
+          tokens: userConfig.tokens,
           indicators: selectedIndicators.map((ind) => ind.handle_name),
         }),
       { manual: true }
     );
+  const onSaveSetting = async () => {
+    await runSaveSetting();
+    setDraftData(
+        (draft) => {
+            // draft.userConfig.tokens = draft.userConfig.tokens;
+            draft.userConfig.indicators = selectedIndicators;
+        }
+    );
 
+  } 
   return (
     <div>
       <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
@@ -141,7 +150,7 @@ const MyDrawer: React.FC = () => {
         <Button
           style={{ fontSize: "12px" }}
           loading={runSaveSettingLoading}
-          onClick={runSaveSetting}
+          onClick={onSaveSetting}
         >
           Save Setting
         </Button>

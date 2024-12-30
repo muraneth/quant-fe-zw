@@ -6,7 +6,7 @@ export interface UserConfig {
     tokens: Array<string>;
     indicators: Array<Indicator>;
 }
-export interface SaveUserConfig {
+export interface SaveUserConfigReq {
     tokens?: Array<string>;
     indicators: Array<string>;
 }
@@ -33,7 +33,7 @@ export function getUserConfig(): Promise<UserConfig> {
     });
 }
 
-export function saveUserConfig(params: SaveUserConfig): Promise<any> {
+export function saveUserConfig(params: SaveUserConfigReq): Promise<any> {
     return request({
         url: "/data/api/explorer/saveUserConfig",
         method: "POST",

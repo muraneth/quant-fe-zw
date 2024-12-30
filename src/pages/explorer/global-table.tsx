@@ -8,7 +8,7 @@ import {
   getTokenByPage,
   getDefaultIndList,
   saveUserConfig,
-  SaveUserConfig,
+  SaveUserConfigReq,
 } from "@/service/explorer";
 import {
   TokenDetailInfo,
@@ -22,7 +22,7 @@ import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
 import type { TablePaginationConfig } from "antd/es/table";
 import { useExplorerStore } from "@/store/explorer";
-import { set } from "lodash-es";
+
 
 const TokenTable = () => {
   const [tokenDetailList, setTokenDetailList] = useImmer<
@@ -52,9 +52,9 @@ const TokenTable = () => {
   useRequest(
     () =>
       saveUserConfig({
-        tokens: [...userConfig.tokens, ...selectedRowKeys],
+        tokens: selectedRowKeys,
         indicators: indicatorList.map((ind) => ind.handle_name),
-      } as SaveUserConfig),
+      } as SaveUserConfigReq),
     {
       refreshDeps: [selectedRowKeys],
     }
@@ -84,12 +84,9 @@ const TokenTable = () => {
     selectedRowKeys,
     onChange: (newSelectedRowKeys: React.Key[]) => {
       setSelectedRowKeys(newSelectedRowKeys as string[]);
-      //   setDraftData((draft) => {
-      //     draft.userConfig.tokens = [
-      //       ...userConfig.tokens,
-      //       ...newSelectedRowKeys,
-      //     ] as Array<string>;
-      //   });
+        setDraftData((draft) => {
+          draft.userConfig.tokens = newSelectedRowKeys as Array<string>;
+        });
     },
   };
   useEffect(() => {
