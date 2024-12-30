@@ -7,7 +7,7 @@ import { useImmer } from 'use-immer';
 const { Paragraph, Text } = Typography;
 
 const Payment = () => {
-  const [price, setPrice] = useImmer(45);
+  const [price] = useImmer(45);
   const [currentMonth, setCurrentMonth] = useImmer(3);
 
   return (
