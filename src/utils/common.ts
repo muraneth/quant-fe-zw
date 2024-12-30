@@ -22,7 +22,7 @@ export function signInSuccessAction(userInfo: SignInResDto) {
     );
     const searchIns = new URLSearchParams(location.search);
     const redirectUrl = searchIns.get("redirectUrl");
-    window.location.href = redirectUrl || "/charts";
+    window.location.href = redirectUrl || "/explorer";
   } catch (err) {
     console.error(err);
   }

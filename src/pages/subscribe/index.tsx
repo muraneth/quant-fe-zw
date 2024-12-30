@@ -1,4 +1,3 @@
-
 import { svgMap } from '@/constants/svg';
 import { Button, Divider, InputNumber, Select, Typography, Modal } from 'antd';
 import { QRCodeSVG } from 'qrcode.react';
@@ -6,6 +5,9 @@ import { useImmer } from 'use-immer';
 import { Plan, getPlan, getPlans, getPaymentMethods, UserPayMethod } from '@/service/plan';
 import { useRequest } from 'ahooks';
 import styles from './index.module.scss';
+import { getUserInfo } from '@/utils/common';
+import { useEffect } from 'react';
+import { CheckCircleFilled } from '@ant-design/icons';
 
 const { Paragraph, Text } = Typography;
 
@@ -22,15 +24,21 @@ const Subscribe = () => {
   const [currentMonth, setCurrentMonth] = useImmer(3);
   const [paymentMethods, setPaymentMethods] = useImmer([] as PaymentProps[]);
   const [selectedAddress, setSelectedAddress] = useImmer('');
+  const [currentPlan, setCurrentPlan] = useImmer("");
+  const userInfo = getUserInfo();
 
-  // Fetch plans
+  useEffect(() => {
+    if (userInfo) {
+      setCurrentPlan(userInfo.plan);
+    }
+  }, []);
+
   useRequest(() => getPlans(), {
     onSuccess: (res) => {
       setPlans(res);
     },
   });
 
-  // Fetch selected plan details
   const { loading: planLoading } = useRequest(
     () => selectedPlanId ? getPlan(selectedPlanId) : Promise.resolve(null),
     {
@@ -44,7 +52,6 @@ const Subscribe = () => {
     }
   );
 
-  // Fetch payment methods
   const { loading: methodsLoading } = useRequest(() => getPaymentMethods(), {
     ready: isModalVisible,
     onSuccess: (data) => {
@@ -82,7 +89,29 @@ const Subscribe = () => {
 
   const handlePayment = () => {
     // Handle payment here
-    handleModalClose();
+    // handleModalClose();
+  };
+
+  const renderSubscribeButton = (plan: Plan) => {
+    const isCurrentPlan = plan.type === currentPlan;
+
+    if (isCurrentPlan) {
+      return (
+        <div className={`${styles.btn} ${styles.currentPlan}`}>
+          <CheckCircleFilled />
+          <div> Current Plan</div> 
+        </div>
+      );
+    }
+
+    return (
+      <div
+        className={styles.btn}
+        onClick={() => handleSubscribeClick(plan.id)}
+      >
+        Subscribe
+      </div>
+    );
   };
 
   const PaymentModal = () => (
@@ -94,11 +123,6 @@ const Subscribe = () => {
       className={styles.paymentModal}
     >
       <div className={styles.payment}>
-        {/* <div className={styles.left}>
-          {svgMap['payment']}
-          <div className={styles.text}>Payment</div>
-          <div className={styles.desc}>Pay with USDT, USDC, ETH</div>
-        </div> */}
         <div className={styles.right}>
           <div className={styles.title}>How Long do you want to subscribe?</div>
           <div className={styles.desc}>Get discount for 3 months or longer</div>
@@ -152,8 +176,8 @@ const Subscribe = () => {
           >
             Done
           </Button>
-          <div style={{color: "gray"}}>
-            You can transfer ETH, USDT, USDC from personal wallet or CEX. 
+          <div style={{color: "gray",paddingBottom:16}}>
+            You can transfer DAI,USDT,USDC from personal wallet or CEX. 
             We will check the balance of the target wallet automatically. 
             Transfer from CEX always takes longer. If you meet any issue, get in touch with us
           </div>
@@ -167,31 +191,26 @@ const Subscribe = () => {
       <div className={styles.content}>
         <div className={styles.top}>
           <div>{svgMap['price']}</div>
-          <div className={styles.title}>Flexible Pricing</div>
-          <div className={styles.desc}>Pay by crypto</div>
+          {/* <div className={styles.title}>Flexible Pricing</div> */}
+          <div className={styles.desc}>Pay by Crypto:DAI,USDT,USDC</div>
         </div>
         <div className={styles.subscribeList}>
-          {plans?.map(i => (
-            <div key={i.id} className={styles.item}>
+          {plans?.map(plan => (
+            <div key={plan.id} className={styles.item}>
               <div className={styles.header}>
-                <span className={styles.headerTitle}>{i.type}</span>
-                {i.isPopolar && <span className={styles.popolar}>MOST POPULAR</span>}
+                <span className={styles.headerTitle}>{plan.title}</span>
+                {plan.isPopolar && <span className={styles.popolar}>MOST POPULAR</span>}
               </div>
               <div className={styles.priceInfo}>
-                <span>${i.price}</span>
-                <span>/{i.util}</span>
+                <span>${plan.price}</span>
+                <span>/{plan.util}</span>
               </div>
               <div className={styles.descList}>
-                {i.desc?.map(Idesc => (
+                {plan.desc?.map(Idesc => (
                   <p key={Idesc.id}>{Idesc.title}</p>
                 ))}
               </div>
-              <div
-                className={styles.btn}
-                onClick={() => handleSubscribeClick(i.id)}
-              >
-                Subscribe
-              </div>
+              {renderSubscribeButton(plan)}
             </div>
           ))}
         </div>

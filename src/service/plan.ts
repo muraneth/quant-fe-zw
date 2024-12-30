@@ -8,6 +8,7 @@ interface Des {
 export interface Plan {
     id: number;
     type: string;
+    title: string;
     price : number;
     util: string;
     desc: Des[];
