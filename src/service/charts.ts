@@ -12,6 +12,7 @@ export enum IndicatorChartType {
 
 interface TokenListReqDto {
   key: string;
+  chain?:string;
 }
 
 export interface TokenBaseInfo {
