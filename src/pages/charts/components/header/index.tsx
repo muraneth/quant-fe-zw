@@ -104,6 +104,12 @@ const Header = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentToken]);
 
+  const handleItemClick = (item:ExtractedTokenMarketInfoItem) => {
+
+    if (item) {
+      window.location.href =`/charts?symbol=${currentToken.symbol}&handle_name=${item.handle_name}&type=${item.chart_type}`;``
+    }
+  };
   const tokenContent = (
     <div className={styles.tokenContent}>
       <Tabs 
@@ -221,7 +227,7 @@ const Header = () => {
       <div className={styles.right}>
         {tokenMarketInfoList?.map((i, index) => {
           return (
-            <div key={index} className={styles.itemInfo}>
+            <div key={index} className={styles.itemInfo} onClick={() => handleItemClick(i)}>
               <div className={styles.title}>{i.title}</div>
               <div className={styles.valueInfo}>
                 <span>{formatNumber(i.value)}</span>

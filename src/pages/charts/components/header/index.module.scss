@@ -67,6 +67,13 @@
 
     .itemInfo:not(:last-child) {
       margin-right: 32px;
+      cursor: pointer; /* Changes the cursor to a pointer */
+      transition: background-color 0.3s, transform 0.3s; /* Smooth hover effect */
+    }
+    
+    .itemInfo:hover {
+      background-color: #393737; /* Light background on hover */
+      transform: scale(1.05); /* Slight zoom effect */
     }
 
     .itemInfo {
