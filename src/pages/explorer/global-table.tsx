@@ -49,16 +49,6 @@ const TokenTable = () => {
       setIndicatorList(res);
     },
   });
-  // useRequest(
-  //   () =>
-  //     saveUserConfig({
-  //       tokens: selectedRowKeys,
-  //       indicators: indicatorList.map((ind) => ind.handle_name),
-  //     } as SaveUserConfigReq),
-  //   {
-  //     refreshDeps: [selectedRowKeys],
-  //   }
-  // );
 
   const handlePageChange = (page: number, pageSize: number) => {
     setCurrentPage(page);
@@ -102,13 +92,14 @@ const TokenTable = () => {
         } else {
           // If save failed, revert UI and show error
           setSelectedRowKeys(selectedRowKeys);  // revert to previous state
-          alert("save error")
+
           
       }
     } catch (error) {
       // Handle any errors during save
       setSelectedRowKeys(selectedRowKeys);  // revert to previous state
-      alert("save error 2")
+      console.log("error", error);
+    
   
     }
   },
