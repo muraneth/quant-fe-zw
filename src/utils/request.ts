@@ -56,15 +56,15 @@ const request = ({ url, method, params = {} }: IFetchParams) => {
       switch (res.code) {
         case ResponseCode.NO_PERMISSION:
         case ResponseCode.SUCCESS:
-          setAuth({ indicatorLevelAuth: true });
+          // setAuth({ indicatorLevelAuth: true });
           return Promise.resolve(res.data);
         case ResponseCode.NO_LEVEL_AUTH:
-          setAuth({ indicatorLevelAuth: false });
+          // setAuth({ indicatorLevelAuth: false });
           return Promise.reject();
         case ResponseCode.NOT_SIGN_IN_1:
         case ResponseCode.NOT_SIGN_IN_2:
         case ResponseCode.TOKEN_ERROR:
-          window.location.href = "/sign-in";
+          // window.location.href = "/sign-in";
           return Promise.reject();
       }
       return Promise.reject(res.msg || "fetch error");

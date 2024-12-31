@@ -13,7 +13,17 @@ export function removeSpacesFromObject(obj: Record<string, any>) {
   });
   return newObj;
 }
-
+export function updateUserInfo(userInfo: SignInResDto) {
+  try {
+    localStorage.setItem(
+      storageKey["userInfo"],
+      JSON.stringify(userInfo || {})
+    );
+    window.location.href = "/charts";
+  } catch (err) {
+    console.error(err);
+  }
+}
 export function signInSuccessAction(userInfo: SignInResDto) {
   try {
     localStorage.setItem(
@@ -22,7 +32,7 @@ export function signInSuccessAction(userInfo: SignInResDto) {
     );
     const searchIns = new URLSearchParams(location.search);
     const redirectUrl = searchIns.get("redirectUrl");
-    window.location.href = redirectUrl || "/explorer";
+    window.location.href = redirectUrl || "/charts";
   } catch (err) {
     console.error(err);
   }

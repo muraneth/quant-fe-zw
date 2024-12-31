@@ -1,35 +1,40 @@
 import { svgMap } from '@/constants/svg';
-import { Button, Divider, InputNumber, Select, Typography, Modal } from 'antd';
+import { Button, Divider, InputNumber, Radio, Typography, Modal } from 'antd';
 import { QRCodeSVG } from 'qrcode.react';
 import { useImmer } from 'use-immer';
-import { Plan, getPlan, getPlans, getPaymentMethods, UserPayMethod } from '@/service/plan';
+import { Plan, getPlan, getPlans, getPaymentMethods, UserPayMethod, postPaid } from '@/service/plan';
 import { useRequest } from 'ahooks';
 import styles from './index.module.scss';
-import { getUserInfo } from '@/utils/common';
-import { useEffect } from 'react';
+import { getUserInfo,updateUserInfo } from '@/utils/common';
+import { useEffect, useMemo } from 'react';
 import { CheckCircleFilled } from '@ant-design/icons';
 
 const { Paragraph, Text } = Typography;
 
+interface Payment {
+  chain: string;
+  address: string;
+}
 interface PaymentProps {
   label: string;
-  value: string;
+  value: Payment;
 }
 
 const Subscribe = () => {
-  const [plans, setPlans] = useImmer([] as Array<Plan>);
+  const [plans, setPlans] = useImmer([{}] as Array<Plan>);
   const [isModalVisible, setIsModalVisible] = useImmer(false);
   const [selectedPlanId, setSelectedPlanId] = useImmer<number | null>(null);
   const [selectedPlan, setSelectedPlan] = useImmer<Plan | null>(null);
   const [currentMonth, setCurrentMonth] = useImmer(3);
   const [paymentMethods, setPaymentMethods] = useImmer([] as PaymentProps[]);
+  const [selectedChain, setSelectedChain] = useImmer('');
   const [selectedAddress, setSelectedAddress] = useImmer('');
-  const [currentPlan, setCurrentPlan] = useImmer("");
+  const [currentPlan, setCurrentPlan] = useImmer(1);
   const userInfo = getUserInfo();
 
   useEffect(() => {
     if (userInfo) {
-      setCurrentPlan(userInfo.plan);
+      setCurrentPlan(userInfo.level);
     }
   }, []);
 
@@ -53,21 +58,29 @@ const Subscribe = () => {
   );
 
   const { loading: methodsLoading } = useRequest(() => getPaymentMethods(), {
-    ready: isModalVisible,
+    ready: true,
     onSuccess: (data) => {
       const methods = data.map((item: UserPayMethod) => ({
         label: item.chain,
-        value: item.address
+        value: {
+          chain: item.chain,
+          address: item.address
+        }
       }));
       setPaymentMethods(methods);
-      if (methods.length > 0) {
-        setSelectedAddress(methods[0].value);
+      if (methods.length > 0 && !selectedChain) {
+        setSelectedChain(methods[0].value.chain);
+        setSelectedAddress(methods[0].value.address);
       }
     }
   });
 
-  const handleNetworkChange = (value: string) => {
-    setSelectedAddress(value);
+  const handleNetworkChange = (e: any) => {
+    const selectedValue = e.target.value;
+    const method = paymentMethods.find(item => item.value.chain === selectedValue);
+    if (!method) return;
+    setSelectedChain(selectedValue);
+    setSelectedAddress(method.value.address);
   };
 
   const calculateTotal = () => {
@@ -87,19 +100,39 @@ const Subscribe = () => {
     setCurrentMonth(3);
   };
 
-  const handlePayment = () => {
-    // Handle payment here
-    // handleModalClose();
-  };
+  const { runAsync: runPostPaid, loading: runPostPaidLoading } =
+  useRequest(
+    () =>
+      postPaid({
+        level: selectedPlan?.level || 1,
+        duration: currentMonth,
+        chain: selectedChain,
+        address: selectedAddress,
+        tx_hash: '',
+        amount: Number(calculateTotal())
+      }),
+    {
+      manual: true,
+      onSuccess: (res) => {
+
+        handleModalClose();
+        updateUserInfo(res);
+      },
+      onError: (err) => {
+        console.log(err);
+      }
+    }
+  );
+
 
   const renderSubscribeButton = (plan: Plan) => {
-    const isCurrentPlan = plan.type === currentPlan;
+    const isCurrentPlan = plan.level === currentPlan;
 
     if (isCurrentPlan) {
       return (
         <div className={`${styles.btn} ${styles.currentPlan}`}>
           <CheckCircleFilled />
-          <div> Current Plan</div> 
+          <div>Current Plan</div>
         </div>
       );
     }
@@ -114,85 +147,89 @@ const Subscribe = () => {
     );
   };
 
-  const PaymentModal = () => (
-    <Modal
-      open={isModalVisible}
-      onCancel={handleModalClose}
-      footer={null}
-      width={800}
-      className={styles.paymentModal}
-    >
-      <div className={styles.payment}>
-        <div className={styles.right}>
-          <div className={styles.title}>How Long do you want to subscribe?</div>
-          <div className={styles.desc}>Get discount for 3 months or longer</div>
-          <div className={styles.monthsInfo}>
-            <InputNumber
-              min={1}
-              value={currentMonth}
-              onChange={(v) => setCurrentMonth(Number(v) || 1)}
-            />
-            <span>months</span>
-          </div>
-          <div className={styles.totalInfo}>
-            <div className={styles.total}>{calculateTotal()}</div>
-            <span>USDT in total</span>
-          </div>
-          <div className={styles.tips}>
-            Original price <Text delete style={{ color: '#2255FF' }}>150</Text> USDT,
-            save <span style={{ color: '#2255FF' }}>10%</span>
-          </div>
-          <Divider style={{ background: 'rgba(0, 0, 0, 0.8)' }} />
-          <div className={styles.network}>
-            <span className={styles.text}>Choose Network</span>
-            <Select
-              style={{ marginLeft: 12, width: 140 }}
-              value={paymentMethods[0]?.label}
-              options={paymentMethods}
-              onChange={handleNetworkChange}
-              loading={methodsLoading}
-            />
-          </div>
-          <div className={styles.qrcode}>
-            <QRCodeSVG
-              value={selectedAddress || 'Loading...'}
-              title="Payment Address QR Code"
-              size={88}
-              bgColor="#ffffff"
-              fgColor="#000000"
-              level="L"
-            />
-          </div>
-          <Paragraph style={{ marginTop: 12 }} copyable>
-            {selectedAddress || 'Loading...'}
-          </Paragraph>
-          <Button
-            style={{ width: 224 }}
-            type="primary"
-            shape="round"
-            size="large"
-            loading={planLoading || methodsLoading}
-            onClick={handlePayment}
+  // Memoize the payment modal content
+  const paymentModalContent = useMemo(() => (
+    <div className={styles.payment}>
+      <div className={styles.right}>
+        <div className={styles.title}>How Long do you want to subscribe?</div>
+        <div className={styles.desc}>Get discount for 3 months or longer</div>
+        <div className={styles.monthsInfo}>
+          <InputNumber
+            min={1}
+            value={currentMonth}
+            onChange={(v) => setCurrentMonth(Number(v) || 1)}
+          />
+          <span>months</span>
+        </div>
+        <div className={styles.totalInfo}>
+          <div className={styles.total}>{calculateTotal()}</div>
+          <span>USDT in total</span>
+        </div>
+        <div className={styles.tips}>
+          Original price <Text delete style={{ color: '#2255FF' }}>150</Text> USDT,
+          save <span style={{ color: '#2255FF' }}>10%</span>
+        </div>
+        <Divider style={{ background: 'rgba(0, 0, 0, 0.8)' }} />
+        <div className={styles.network}>
+          <span className={styles.text}>Choose Network</span>
+          <Radio.Group
+            value={selectedChain}
+            onChange={handleNetworkChange}
+            style={{ marginLeft: 12 }}
           >
-            Done
-          </Button>
-          <div style={{color: "gray",paddingBottom:16}}>
-            You can transfer DAI,USDT,USDC from personal wallet or CEX. 
-            We will check the balance of the target wallet automatically. 
-            Transfer from CEX always takes longer. If you meet any issue, get in touch with us
-          </div>
+            {paymentMethods.map((method) => (
+              <Radio key={method.value.chain} value={method.value.chain}>
+                {method.label}
+              </Radio>
+            ))}
+          </Radio.Group>
+        </div>
+        <div className={styles.qrcode}>
+          <QRCodeSVG
+            value={selectedAddress || 'Loading...'}
+            title="Payment Address QR Code"
+            size={88}
+            bgColor="#ffffff"
+            fgColor="#000000"
+            level="L"
+          />
+        </div>
+        <Paragraph style={{ marginTop: 12 }} copyable>
+          {selectedAddress || 'Loading...'}
+        </Paragraph>
+        <Button
+          style={{ width: 224 }}
+          type="primary"
+          shape="round"
+          size="large"
+          loading={planLoading || methodsLoading||runPostPaidLoading}
+          onClick={runPostPaid}
+        >
+          Done
+        </Button>
+        <div style={{color: "gray", paddingBottom: 16}}>
+          You can transfer USDT from personal wallet or CEX. 
+          We will check the balance of the target wallet automatically. 
+          Transfer from CEX always takes longer. If you meet any issue, get in touch with us
         </div>
       </div>
-    </Modal>
-  );
+    </div>
+  ), [
+    currentMonth,
+    selectedChain,
+    selectedAddress,
+    paymentMethods,
+    planLoading,
+    methodsLoading,
+    calculateTotal
+  ]);
 
   return (
     <div className={styles.subscribe}>
       <div className={styles.content}>
         <div className={styles.top}>
           <div>{svgMap['price']}</div>
-          {/* <div className={styles.title}>Flexible Pricing</div> */}
-          <div className={styles.desc}>Pay by Crypto:DAI,USDT,USDC</div>
+          <div className={styles.desc}>Pay by USDT from Layer2</div>
         </div>
         <div className={styles.subscribeList}>
           {plans?.map(plan => (
@@ -215,7 +252,16 @@ const Subscribe = () => {
           ))}
         </div>
       </div>
-      <PaymentModal />
+      <Modal
+        open={isModalVisible}
+        onCancel={handleModalClose}
+        footer={null}
+        width={800}
+        className={styles.paymentModal}
+        destroyOnClose={false}
+      >
+        {paymentModalContent}
+      </Modal>
     </div>
   );
 };

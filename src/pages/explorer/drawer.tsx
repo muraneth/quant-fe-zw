@@ -10,10 +10,9 @@ import {
 import { useRequest } from "ahooks";
 import { Indicator, IndicatorCategory } from "@/service/charts";
 import { useExplorerStore } from "@/store/explorer";
+import { getUserInfo } from "@/utils/common";
 const MyDrawer: React.FC = () => {
-  const [selectedIndicators, setSelectedIndicators] = useImmer<
-    Array<Indicator>
-  >([]);
+  const userInfo = getUserInfo();
 
   const [categories, setCategories] = useImmer<Array<IndicatorCategory>>([]);
   const [checkedKeys, setCheckedKeys] = useImmer<React.Key[]>([]);
@@ -21,26 +20,25 @@ const MyDrawer: React.FC = () => {
   const userConfig = useExplorerStore.use.userConfig();
   useRequest(() => getUserConfig(), {
     onSuccess: (res) => {
-      setSelectedIndicators(res.indicators);
-      // Set initially checked keys based on selected indicators
       const keys = res.indicators.map((ind) => ind.handle_name);
       setCheckedKeys(keys);
     },
   });
 
-  // Fetch all available indicators
   useRequest(() => getIndicatorList(), {
     onSuccess: (res) => {
       setCategories(res);
     },
   });
+  
   const getSelectedCount = (indicators: Indicator[]): number => {
     return indicators.filter((indicator) =>
       checkedKeys.includes(indicator.handle_name)
     ).length;
   };
-
-  // Helper function to get count of selected indicators in a category
+  const checkIfLeafAvailable = (indicator: Indicator): boolean => {
+    return userInfo.level >= indicator.required_level;
+  }
   const getCategorySelectedCount = (category: IndicatorCategory): number => {
     return category.groups.reduce(
       (sum, group) => sum + getSelectedCount(group.indicators),
@@ -104,12 +102,13 @@ const MyDrawer: React.FC = () => {
           ),
           key: indicator.handle_name,
           isLeaf: true,
-          checkable: true,
+          // checkable: true,
+          disableCheckbox: !checkIfLeafAvailable(indicator),
         })),
       })),
     }));
-
-  const handleCheck = (checked: React.Key[] | { checked: React.Key[] }) => {
+    
+  const handleCheck = async (checked: React.Key[] | { checked: React.Key[] }) => {
     const keys = Array.isArray(checked) ? checked : checked.checked;
     setCheckedKeys(keys);
 
@@ -122,38 +121,42 @@ const MyDrawer: React.FC = () => {
       )
     );
 
-    setSelectedIndicators(newSelectedIndicators);
+    try {
+      saveUserConfig({
+        tokens: userConfig.tokens,
+        indicators: newSelectedIndicators.map((ind) => ind.handle_name),
+      })
+      setDraftData((draft) => {
+        draft.userConfig.indicators = newSelectedIndicators;
+      });
+    } catch (error) {
+      console.error('Failed to save settings:', error);
+      // You might want to add error handling here
+    }
   };
-  const { runAsync: runSaveSetting, loading: runSaveSettingLoading } =
-    useRequest(
-      () =>
-        saveUserConfig({
-          tokens: userConfig.tokens,
-          indicators: selectedIndicators.map((ind) => ind.handle_name),
-        }),
-      { manual: true }
-    );
-  const onSaveSetting = async () => {
-    await runSaveSetting();
-    setDraftData(
-        (draft) => {
-            // draft.userConfig.tokens = draft.userConfig.tokens;
-            draft.userConfig.indicators = selectedIndicators;
-        }
-    );
-
-  } 
+  
+  const upgradeHit= ()=>{
+     return (
+      <div>
+        {userInfo.level<2?(<div>
+          If you want more indicators, you can upgrade your plan 
+          <Button
+          size="small"
+          href="/pricing"
+          >Upgrade plan</Button>
+        </div>):null}
+      </div>
+     )
+  }
   return (
     <div>
-      <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+      <div style={{ display: "flex", flexDirection: "column" }}>
         <h3>Choose Indicator</h3>
-        <Button
-          style={{ fontSize: "12px" }}
-          loading={runSaveSettingLoading}
-          onClick={onSaveSetting}
-        >
-          Save Setting
-        </Button>
+        <div>
+        {upgradeHit()}
+        </div>
+       
+        
       </div>
 
       <Tree
