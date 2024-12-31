@@ -31,7 +31,7 @@ export interface SignInResDto {
   email: string;
   token: string;
   pic_url: string;
-  plan: string;
+  level: number;
   expires_at: string;
 }
 

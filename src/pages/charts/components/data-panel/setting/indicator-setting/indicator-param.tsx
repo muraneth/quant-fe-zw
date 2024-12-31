@@ -77,9 +77,9 @@ const IndicatorParam = () => {
       { manual: true }
     );
 
-  React.useEffect(() => {
-    form.resetFields();
-  }, [form, extra_params_schema]);
+  // React.useEffect(() => {
+  //   form.resetFields();
+  // }, [form, extra_params_schema]);
 
   return (
     <div className={styles.setting}>
