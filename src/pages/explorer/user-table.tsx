@@ -38,7 +38,7 @@ const UserTokenTable = () => {
     },
   });
 
-  const handlePageChange = (page: number, pageSize: number) => {
+  const handlePageChange = (page: number) => {
     setCurrentPage(page);
   };
   const handleRemoveRow = async (symbol: string) => {
@@ -141,7 +141,7 @@ const UserTokenTable = () => {
     processTokens();
   }, [userConfig]);
 
-  const { runAsync: runGetTokenSnap, loading: tokenIndLoading } = useRequest(
+  const { runAsync: runGetTokenSnap } = useRequest(
     getTokenSnap,
     {
       manual: true,

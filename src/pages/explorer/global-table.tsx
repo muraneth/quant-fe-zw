@@ -1,14 +1,12 @@
 import React, { useMemo } from "react";
-import { Table ,Alert} from "antd";
+import { Table } from "antd";
 import { useRequest } from "ahooks";
 import {
-  getUserConfig,
   getTokenSnap,
   TokenSnapReq,
   getTokenByPage,
   getDefaultIndList,
   saveUserConfig,
-  SaveUserConfigReq,
 } from "@/service/explorer";
 import {
   TokenDetailInfo,
@@ -60,7 +58,7 @@ const TokenTable = () => {
   //   }
   // );
 
-  const handlePageChange = (page: number, pageSize: number) => {
+  const handlePageChange = (page: number) => {
     setCurrentPage(page);
   };
 
@@ -154,7 +152,7 @@ const TokenTable = () => {
     }
   }, [indicatorList, tokenList]);
 
-  const { runAsync: runGetTokenSnap, loading: tokenIndLoading } = useRequest(
+  const { runAsync: runGetTokenSnap } = useRequest(
     getTokenSnap,
     {
       manual: true,
