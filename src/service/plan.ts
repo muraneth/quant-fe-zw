@@ -1,7 +1,6 @@
 import { request } from "@/utils/request";
 import {SignInResDto} from "@/service/sign-in-up";
 
-
 interface Des {
     id: string;
     title: string;

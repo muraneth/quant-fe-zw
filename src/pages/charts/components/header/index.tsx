@@ -1,7 +1,6 @@
 import * as React from "react";
 import { useImmer } from "use-immer";
 import { Input, Popover, Skeleton,Tabs } from "antd";
-import type { TabsProps } from "antd";
 import { useDebounceFn, useRequest } from "ahooks";
 import {
   getTokenList,

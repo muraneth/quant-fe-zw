@@ -23,3 +23,8 @@
 + /sign-up 注册
 + /subscribe 订阅套餐选择
 + /payment 付款
+
+## 部署
++ yarn build
++ docker-compose up
++ http://localhost:4009
