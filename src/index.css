@@ -120,7 +120,7 @@ button:focus-visible {
 
 @font-face {
   font-family: slkscr-font;
-  src: url("./assets/slkscr.ttf") format("opentype");
+  src: url("/slkscr.ttf") format("opentype");
   font-display: swap;
 }
 
@@ -129,7 +129,7 @@ button:focus-visible {
   font-style: normal;
   font-weight: 400;
   src: local("SF Pro Display"),
-    url("https://fonts.cdnfonts.com/s/59278/SFPRODISPLAYREGULAR.woff")
+    url("/SFPRODISPLAYREGULAR.woff")
       format("woff");
   font-display: swap;
 }
