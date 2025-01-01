@@ -13,7 +13,7 @@ import Wallet from "./pages/wallet";
 import Subscribe from "./pages/subscribe";
 import Explorer from './pages/explorer';
 
-const Charts = React.lazy(() => import('./pages/charts'))
+const Charts = React.lazy(() => import('./pages/charts'));
 
 function App() {
   return (

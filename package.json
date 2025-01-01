@@ -7,7 +7,7 @@
     "dev": "vite --mode dev",
     "test": "vite --mode test",
     "prod": "vite --mode prod",
-    "build": "tsc -b && vite build --mode prod && cp -r unpkg dist",
+    "build": "tsc -b && vite build --mode prod && cp -r dist/* docker/quant-fe/static",
     "lint": "eslint .",
     "preview": "vite preview"
   },

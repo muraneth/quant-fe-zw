@@ -37,6 +37,7 @@ export default defineConfig({
     },
   },
   envDir: ".env",
+  base: './',
   build: {
     rollupOptions: {
       // 稳定且庞大的三方库走 external
