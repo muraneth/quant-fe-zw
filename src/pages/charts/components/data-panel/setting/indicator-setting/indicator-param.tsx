@@ -22,7 +22,7 @@ const IndicatorParam = () => {
 
   const base_params = useChartStore.use.base_params();
   const extra_params = useChartStore.use.extra_params();
-  const chart_options = useChartStore.use.options();
+  // const chart_options = useChartStore.use.options();
   const { param_schema, handle_name } = useChartStore.use.indicatorInfo();
   const { use_base_param, extra_params_schema } =
     JSON.parse((param_schema || null) as string) || {};
@@ -56,15 +56,15 @@ const IndicatorParam = () => {
     //   draft.extra_params = allValues;
     // });
   };
-  const onSmoothChange = () => {
-    if (chart_options) {
-      chart_options.series.forEach((item: any) => {
-        if (item.name == "Indicator" && item.type == "line") {
-          item.smooth = !item.smooth;
-        }
-      });
-    }
-  };
+  // const onSmoothChange = () => {
+  //   if (chart_options) {
+  //     chart_options.series.forEach((item: any) => {
+  //       if (item.name == "Indicator" && item.type == "line") {
+  //         item.smooth = !item.smooth;
+  //       }
+  //     });
+  //   }
+  // };
 
   const { runAsync: runSaveIndicator, loading: runSaveIndicatorLoading } =
     useRequest(

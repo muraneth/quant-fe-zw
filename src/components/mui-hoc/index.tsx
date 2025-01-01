@@ -1,6 +1,7 @@
+import * as React from 'react';
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import { createTheme, ThemeProvider } from "@mui/material/styles";
+import { createTheme, ThemeProvider } from "@mui/material";
 
 const defaultTheme = createTheme({
   palette: {
@@ -18,7 +19,11 @@ const defaultTheme = createTheme({
   spacing: 0,
 });
 
-const MuiHOC = (props) => {
+interface MuiHOCProps {
+  children: React.ReactNode;
+}
+
+const MuiHOC: React.FC<MuiHOCProps> = (props) => {
   return (
     <ThemeProvider theme={defaultTheme}>
       <LocalizationProvider dateAdapter={AdapterDayjs}>

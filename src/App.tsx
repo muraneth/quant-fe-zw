@@ -1,3 +1,4 @@
+import * as React from 'react';
 import { Routes, Route, Navigate } from "react-router-dom";
 import { ConfigProvider, theme } from "antd";
 import Layout from "@/components/layout";
@@ -5,13 +6,14 @@ import LandingPage from "./pages/landing";
 import SignIn from "./pages/sign-in";
 import SignUp from "./pages/sign-up";
 import Home from "@/pages/home";
-import Explorer from "@/pages/explorer";
-import Charts from "@/pages/charts";
+import Payment from "@/pages/payment";
 import Studio from "./pages/studio";
 import Compare from "./pages/compare";
 import Wallet from "./pages/wallet";
 import Subscribe from "./pages/subscribe";
-import Payment from "./pages/payment";
+import Explorer from './pages/explorer';
+
+const Charts = React.lazy(() => import('./pages/charts'));
 
 function App() {
   return (
@@ -35,7 +37,6 @@ function App() {
     >
       <Routes>
         <Route path="/" element={<Layout />}>
-          {/* 核心的路由页面直接打进主包，非核心路由页面动态加载分包 */}
           <Route path="/home" element={<Home />} />
           <Route path="/explorer" element={<Explorer />} />
           <Route path="/landing" element={<LandingPage />} />

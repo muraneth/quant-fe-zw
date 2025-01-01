@@ -1,7 +1,7 @@
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import dayjs from "dayjs";
 import MuiHOC from "@/components/mui-hoc";
-import type { WidgetProps } from "form-render";
+import type { WidgetProps } from "form-render/es/type";
 import styles from "./index.module.scss";
 import { QuestionCircleOutlined } from "@ant-design/icons";
 import { Tooltip } from "antd";
