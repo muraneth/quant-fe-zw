@@ -1,5 +1,5 @@
 import React, { useMemo, useEffect } from "react";
-import { Table } from "antd";
+import { Table, Input } from "antd";
 import { useRequest } from "ahooks";
 import { useImmer } from "use-immer";
 import { useNavigate } from "react-router-dom";
@@ -17,9 +17,10 @@ import {
   IndicatorDetailReqDto,
   Indicator,
 } from "@/service/charts";
+import { getUserInfo } from "@/utils/common";
 
 const PAGE_SIZE = 20;
-const FETCH_DELAY = 100;
+const FETCH_DELAY = 500;
 
 const TokenTable = () => {
   const [tokenDetailList, setTokenDetailList] = useImmer<
@@ -31,6 +32,7 @@ const TokenTable = () => {
   const [indicatorList, setIndicatorList] = useImmer<Array<Indicator>>([]);
   const [selectedRowKeys, setSelectedRowKeys] = useImmer<string[]>([]);
   const [isLoading, setIsLoading] = useImmer(false);
+  const [searchKey, setSearchKey] = useImmer("");
 
   const userConfig = useExplorerStore.use.userConfig();
   const setDraftData = useExplorerStore.use.setDraftData();
@@ -39,15 +41,21 @@ const TokenTable = () => {
   const { runAsync: runGetTokenSnap } = useRequest(getTokenSnap, {
     manual: true,
   });
+  const userInfo = getUserInfo();
 
   useRequest(
-    () => getTokenByPage({ page: currentPage, page_size: PAGE_SIZE }),
+    () =>
+      getTokenByPage({
+        key: searchKey,
+        page: currentPage,
+        page_size: PAGE_SIZE,
+      }),
     {
       onSuccess: (res) => {
         setTotalToken(res.total);
         setTokenList(res.tokens);
       },
-      refreshDeps: [currentPage],
+      refreshDeps: [currentPage, searchKey],
     }
   );
 
@@ -56,6 +64,10 @@ const TokenTable = () => {
       setIndicatorList(res);
     },
   });
+  const handleSearch = (value: string) => {
+    setSearchKey(value);
+    setCurrentPage(1); // Reset to first page on search
+  };
 
   useEffect(() => {
     setSelectedRowKeys(userConfig.tokens);
@@ -100,6 +112,11 @@ const TokenTable = () => {
     selectedRowKeys,
     onChange: async (newSelectedRowKeys: React.Key[]) => {
       try {
+        if (!userInfo || !userInfo.uid) {
+          console.error("User config not loaded");
+          //   setSelectedRowKeys(selectedRowKeys);
+          return;
+        }
         setSelectedRowKeys(newSelectedRowKeys as string[]);
         const response = await saveUserConfig({
           tokens: newSelectedRowKeys as string[],
@@ -231,24 +248,32 @@ const TokenTable = () => {
   }, [tokenDetailList, navigate]);
 
   return (
-    <Table
-      rowSelection={rowSelection}
-      columns={columns}
-      dataSource={tokenDetailList}
-      rowKey={(record) => record.base_info.symbol}
-      bordered
-      //   loading={isLoading}
-      scroll={{ x: "max-content" }}
-      pagination={{
-        total: totalToken,
-        pageSize: PAGE_SIZE,
-        current: currentPage,
-        onChange: handlePageChange,
-        showSizeChanger: false,
-        showTotal: (total) => `Total ${total} items`,
-        position: ["bottomCenter"],
-      }}
-    />
+    <div>
+      <Input.Search
+        placeholder="Search tokens"
+        onSearch={handleSearch}
+        style={{ maxWidth: 300, marginBottom: 16 }}
+        allowClear
+      />
+      <Table
+        rowSelection={rowSelection}
+        columns={columns}
+        dataSource={tokenDetailList}
+        rowKey={(record) => record.base_info.symbol}
+        bordered
+        //   loading={isLoading}
+        scroll={{ x: "max-content" }}
+        pagination={{
+          total: totalToken,
+          pageSize: PAGE_SIZE,
+          current: currentPage,
+          onChange: handlePageChange,
+          showSizeChanger: false,
+          showTotal: (total) => `Total ${total} items`,
+          position: ["bottomCenter"],
+        }}
+      />
+    </div>
   );
 };
 
