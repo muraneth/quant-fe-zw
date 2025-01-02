@@ -4,6 +4,7 @@ import { useChartStore } from "@/store/charts";
 import classNames from "classnames";
 import styles from "../index.module.scss";
 import { useSearchParams } from "react-router-dom";
+import { svgMap } from "@/constants/svg";
 
 
 type IndicatorItemProps = Indicator;
@@ -79,6 +80,9 @@ const IndicatorItem: React.FC<IndicatorItemProps> = (indicatorInfoItem) => {
         {`L${required_level - 1}`}
       </span>
       <span className={styles.indicatorName}>{name}</span>
+      {/* <div className={classNames(styles.indicatorItemLevel, {
+          [styles[`indicatorItemLevel${required_level - 1}`]]: true,
+        })}>{svgMap["paramSetting"]}</div> */}
     </div>
   );
 };
