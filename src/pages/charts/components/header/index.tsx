@@ -19,6 +19,7 @@ import classNames from "classnames";
 import styles from "./index.module.scss";
 import { formatNumber } from "@/utils/common";
 
+import { useSearchParams } from "react-router-dom";
 
 const chains = [
   { key: "ethereum", label: "Ethereum" },
@@ -34,6 +35,7 @@ const Header = () => {
   const [tokenMarketInfoList, setTokenMarketInfoList] = useImmer<
     Array<ExtractedTokenMarketInfoItem>
   >([]);
+  const [searchParams, setSearchParams] = useSearchParams();
 
   const setDraftData = useChartStore.use.setDraftData();
   const resetChartPanelData = useChartStore.use.resetChartPanelData();
@@ -59,6 +61,7 @@ const Header = () => {
       },
     }
   );
+
   
   useRequest(
     () => {
@@ -83,6 +86,16 @@ const Header = () => {
       },
     }
   );
+  const handleSelectToken = (token: TokenBaseInfo) => {
+    const newParams = new URLSearchParams(searchParams);
+    newParams.set("symbol", token.symbol);
+    newParams.set("chain", token.chain);
+    setSearchParams(newParams);
+
+    setCurrentToken(token);
+    setOpenPopover(false);
+
+  }
   const handleChainChange = (chain: string) => {
     setSelectedChain(chain);
     setKeywords(""); 
@@ -142,8 +155,7 @@ const Header = () => {
             className={styles.item}
             key={index}
             onClick={() => {
-              setCurrentToken(i);
-              setOpenPopover(false);
+              handleSelectToken(i);
             }}
           >
             <div className={styles.left}>

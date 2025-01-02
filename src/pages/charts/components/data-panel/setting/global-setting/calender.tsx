@@ -38,6 +38,9 @@ const CalendarComponent: React.FC = () => {
       case "1M":
         start_time = dayjs().subtract(1, "month").format("YYYY-MM-DD 00:00:00");
         break;
+      case "3M":
+        start_time = dayjs().subtract(3, "month").format("YYYY-MM-DD 00:00:00");
+        break;
       case "1Y":
         start_time = dayjs().subtract(1, "year").format("YYYY-MM-DD 00:00:00");
         break;
@@ -78,6 +81,12 @@ const CalendarComponent: React.FC = () => {
           onClick={() => setPresetTime("1M")}
         >
           1M
+        </span>
+        <span
+          className={styles.calendarOption}
+          onClick={() => setPresetTime("3M")}
+        >
+          3M
         </span>
         <span
           className={styles.calendarOption}

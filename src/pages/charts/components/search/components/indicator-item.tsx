@@ -4,8 +4,7 @@ import { useChartStore } from "@/store/charts";
 import classNames from "classnames";
 import styles from "../index.module.scss";
 import { useSearchParams } from "react-router-dom";
-import { useEffect } from "react";
-import { current } from "immer";
+
 
 type IndicatorItemProps = Indicator;
 
