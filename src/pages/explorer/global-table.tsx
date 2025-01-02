@@ -228,7 +228,7 @@ const TokenTable = () => {
               onClick={() => {
                 if (snap.handle_name) {
                   navigate(
-                    `/charts?symbol=${baseInfo.symbol}&handle_name=${snap.handle_name}&type=${snap.type}&chain=${baseInfo.chain}`
+                    `/charts?symbol=${baseInfo.symbol}&handle_name=${snap.handle_name}&chain=${baseInfo.chain}`
                   );
                 }
               }}
