@@ -12,11 +12,11 @@ const menuList = [
   },
   {
     name: "Chart",
-    path: "/charts",
+    path: "/charts?symbol=MSTR&handle_name=holder.all&type=independent_line&chain=ethereum",
   },
   {
     name: "Document",
-    path: "https://www.google.com",
+    path: "https://doc.tokenalytic.com",
   },
   {
     name: "Pricing",

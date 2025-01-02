@@ -28,22 +28,33 @@ const chains = [
 const Header = () => {
   const [openPopover, setOpenPopover] = useImmer(false);
   const [keywords, setKeywords] = useImmer("");
-  const [currentToken, setCurrentToken] = useImmer<TokenBaseInfo>(
-    null as unknown as TokenBaseInfo
-  );
+  
   const [selectedChain, setSelectedChain] = useImmer("ethereum"); 
 
   const [tokenMarketInfoList, setTokenMarketInfoList] = useImmer<
     Array<ExtractedTokenMarketInfoItem>
   >([]);
-  
+
+  const setDraftData = useChartStore.use.setDraftData();
+  const resetChartPanelData = useChartStore.use.resetChartPanelData();
+  const tokenInfo =useChartStore.use.tokenInfo()
+  const [currentToken, setCurrentToken] = useImmer<TokenBaseInfo>(
+     null as unknown as TokenBaseInfo
+  ); 
+
   const { data: tokenList = [] } = useRequest(
     () => getTokenList({ key: keywords, chain: selectedChain }),
     {
       refreshDeps: [keywords, selectedChain],
       onSuccess: (res) => {
-        if (res?.[0] && !currentToken) {
-          setCurrentToken(res[0]);
+        if (!currentToken && tokenInfo) {
+
+          const matchingToken = res.find(token => (token.symbol === tokenInfo.symbol && token.chain===token.chain));
+          if (matchingToken) {
+            setCurrentToken(matchingToken);
+          }else{
+            setCurrentToken(res[0])
+          }
         }
       },
     }
@@ -85,9 +96,6 @@ const Header = () => {
     }
   );
 
-  const setDraftData = useChartStore.use.setDraftData();
-  const resetChartPanelData = useChartStore.use.resetChartPanelData();
-
   React.useEffect(() => {
     if (currentToken) {
       resetChartPanelData({ refreshChart: true });
@@ -106,7 +114,7 @@ const Header = () => {
   const handleItemClick = (item:ExtractedTokenMarketInfoItem) => {
 
     if (item) {
-      window.location.href =`/charts?symbol=${currentToken.symbol}&handle_name=${item.handle_name}&type=${item.chart_type}`;``
+      window.location.href =`/charts?symbol=${currentToken.symbol}&handle_name=${item.handle_name}&chain=${currentToken.chain}`;``
     }
   };
   const tokenContent = (

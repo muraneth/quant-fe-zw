@@ -20,7 +20,7 @@ import {
 import { getUserInfo } from "@/utils/common";
 
 const PAGE_SIZE = 20;
-const FETCH_DELAY = 500;
+const FETCH_DELAY = 50;
 
 const TokenTable = () => {
   const [tokenDetailList, setTokenDetailList] = useImmer<
@@ -149,7 +149,7 @@ const TokenTable = () => {
             style={{ display: "flex", alignItems: "center", cursor: "pointer" }}
             onClick={() =>
               navigate(
-                `/charts?symbol=${baseInfo.symbol}&handle_name=holder.all&type=independent_line&chain=${baseInfo.chain}`
+                `/charts?symbol=${baseInfo.symbol}&handle_name=holder.all&chain=${baseInfo.chain}`
               )
             }
           >

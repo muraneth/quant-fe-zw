@@ -4,6 +4,7 @@ import Header from "./components/header";
 import Search from "./components/search";
 import DataPanel from "./components/data-panel";
 import { useChartStore } from "@/store/charts";
+import {IndicatorListResDto,Indicator} from "@/service/charts"
 import styles from "./index.module.scss";
 import { useLocation } from "react-router-dom";
 
@@ -13,13 +14,12 @@ const Charts = () => {
   const chain = queryParams.get("chain") as string;
   const symbol = queryParams.get("symbol");
   const handle_name = queryParams.get("handle_name");
-  const type = queryParams.get("type") as any;
-
   const removeChartStore = useChartStore.use.removeChartStore();
   const setDraftData = useChartStore.use.setDraftData();
+  const indicatorList = useChartStore.use.indicatorList();
 
   React.useEffect(() => {
-    if (symbol && handle_name && type) {
+    if (symbol && handle_name &&indicatorList ) {
       // url参数解析设置
       setDraftData((draft) => {
         // draft.tokenInfo.symbol = symbol;
@@ -29,11 +29,27 @@ const Charts = () => {
           start_time: "",
           end_time: "",
         };
-        draft.indicatorInfo.handle_name = handle_name;
-        draft.indicatorInfo.type = type;
+        const findIndicator = (list: IndicatorListResDto):Indicator => {
+          for (const category of list) {
+            for (const group of category.groups) {
+              const foundIndicator = group.indicators.find(indicator => 
+                indicator.handle_name === handle_name 
+              );
+              
+              if (foundIndicator){
+                return foundIndicator;
+              } 
+            }
+          }
+          console.log("dont find match ind",handle_name,list );
+          
+          return {} as Indicator;
+        };
+  
+        draft.indicatorInfo = findIndicator(indicatorList);
       });
     }
-  }, [symbol, handle_name, type, setDraftData]);
+  }, [symbol, handle_name,indicatorList, setDraftData]);
 
   React.useEffect(() => {
     return () => {
