@@ -19,6 +19,7 @@ import classNames from "classnames";
 import styles from "./index.module.scss";
 import { formatNumber } from "@/utils/common";
 
+import { useSearchParams } from "react-router-dom";
 
 const chains = [
   { key: "ethereum", label: "Ethereum" },
@@ -28,26 +29,39 @@ const chains = [
 const Header = () => {
   const [openPopover, setOpenPopover] = useImmer(false);
   const [keywords, setKeywords] = useImmer("");
-  const [currentToken, setCurrentToken] = useImmer<TokenBaseInfo>(
-    null as unknown as TokenBaseInfo
-  );
+  
   const [selectedChain, setSelectedChain] = useImmer("ethereum"); 
 
   const [tokenMarketInfoList, setTokenMarketInfoList] = useImmer<
     Array<ExtractedTokenMarketInfoItem>
   >([]);
-  
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  const setDraftData = useChartStore.use.setDraftData();
+  const resetChartPanelData = useChartStore.use.resetChartPanelData();
+  const tokenInfo =useChartStore.use.tokenInfo()
+  const [currentToken, setCurrentToken] = useImmer<TokenBaseInfo>(
+     null as unknown as TokenBaseInfo
+  ); 
+
   const { data: tokenList = [] } = useRequest(
     () => getTokenList({ key: keywords, chain: selectedChain }),
     {
       refreshDeps: [keywords, selectedChain],
       onSuccess: (res) => {
-        if (res?.[0] && !currentToken) {
-          setCurrentToken(res[0]);
+        if (!currentToken && tokenInfo) {
+
+          const matchingToken = res.find(token => (token.symbol === tokenInfo.symbol && token.chain===token.chain));
+          if (matchingToken) {
+            setCurrentToken(matchingToken);
+          }else{
+            setCurrentToken(res[0])
+          }
         }
       },
     }
   );
+
   
   useRequest(
     () => {
@@ -72,6 +86,16 @@ const Header = () => {
       },
     }
   );
+  const handleSelectToken = (token: TokenBaseInfo) => {
+    const newParams = new URLSearchParams(searchParams);
+    newParams.set("symbol", token.symbol);
+    newParams.set("chain", token.chain);
+    setSearchParams(newParams);
+
+    setCurrentToken(token);
+    setOpenPopover(false);
+
+  }
   const handleChainChange = (chain: string) => {
     setSelectedChain(chain);
     setKeywords(""); 
@@ -84,9 +108,6 @@ const Header = () => {
       wait: 200,
     }
   );
-
-  const setDraftData = useChartStore.use.setDraftData();
-  const resetChartPanelData = useChartStore.use.resetChartPanelData();
 
   React.useEffect(() => {
     if (currentToken) {
@@ -106,7 +127,7 @@ const Header = () => {
   const handleItemClick = (item:ExtractedTokenMarketInfoItem) => {
 
     if (item) {
-      window.location.href =`/charts?symbol=${currentToken.symbol}&handle_name=${item.handle_name}&type=${item.chart_type}`;``
+      window.location.href =`/charts?symbol=${currentToken.symbol}&handle_name=${item.handle_name}&chain=${currentToken.chain}`;``
     }
   };
   const tokenContent = (
@@ -134,8 +155,7 @@ const Header = () => {
             className={styles.item}
             key={index}
             onClick={() => {
-              setCurrentToken(i);
-              setOpenPopover(false);
+              handleSelectToken(i);
             }}
           >
             <div className={styles.left}>

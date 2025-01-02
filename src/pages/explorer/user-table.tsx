@@ -162,7 +162,7 @@ const UserTokenTable = () => {
             style={{ display: "flex", alignItems: "center", cursor: "pointer" }}
             onClick={() => {
               navigate(
-                `/charts?symbol=${baseInfo.symbol}&handle_name=holder.all&type=independent_line&chain=${baseInfo.chain}`
+                `/charts?symbol=${baseInfo.symbol}&handle_name=holder.all&chain=${baseInfo.chain}`
               );
             }}
           >
@@ -229,7 +229,7 @@ const UserTokenTable = () => {
               onClick={() => {
                 if (snap.handle_name) {
                   navigate(
-                    `/charts?symbol=${baseInfo.symbol}&handle_name=${snap.handle_name}&type=${snap.type}&chain=${baseInfo.chain}`
+                    `/charts?symbol=${baseInfo.symbol}&handle_name=${snap.handle_name}&chain=${baseInfo.chain}`
                   );
                 }
               }}

@@ -9,6 +9,7 @@ interface GroupProps {
   backPreView?: () => void;
   indicatorList: IndicatorListResDto;
   selectedCategoryIndex: number;
+
   showBack?: boolean;
 }
 
@@ -46,12 +47,14 @@ const Group: React.FC<GroupProps> = ({
 
   return (
     <div className={styles.group}>
+
       {showBack ? (
         <div className={styles.groupToCategory} onClick={backPreView}>
           <ArrowLeftOutlined className={styles.groupToCategoryIcon} />
           <span className={styles.groupToCategoryTitle}>All Categories</span>
         </div>
       ) : null}
+      <div style={{marginLeft:20}}>{indicatorList[selectedCategoryIndex]?.category}</div>
       <div className={styles.groupList}>
         <Collapse items={items} defaultActiveKey={defaultActiveKey} />
       </div>

@@ -160,9 +160,9 @@ export const commonOption = {
       top: 'center',
       style: {
         text: 'tokenalytic.com',
-        fontSize: 60,
+        fontSize: 80,
         // fontWeight: 'bold',
-        fill: 'rgba(100, 100, 0, 0.2)', // Semi-transparent watermark
+        fill: 'rgba(100, 100, 0, 0.4)', // Semi-transparent watermark
         textAlign: 'center'
       }
     }

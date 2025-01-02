@@ -12,11 +12,17 @@ const Explorer: React.FC = () => {
 
   const items = [
     {
-      key: '1',
-      label: 'My Watch List',
+      key: "1",
+      label: "My Watch List",
       children: (
         <div style={{ marginTop: "1px" }}>
-          <div style={{ display: "flex", justifyContent: "flex-end", marginBottom: "5px" }}>
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "flex-end",
+              marginBottom: "5px",
+            }}
+          >
             <Button onClick={() => setDrawerOpen(!isDrawerOpen)}>
               Set Indicator
             </Button>
@@ -26,15 +32,17 @@ const Explorer: React.FC = () => {
       ),
     },
     {
-      key: '2',
-      label: 'Explore Token List',
+      key: "2",
+      label: "Explore All",
       children: (
-        <div style={{ 
-          marginLeft: "50px",
-          marginRight: "50px",
-          marginBottom: "120px",
-          marginTop: "20px"
-        }}>
+        <div
+          style={{
+            // marginLeft: "50px",
+            // marginRight: "50px",
+            marginBottom: "120px",
+            marginTop: "20px",
+          }}
+        >
           <TokenTable />
         </div>
       ),
@@ -74,8 +82,8 @@ const Explorer: React.FC = () => {
             overflow: "auto",
           }}
         >
-          <Tabs 
-            defaultActiveKey="1" 
+          <Tabs
+            defaultActiveKey="1"
             items={items}
             size="large"
             style={{ marginTop: "20px" }}

@@ -47,7 +47,7 @@ export function getTokenSnap(params: TokenSnapReq): Promise<TokenDetailInfo> {
         params,
     });
 }
-export function getTokenByPage(params: { page: number; page_size: number }): Promise<TokenPageResponse> {
+export function getTokenByPage(params: { key: string; page: number; page_size: number }): Promise<TokenPageResponse> {
     return request({
         url: "/data/api/explorer/getTokenByPage",
         method: "POST",

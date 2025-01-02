@@ -57,6 +57,7 @@ const FullSearch = () => {
         backPreView={stackOut}
         indicatorList={indicatorList}
         selectedCategoryIndex={selectedCategoryIndex}
+        
       />
     ),
     [View.Result]: (

@@ -1,9 +1,12 @@
-import React, { useMemo } from "react";
-import { Table } from "antd";
+import React, { useMemo, useEffect } from "react";
+import { Table, Input } from "antd";
 import { useRequest } from "ahooks";
+import { useImmer } from "use-immer";
+import { useNavigate } from "react-router-dom";
+import { useExplorerStore } from "@/store/explorer";
+import { formatNumber } from "@/utils/common";
 import {
   getTokenSnap,
-  TokenSnapReq,
   getTokenByPage,
   getDefaultIndList,
   saveUserConfig,
@@ -14,13 +17,10 @@ import {
   IndicatorDetailReqDto,
   Indicator,
 } from "@/service/charts";
-import { useImmer } from "use-immer";
-import { formatNumber } from "@/utils/common";
-import { useNavigate } from "react-router-dom";
-import { useEffect } from "react";
-import type { TablePaginationConfig } from "antd/es/table";
-import { useExplorerStore } from "@/store/explorer";
+import { getUserInfo } from "@/utils/common";
 
+const PAGE_SIZE = 20;
+const FETCH_DELAY = 50;
 
 const TokenTable = () => {
   const [tokenDetailList, setTokenDetailList] = useImmer<
@@ -31,129 +31,113 @@ const TokenTable = () => {
   const [totalToken, setTotalToken] = useImmer(0);
   const [indicatorList, setIndicatorList] = useImmer<Array<Indicator>>([]);
   const [selectedRowKeys, setSelectedRowKeys] = useImmer<string[]>([]);
+  const [isLoading, setIsLoading] = useImmer(false);
+  const [searchKey, setSearchKey] = useImmer("");
+
   const userConfig = useExplorerStore.use.userConfig();
   const setDraftData = useExplorerStore.use.setDraftData();
   const navigate = useNavigate();
 
-  useRequest(() => getTokenByPage({ page: currentPage, page_size: 10 }), {
-    onSuccess: (res) => {
-      setTotalToken(res.total);
-      setTokenList(res.tokens);
-    },
-    refreshDeps: [currentPage],
+  const { runAsync: runGetTokenSnap } = useRequest(getTokenSnap, {
+    manual: true,
   });
+  const userInfo = getUserInfo();
+
+  useRequest(
+    () =>
+      getTokenByPage({
+        key: searchKey,
+        page: currentPage,
+        page_size: PAGE_SIZE,
+      }),
+    {
+      onSuccess: (res) => {
+        setTotalToken(res.total);
+        setTokenList(res.tokens);
+      },
+      refreshDeps: [currentPage, searchKey],
+    }
+  );
+
   useRequest(() => getDefaultIndList(), {
     onSuccess: (res) => {
       setIndicatorList(res);
     },
   });
+  const handleSearch = (value: string) => {
+    setSearchKey(value);
+    setCurrentPage(1); // Reset to first page on search
+  };
+
+  useEffect(() => {
+    setSelectedRowKeys(userConfig.tokens);
+  }, [userConfig]);
+
+  useEffect(() => {
+    const fetchTokenDetails = async () => {
+      if (!indicatorList.length || !tokenList.length) return;
+
+      setIsLoading(true);
+      setTokenDetailList([]);
+
+      const indReqTemp: IndicatorDetailReqDto[] = indicatorList.map((ind) => ({
+        handle_name: ind.handle_name,
+      }));
+
+      for (const token of tokenList) {
+        try {
+          const result = await runGetTokenSnap({
+            symbol: token.symbol,
+            indicators: indReqTemp,
+          });
+
+          setTokenDetailList((prev) => [...prev, result]);
+          await new Promise((resolve) => setTimeout(resolve, FETCH_DELAY));
+        } catch (error) {
+          console.error(`Error fetching token ${token.symbol}:`, error);
+        }
+      }
+
+      setIsLoading(false);
+    };
+
+    fetchTokenDetails();
+  }, [indicatorList, tokenList, currentPage]);
 
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
   };
 
-  const paginationConfig: TablePaginationConfig = {
-    total: totalToken,
-    pageSize: 20,
-    current: currentPage,
-    onChange: handlePageChange,
-    showSizeChanger: false, // Disable page size changing
-    showTotal: (total) => `Total ${total} items`,
-    position: ["bottomCenter"],
-    // showQuickJumper: true, // Allow quick jump to page
-  };
-
-  React.useEffect(() => {
-    setSelectedRowKeys(userConfig.tokens);
-  }, [userConfig]);
-  const sleep = (ms: number) =>
-    new Promise((resolve) => setTimeout(resolve, ms));
-
   const rowSelection = {
-  selectedRowKeys,
-  onChange: async (newSelectedRowKeys: React.Key[]) => {
-    try {
-      // Update UI immediately for responsiveness
+    selectedRowKeys,
+    onChange: async (newSelectedRowKeys: React.Key[]) => {
+      try {
+        if (!userInfo || !userInfo.uid) {
+          console.error("User config not loaded");
+          //   setSelectedRowKeys(selectedRowKeys);
+          return;
+        }
         setSelectedRowKeys(newSelectedRowKeys as string[]);
-
-        // Attempt to save to server
         const response = await saveUserConfig({
           tokens: newSelectedRowKeys as string[],
           indicators: userConfig.indicators.map((ind) => ind.handle_name),
         });
 
-        // If save was successful, update draft
-        if (response) {  // adjust this condition based on your API response structure
+        if (response) {
           setDraftData((draft) => {
-            draft.userConfig.tokens = newSelectedRowKeys as Array<string>;
+            draft.userConfig.tokens = newSelectedRowKeys as string[];
           });
         } else {
-          // If save failed, revert UI and show error
-          setSelectedRowKeys(selectedRowKeys);  // revert to previous state
-
-          
-      }
-    } catch (error) {
-      // Handle any errors during save
-      setSelectedRowKeys(selectedRowKeys);  // revert to previous state
-      console.log("error", error);
-    
-  
-    }
-  },
-};
-  useEffect(() => {
-    if (indicatorList && tokenList) {
-      const indReqTemp = [] as Array<IndicatorDetailReqDto>;
-      for (const ind of indicatorList) {
-        indReqTemp.push({
-          handle_name: ind.handle_name,
-        });
-      }
-
-      const processTokens = async () => {
-        for (const token of tokenList) {
-          try {
-            const result = await runGetTokenSnap({
-              symbol: token.symbol,
-              indicators: indReqTemp,
-            } as TokenSnapReq);
-
-            setTokenDetailList((prev) => {
-              if (
-                !prev.some(
-                  (item) =>
-                    item.base_info.contract_address ===
-                    result.base_info.contract_address
-                )
-              ) {
-                return [...prev, result];
-              }
-              return prev;
-            });
-
-            await sleep(100);
-          } catch (error) {
-            console.error(`Error processing token ${token}:`, error);
-          }
+          setSelectedRowKeys(selectedRowKeys);
         }
-      };
-
-      processTokens();
-    }
-  }, [indicatorList, tokenList]);
-
-  const { runAsync: runGetTokenSnap } = useRequest(
-    getTokenSnap,
-    {
-      manual: true,
-    }
-  );
+      } catch (error) {
+        console.error("Selection save error:", error);
+        setSelectedRowKeys(selectedRowKeys);
+      }
+    },
+  };
 
   const columns = useMemo(() => {
-    // Base columns for token info
-    console.log("user tokenDetailList", tokenDetailList);
-
     const baseColumns = [
       {
         title: "Token",
@@ -163,11 +147,11 @@ const TokenTable = () => {
         render: (baseInfo: TokenBaseInfo) => (
           <div
             style={{ display: "flex", alignItems: "center", cursor: "pointer" }}
-            onClick={() => {
+            onClick={() =>
               navigate(
-                `/charts?symbol=${baseInfo.symbol}&handle_name=holder.all&type=independent_line&chain=${baseInfo.chain}`
-              );
-            }}
+                `/charts?symbol=${baseInfo.symbol}&handle_name=holder.all&chain=${baseInfo.chain}`
+              )
+            }
           >
             <div style={{ display: "flex", flexDirection: "column" }}>
               <div style={{ display: "flex", flexDirection: "row" }}>
@@ -189,9 +173,10 @@ const TokenTable = () => {
                     marginLeft: "10px",
                   }}
                 >
-                  {baseInfo.contract_address.slice(0, 6) +
-                    "..." +
-                    baseInfo.contract_address.slice(-6)}
+                  {`${baseInfo.contract_address.slice(
+                    0,
+                    6
+                  )}...${baseInfo.contract_address.slice(-6)}`}
                 </span>
               </div>
               <span
@@ -212,6 +197,7 @@ const TokenTable = () => {
           new Date(createTime).toLocaleDateString(),
       },
     ];
+
     const dynamicColumns =
       tokenDetailList[0]?.indicator_snaps?.map((indicator, index) => ({
         title: indicator.name,
@@ -230,7 +216,10 @@ const TokenTable = () => {
             (snap) => snap.name === indicator.name
           );
           const baseInfo = record.base_info;
-          return snap ? (
+
+          if (!snap) return null;
+
+          return (
             <div
               style={{
                 cursor: snap.handle_name ? "pointer" : "default",
@@ -239,7 +228,7 @@ const TokenTable = () => {
               onClick={() => {
                 if (snap.handle_name) {
                   navigate(
-                    `/charts?symbol=${baseInfo.symbol}&handle_name=${snap.handle_name}&type=${snap.type}&chain=${baseInfo.chain}`
+                    `/charts?symbol=${baseInfo.symbol}&handle_name=${snap.handle_name}&chain=${baseInfo.chain}`
                   );
                 }
               }}
@@ -251,22 +240,38 @@ const TokenTable = () => {
                 {formatNumber(snap.value_chg * 100)}%
               </span>
             </div>
-          ) : null;
+          );
         },
       })) || [];
+
     return [...baseColumns, ...dynamicColumns];
-  }, [tokenDetailList]);
+  }, [tokenDetailList, navigate]);
 
   return (
     <div>
+      <Input.Search
+        placeholder="Search tokens"
+        onSearch={handleSearch}
+        style={{ maxWidth: 300, marginBottom: 16 }}
+        allowClear
+      />
       <Table
         rowSelection={rowSelection}
         columns={columns}
         dataSource={tokenDetailList}
         rowKey={(record) => record.base_info.symbol}
         bordered
+        //   loading={isLoading}
         scroll={{ x: "max-content" }}
-        pagination={paginationConfig}
+        pagination={{
+          total: totalToken,
+          pageSize: PAGE_SIZE,
+          current: currentPage,
+          onChange: handlePageChange,
+          showSizeChanger: false,
+          showTotal: (total) => `Total ${total} items`,
+          position: ["bottomCenter"],
+        }}
       />
     </div>
   );
