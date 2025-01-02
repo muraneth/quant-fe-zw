@@ -4,8 +4,6 @@ import { useChartStore } from "@/store/charts";
 import classNames from "classnames";
 import styles from "../index.module.scss";
 import { useSearchParams } from "react-router-dom";
-import { svgMap } from "@/constants/svg";
-
 
 type IndicatorItemProps = Indicator;
 

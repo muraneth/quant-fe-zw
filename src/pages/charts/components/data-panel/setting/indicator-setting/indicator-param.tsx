@@ -1,4 +1,3 @@
-import * as React from "react";
 import { Button, Checkbox, Popover } from "antd";
 import FormRender, { useForm } from "form-render";
 import { useChartStore } from "@/store/charts";

@@ -34,6 +34,8 @@ const TokenTable = () => {
   const [isLoading, setIsLoading] = useImmer(false);
   const [searchKey, setSearchKey] = useImmer("");
 
+  console.log(isLoading);
+
   const userConfig = useExplorerStore.use.userConfig();
   const setDraftData = useExplorerStore.use.setDraftData();
   const navigate = useNavigate();
