@@ -38,6 +38,7 @@ export function createDynamicColumns(tokenDetailList:Array<TokenDetailInfo>) {
                                 flexDirection: "column",
                                 alignItems: "flex-start",
                                 justifyContent: "center",
+                                width: "100%",
                                 gap: "4px",
                                 padding: "4px",
                                 fontSize: "12px",
@@ -53,23 +54,27 @@ export function createDynamicColumns(tokenDetailList:Array<TokenDetailInfo>) {
                                 }
                             }}
                         >
-                            <div>
-                                <strong>Current:</strong>{" "}
-                                <span style={{ fontWeight: "bold" }}>{formatNumber(snap.data[6].value)}</span>
+                            <div style={{display:"flex",justifyContent: "space-between",width:"90%"}}>
+                                <span>Current:</span>{" "}
+                                <strong style={{ fontWeight: "bold", color:"white"}}>{formatNumber(snap.data[6].value)}</strong>
                             </div>
-                            <div>
-                                <strong>24h:</strong>{" "}
-                                <span>{formatNumber(snap.data[5].value)} / </span>
-                                <span style={{ color: getColor(snap.data[6].value, snap.data[5].value) }}>
-                                    {calculateChange(snap.data[6].value, snap.data[5].value)}%
-                                </span>
+                            <div style={{display:"flex",justifyContent: "space-between",width:"90%"}}>
+                                <span>24h:</span>
+                                <div>
+                                    <strong style={{color:"white"}}>{formatNumber(snap.data[5].value)} / </strong>
+                                    <span style={{ color: getColor(snap.data[6].value, snap.data[5].value) }}>
+                                        {calculateChange(snap.data[6].value, snap.data[5].value)}%
+                                    </span>
+                                </div>
                             </div>
-                            <div>
-                                <strong>7d:</strong>{" "}
-                                <span>{formatNumber(snap.data[0].value)} / </span>
+                            <div style={{display:"flex",justifyContent: "space-between",width:"90%"}}>
+                                <span>7d:</span>{" "}
+                                <div>
+                                <strong style={{color:"white"}}>{formatNumber(snap.data[0].value)} / </strong>
                                 <span style={{ color: getColor(snap.data[6].value, snap.data[0].value) }}>
                                     {calculateChange(snap.data[6].value, snap.data[0].value)}%
                                 </span>
+                                </div>
                             </div>
                             <div style={{ width: "100%", marginTop: "4px" }}>
                                 <SparklineChart 
