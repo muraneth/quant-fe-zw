@@ -117,7 +117,7 @@ const IndicatorParam = () => {
                 <span style={{ color: "gray" }}>
                   This feature requires Advanced plan
                 </span>
-                <Button type="primary" onClick={() => window.location.href = '/pricing'}>
+                <Button type="primary" size="small" onClick={() => window.location.href = '/pricing'}>
                   Upgrade Now
                 </Button>
               </div>
