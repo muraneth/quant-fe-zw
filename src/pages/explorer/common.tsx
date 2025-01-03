@@ -3,11 +3,13 @@ import {TokenDetailInfo} from "@/service/charts";
 import { formatNumber } from "@/utils/common";
 import { useNavigate } from "react-router-dom";
 import SparklineChart from "./SimpleChart";
+import { getUserInfo } from "@/utils/common";
+import { userInfo } from "os";
 const getColor = (current:number, previous:number) => (current - previous >= 0 ? "#36F097" : "#EB5757");
 const calculateChange = (current:number, previous:number) => ((current - previous) / previous * 100).toFixed(2);
 export function createDynamicColumns(tokenDetailList:Array<TokenDetailInfo>) {
     const navigate = useNavigate();
-
+    const userInfo = getUserInfo();
     return (
         tokenDetailList[0]?.indicator_snaps?.map((indicator, index) => ({
             title: indicator.name,
@@ -26,6 +28,21 @@ export function createDynamicColumns(tokenDetailList:Array<TokenDetailInfo>) {
                 const snap = record.indicator_snaps?.find(
                     (snap) => snap.name === indicator.name
                 );
+                if (snap==undefined) {
+                    return null;
+                }
+                if (snap.required_level> 1 && (!userInfo || userInfo.level < snap.required_level)) {
+                    return <div>
+                        higher level required{" "}
+                        <a 
+                        href="/pricing"
+                        >
+                           upgrade plan
+                        </a>
+                    </div>;
+                }
+
+
                 if (snap?.data && snap.data.length >= 7) {
                     const values = snap.data.map((d) => d.value);
                     

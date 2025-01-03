@@ -32,6 +32,7 @@ export interface IndicatorSnap {
   name: string;
   handle_name: string;
   type: IndicatorChartType;
+  required_level: number;
   data: Array<IndicatorUnit>;
 }
 export interface IndicatorUnit{
