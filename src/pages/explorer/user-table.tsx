@@ -12,7 +12,6 @@ import {
   TokenBaseInfo,
 } from "@/service/charts";
 import { useImmer } from "use-immer";
-import { formatNumber } from "@/utils/common";
 import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
 import type { TablePaginationConfig } from "antd/es/table";
@@ -23,7 +22,6 @@ const UserTokenTable = () => {
     Array<TokenDetailInfo>
   >([]);
   const [currentPage, setCurrentPage] = useImmer(1);
-  // const [userConfig, setUserConfig] = useImmer<UserConfig>({} as UserConfig);
   const userConfig = useExplorerStore.use.userConfig();
   const [existingToken, setExistingToken] = useImmer<Array<string>>([]);  
 
@@ -42,18 +40,13 @@ const UserTokenTable = () => {
     setCurrentPage(page);
   };
   const handleRemoveRow = async (symbol: string) => {
-    // Update both states
     setTokenDetailList((prev) =>
       prev.filter((item) => item.base_info.symbol !== symbol)
     );
-    
-    // Create the new token list
     const newTokenList = existingToken.filter(item => item !== symbol);
-    
-    // Update state
+  
     setExistingToken(newTokenList);
-    
-    // Save using the new list directly
+  
     await saveUserConfig({
       tokens: newTokenList,
       indicators: userConfig.indicators.map((ind) => ind.handle_name),
@@ -77,21 +70,17 @@ const UserTokenTable = () => {
     if (!userConfig.indicators || !userConfig.tokens) return;
   
     console.log("userConfig", userConfig);
-    
-    // Create indicator request array
+  
     const indReqTemp = userConfig.indicators.map(ind => ({
       handle_name: ind.handle_name,
     }));
   
     setExistingToken(userConfig.tokens);
   
-    // Process all tokens when indicators change, or only new tokens otherwise
     const processTokens = async () => {
-      // Check if indicators have changed by comparing with first token's indicators
       const hasIndicatorsChanged = tokenDetailList.length > 0 && 
         tokenDetailList[0].indicator_snaps.length !== userConfig.indicators.length;
   
-      // If indicators changed, clear the list and process all tokens
       if (hasIndicatorsChanged) {
         setTokenDetailList([]);
         
@@ -109,20 +98,14 @@ const UserTokenTable = () => {
           }
         }
       } else {
-        // Just process new tokens
         const existingTokens = new Set(
           tokenDetailList.map(item => item.base_info.symbol)
         );
-  
-        // Clean up removed tokens
         setTokenDetailList(prev => 
           prev.filter(item => userConfig.tokens.includes(item.base_info.symbol))
         );
-  
-        // Process only new tokens
         for (const token of userConfig.tokens) {
           if (existingTokens.has(token)) continue;
-  
           try {
             const result = await runGetTokenSnap({
               symbol: token,
@@ -150,8 +133,6 @@ const UserTokenTable = () => {
   const dynamicColumns = createDynamicColumns(tokenDetailList);
 
   const columns = useMemo(() => {
-    // Base columns for token info
-
     const baseColumns = [
       {
         title: "Token",

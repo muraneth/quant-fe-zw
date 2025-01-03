@@ -37,8 +37,6 @@ const Explorer: React.FC = () => {
       children: (
         <div
           style={{
-            // marginLeft: "50px",
-            // marginRight: "50px",
             marginBottom: "120px",
             marginTop: "20px",
           }}
