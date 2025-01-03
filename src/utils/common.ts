@@ -89,44 +89,41 @@ export function findKeyByValueFromMapping<T>(mapping: Record<any, Array<T>>) {
 }
 
 export interface ExtractedTokenMarketInfoItem {
-  percentage: string;
+  percentage?: string;
   title: string;
-  handle_name?: string;
+  handle_name: string;
   chart_type?: string;
-  type: "rise" | "fall" | "neutral";
-  value: number;
+  type?: "rise" | "fall" | "neutral";
+  value?: number;
 }
 
 export function extractedTokenMarketInfo(
   tokenMarketInfo?: TokenDetailInfo
 ): Array<ExtractedTokenMarketInfoItem> {
-  if (!tokenMarketInfo) return [];
+  if (!tokenMarketInfo||!tokenMarketInfo.indicator_snaps) return [];
   return tokenMarketInfo.indicator_snaps.map((item) => {
-
+    if (!item.data || item.data.length < 7) {
+      return {
+        title: item.name, 
+        handle_name: item.handle_name,
+        chart_type: item.type,
+      }
+    }
+    var chg = item.data[6].value - item.data[5].value;
+    var chgPercentage =0;
+    if (item.data[5].value!=0){
+      chgPercentage = chg / item.data[5].value;
+    }
     return {
       title: item.name,
-      value: item.value,
+      value: item.data[6].value,
       handle_name: item.handle_name,
       chart_type: item.type,
-      type: item.value_chg > 0 ? "rise" : item.value_chg < 0 ? "fall" : "neutral",
-      percentage: numberToPercentage(item.value_chg),
+      type: chg > 0 ? "rise" :chg < 0 ? "fall" : "neutral",
+      percentage: numberToPercentage(chgPercentage),
     };
   })
-  // return Object.entries(tokenMarketInfo)
-  //   .filter(([key]) => key.endsWith("_daily_chg"))
-  //   .map(([key, value]) => {
-  //     const baseKey = key.replace("_daily_chg", "");
-  //     const title = baseKey
-  //       .replace(/_/g, " ")
-  //       .replace(/\b\w/g, (char) => char.toUpperCase());
-
-  //     return {
-  //       title,
-  //       value: tokenMarketInfo[baseKey] ?? null,
-  //       type: value > 0 ? "rise" : value < 0 ? "fall" : "neutral",
-  //       percentage: `${numberToPercentage(value)}`,
-  //     };
-  //   });
+ 
 }
 
 export const formatNumber = (data: any) => {

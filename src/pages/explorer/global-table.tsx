@@ -209,7 +209,8 @@ const TokenTable = () => {
           const snapB = b.indicator_snaps?.find(
             (snap) => snap.name === indicator.name
           );
-          return (snapA?.value || 0) - (snapB?.value || 0);
+          return (snapA?.data[6]?.value || 0) - (snapB?.data[6]?.value || 0);
+
         },
         render: (_: any, record: TokenDetailInfo) => {
           const snap = record.indicator_snaps?.find(
@@ -217,9 +218,9 @@ const TokenTable = () => {
           );
           const baseInfo = record.base_info;
 
-          if (!snap) return null;
 
-          return (
+          return (snap&&snap.data&&snap.data.length>=7)?(
+
             <div
               style={{
                 cursor: snap.handle_name ? "pointer" : "default",
@@ -233,14 +234,16 @@ const TokenTable = () => {
                 }
               }}
             >
-              <div>{formatNumber(snap.value)}</div>
-              <span
-                style={{ color: snap.value_chg >= 0 ? "#36F097" : "#EB5757" }}
+              <div>Cur Value: 
+                <span>{formatNumber(snap.data[6].value)}</span>
+              </div>
+              {/* <span
+                style={{ color: snap.value_chg_24h >= 0 ? "#36F097" : "#EB5757" }}
               >
-                {formatNumber(snap.value_chg * 100)}%
-              </span>
+                {formatNumber(snap.value_chg_24h * 100)}%
+              </span> */}
             </div>
-          );
+          ):null;
         },
       })) || [];
 
