@@ -14,86 +14,10 @@ import {
 import { useImmer } from "use-immer";
 import { formatNumber } from "@/utils/common";
 import { useNavigate } from "react-router-dom";
-import { useEffect,useRef } from "react";
+import { useEffect } from "react";
 import type { TablePaginationConfig } from "antd/es/table";
 import { useExplorerStore } from "@/store/explorer";
-import * as echarts from 'echarts';
-import type { ECharts, EChartsOption } from 'echarts';
-
-interface SparklineChartProps {
-  data: number[];
-  color: string;
-}
-const SparklineChart: React.FC<SparklineChartProps> = ({ data, color }) => {
-  const chartRef = useRef<HTMLDivElement>(null);
-  const chartInstance = useRef<ECharts | null>(null);
-
-  useEffect(() => {
-    if (chartRef.current) {
-      if (!chartInstance.current) {
-        chartInstance.current = echarts.init(chartRef.current);
-      }
-
-      const option: EChartsOption = {
-        animation: false,
-        grid: {
-          left: 0,
-          right: 0,
-          top: 0,
-          bottom: 0,
-          // containLabel: true,
-        },
-        xAxis: {
-          type: 'category',
-          show: false,
-          data: [0, 1, 2, 3, 4, 5, 6]
-        },
-        yAxis: {
-          type: 'value',
-          show: false
-        },
-        series: [{
-          data: data,
-          type: 'line',
-          showSymbol: false,
-          lineStyle: {
-            width: 1,
-            color: color
-          },
-          areaStyle: {
-            color: color,
-            opacity: 0.1
-          }
-        }]
-      };
-
-      chartInstance.current.setOption(option);
-    }
-
-    return () => {
-      if (chartInstance.current) {
-        chartInstance.current.dispose();
-        chartInstance.current = null;
-      }
-    };
-  }, [data, color]);
-
-  useEffect(() => {
-    const handleResize = () => {
-      if (chartInstance.current) {
-        chartInstance.current.resize();
-      }
-    };
-
-    window.addEventListener('resize', handleResize);
-
-    return () => {
-      window.removeEventListener('resize', handleResize);
-    };
-  }, []);
-
-  return <div ref={chartRef} style={{ height: '40px', width: '100%' }} />;
-};
+import { createDynamicColumns } from "./common";
 const UserTokenTable = () => {
   const [tokenDetailList, setTokenDetailList] = useImmer<
     Array<TokenDetailInfo>
@@ -223,6 +147,7 @@ const UserTokenTable = () => {
       manual: true,
     }
   );
+  const dynamicColumns = createDynamicColumns(tokenDetailList);
 
   const columns = useMemo(() => {
     // Base columns for token info
@@ -278,73 +203,8 @@ const UserTokenTable = () => {
       },
     
     ];
-    const dynamicColumns =
-      tokenDetailList[0]?.indicator_snaps?.map((indicator, index) => ({
-        title: indicator.name,
-        key: `indicator_${index}`,
-        width: "180px",
-        sorter: (a: TokenDetailInfo, b: TokenDetailInfo) => {
-          const snapA = a.indicator_snaps?.find(
-            (snap) => snap.name === indicator.name
-          );
-          const snapB = b.indicator_snaps?.find(
-            (snap) => snap.name === indicator.name
-          );
-          return (snapA?.data[6]?.value || 0) - (snapB?.data[6]?.value || 0);
-        },
-        render: (_: any, record: TokenDetailInfo) => {
-          const snap = record.indicator_snaps?.find(
-            (snap) => snap.name === indicator.name
-          );
-          if (snap?.data && snap.data.length >= 7) {
-            const values = snap.data.map(d => d.value);
-            const getColor = (current:number, previous:number) => (current - previous >= 0 ? "#36F097" : "#EB5757");
-            const calculateChange = (current:number, previous:number) => 
-                ((current - previous) / previous * 100).toFixed(2);
-        
-            return (
-                <div
-                    style={{
-                        display: "flex",
-                        flexDirection: "column",
-                        alignItems: "flex-start",
-                        justifyContent: "center",
-                        gap: "4px",
-                        padding: "4px",
-                        fontSize: "12px",
-                        lineHeight: "1.5",
-                    }}
-                >
-                    <div>
-                        <strong>Current:</strong>{" "}
-                        <span style={{ fontWeight: "bold" }}>{formatNumber(snap.data[6].value)}</span>
-                    </div>
-                    <div>
-                        <strong>24h:</strong>{" "}
-                        <span>{formatNumber(snap.data[5].value)} / </span>
-                        <span style={{ color: getColor(snap.data[6].value, snap.data[5].value) }}>
-                            {calculateChange(snap.data[6].value, snap.data[5].value)}%
-                        </span>
-                    </div>
-                    <div>
-                        <strong>7d:</strong>{" "}
-                        <span>{formatNumber(snap.data[0].value)} / </span>
-                        <span style={{ color: getColor(snap.data[6].value, snap.data[0].value) }}>
-                            {calculateChange(snap.data[6].value, snap.data[0].value)}%
-                        </span>
-                    </div>
-                    <div style={{ width: "100%", marginTop: "4px" }}>
-                        <SparklineChart 
-                            data={values} 
-                            color={getColor(snap.data[6].value, snap.data[0].value)} 
-                        />
-                    </div>
-                </div>
-            );
-        }
-           
-        },
-      })) || [];
+
+     
     return [
       ...baseColumns,
       ...dynamicColumns,
