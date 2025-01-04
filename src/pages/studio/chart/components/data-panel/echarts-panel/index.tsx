@@ -83,7 +83,7 @@ const EchartsPanel = () => {
   React.useEffect(() => {
     if (
       Array.isArray(indicatorDetailList) &&
-      Array.isArray(priceList) &&
+      priceList?.length &&
       klineType &&
       type
     ) {
