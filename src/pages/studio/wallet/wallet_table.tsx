@@ -26,6 +26,9 @@ const WalletTable = () => {
       },
     }
   );
+  const handleRowClick = (record: WalletBaseInfo) => {
+    navigate(`/studio?tab=wallet&wallet_address=${record.wallet_address}`);
+  };
 
   const formatNumber = (num: number, decimals = 2) => {
     return new Intl.NumberFormat("en-US", {
@@ -39,10 +42,6 @@ const WalletTable = () => {
       style: "currency",
       currency: "USD",
     }).format(num);
-  };
-
-  const handleRowClick = (record: WalletBaseInfo) => {
-    navigate(`/studio?tab=wallet&wallet_address=${record.wallet_address}`);
   };
 
   const columns: ColumnsType<WalletBaseInfo> = [
