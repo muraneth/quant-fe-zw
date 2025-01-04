@@ -3,6 +3,7 @@
   height: calc(100vh - 120px);
   display: flex;
   flex-direction: column;
+  overflow-y: auto;
 
   .top {
     width: 100%;
