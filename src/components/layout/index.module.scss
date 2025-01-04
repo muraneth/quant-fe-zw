@@ -36,12 +36,19 @@
         font-size: 16px;
         line-height: 16px;
         padding: 4px;
+        cursor: pointer;
 
         &:hover {
           background: #2d2e30;
           border-radius: 2px;
           transition: all 200ms ease;
         }
+      }
+
+      .menuItemActive {
+        background: #2d2e30;
+        border-radius: 2px;
+        transition: all 200ms ease;
       }
     }
 
@@ -58,14 +65,14 @@
       display: flex;
       align-items: center;
       color: rgba(255, 255, 255, 0.85);
-  
+
       .avatar {
         width: 16px;
         height: 16px;
         margin-right: 12px;
         border-radius: 50%;
       }
-  
+
       .name {
         margin-right: 8px;
       }

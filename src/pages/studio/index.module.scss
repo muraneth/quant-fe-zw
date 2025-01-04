@@ -1,6 +1,17 @@
 .studio {
   width: 100%;
-  height: 100%;
-  background: var(--primary-content-color);
-  color: #FFF;
+
+  :global {
+    .ant-tabs >.ant-tabs-nav .ant-tabs-nav-wrap {
+      padding-left: 12px;
+    }
+    .ant-tabs-top >.ant-tabs-nav {
+      margin: 0;
+    }
+  }
+
+  .segmented {
+    height: 40px;
+    line-height: 40px;
+  }
 }

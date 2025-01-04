@@ -34,7 +34,7 @@ const Search = () => {
   return (
     <div className={styles.searchWrapper}>
       <Tabs
-        type="card"
+        type="line"
         destroyInactiveTabPane
         defaultActiveKey="1"
         items={items}

@@ -127,7 +127,7 @@ const Header = () => {
   const handleItemClick = (item:ExtractedTokenMarketInfoItem) => {
 
     if (item) {
-      window.location.href =`/charts?symbol=${currentToken.symbol}&handle_name=${item.handle_name}&chain=${currentToken.chain}`;``
+      window.location.href =`/studio?symbol=${currentToken.symbol}&handle_name=${item.handle_name}&chain=${currentToken.chain}`;``
     }
   };
   const tokenContent = (

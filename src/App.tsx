@@ -2,18 +2,16 @@ import * as React from 'react';
 import { Routes, Route, Navigate } from "react-router-dom";
 import { ConfigProvider, theme } from "antd";
 import Layout from "@/components/layout";
-import LandingPage from "./pages/landing";
+import Home from "./pages/home";
 import SignIn from "./pages/sign-in";
 import SignUp from "./pages/sign-up";
-import Home from "@/pages/home";
 import Payment from "@/pages/payment";
-import Studio from "./pages/studio";
 import Compare from "./pages/compare";
 import Wallet from "./pages/wallet";
 import Subscribe from "./pages/subscribe";
 import Explorer from './pages/explorer';
 
-const Charts = React.lazy(() => import('./pages/charts'));
+const Studio = React.lazy(() => import('./pages/studio'));
 
 function App() {
   return (
@@ -37,12 +35,10 @@ function App() {
     >
       <Routes>
         <Route path="/" element={<Layout />}>
-          <Route path="/home" element={<Home />} />
           <Route path="/explorer" element={<Explorer />} />
-          <Route path="/landing" element={<LandingPage />} />
+          <Route path="/home" element={<Home />} />
           <Route path="/sign-in" element={<SignIn />} />
           <Route path="/sign-up" element={<SignUp />} />
-          <Route path="/charts" element={<Charts />} />
           <Route path="/studio" element={<Studio />} />
           <Route path="/compare" element={<Compare />} />
           <Route path="/wallet" element={<Wallet />} />

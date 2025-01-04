@@ -144,7 +144,7 @@ const UserTokenTable = () => {
             style={{ display: "flex", alignItems: "center", cursor: "pointer" }}
             onClick={() => {
               navigate(
-                `/charts?symbol=${baseInfo.symbol}&handle_name=holder.all&chain=${baseInfo.chain}`
+                `/studio?symbol=${baseInfo.symbol}&handle_name=holder.all&chain=${baseInfo.chain}`
               );
             }}
           >

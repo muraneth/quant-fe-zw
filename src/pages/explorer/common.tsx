@@ -66,7 +66,7 @@ export function createDynamicColumns(tokenDetailList:Array<TokenDetailInfo>) {
                             onClick={() => {
                                 if (snap.handle_name) {
                                     navigate(
-                                        `/charts?symbol=${baseInfo.symbol}&handle_name=${snap.handle_name}&chain=${baseInfo.chain}`
+                                        `/studio?symbol=${baseInfo.symbol}&handle_name=${snap.handle_name}&chain=${baseInfo.chain}`
                                     );
                                 }
                             }}
