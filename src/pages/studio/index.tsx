@@ -3,7 +3,7 @@ import type { TabsProps } from "antd";
 import Chart from "./chart";
 import Header from "./header";
 import styles from "./index.module.scss";
-
+import Wallets from "./wallet";
 const items: TabsProps["items"] = [
   {
     key: "CHART",
@@ -13,7 +13,7 @@ const items: TabsProps["items"] = [
   {
     key: "WALLET",
     label: "WALLET",
-    children: "WALLET",
+    children: <Wallets />,
   },
   {
     key: "COMPOSE",
@@ -32,11 +32,7 @@ const Studio = () => {
     <div className={styles.studio}>
       <Header />
       <Divider style={{ margin: 0 }} />
-      <Tabs
-        type="line"
-        defaultActiveKey="CHART"
-        items={items}
-      />
+      <Tabs type="line" defaultActiveKey="CHART" items={items} />
     </div>
   );
 };
