@@ -14,7 +14,6 @@ export function generateOptions({
   priceList = [] as any,
   klineType = '',
 }) {
-  console.log('type', type);
 
   switch (type) {
     case IndicatorChartType.PRICE_LINE:

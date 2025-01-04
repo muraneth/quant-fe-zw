@@ -1,6 +1,5 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 // @ts-nocheck
-import { get } from "http";
 import {
   getPriceSeries,
   getIndenpendYAxis,
