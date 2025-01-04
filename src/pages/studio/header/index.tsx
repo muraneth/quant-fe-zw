@@ -9,7 +9,6 @@ import {
   TokenDetailInfo,
   IndicatorListResDto,
   Indicator,
-  TokenListResDto
 } from "@/service/charts";
 import { DownOutlined, SearchOutlined } from "@ant-design/icons";
 import EllipsisMiddle from "@/components/ellipsis-middle";
@@ -36,7 +35,10 @@ const hasUrlInitParams = Boolean(chain && symbol && handle_name);
 
 const Header = () => {
   const [searchParams, setSearchParams] = useSearchParams();
-  const hasUrlInitParamsRef = React.useRef<boolean>(hasUrlInitParams);
+
+  const hasUrlInitRef = React.useRef<{ resetFlag: boolean }>({ 
+    resetFlag: hasUrlInitParams,
+   });
 
   const [openPopover, setOpenPopover] = useImmer(false);
   const [keywords, setKeywords] = useImmer("");
@@ -44,10 +46,9 @@ const Header = () => {
   const [tokenMarketInfoList, setTokenMarketInfoList] = useImmer<
     Array<ExtractedTokenMarketInfoItem>
   >([]);
-  const [currentToken, setCurrentToken] = useImmer<TokenBaseInfo>({
-    symbol,
-    chain,
-  } as TokenBaseInfo);
+  const [currentToken, setCurrentToken] = useImmer<TokenBaseInfo>(
+    null as unknown as TokenBaseInfo
+  );
 
   const setDraftData = useChartStore.use.setDraftData();
   const resetChartPanelData = useChartStore.use.resetChartPanelData();
@@ -55,43 +56,49 @@ const Header = () => {
   const indicatorList = useChartStore.use.indicatorList();
 
   React.useEffect(() => {
-    // 解析 url 参数，获取 indicator 数据
-    setDraftData((draft) => {
-      const findIndicator = (list: IndicatorListResDto): Indicator => {
-        for (const category of list) {
-          for (const group of category.groups) {
-            const foundIndicator = group.indicators.find(
-              (indicator) => indicator.handle_name === handle_name
-            );
+    if (indicatorList) {
+      // 解析 url 参数，获取 indicator 数据
+      // token 切换 -> indicatorList更新 -> 设置默认的 extra_params
+      setDraftData((draft) => {
+        const findIndicator = (list: IndicatorListResDto): Indicator => {
+          for (const category of list) {
+            for (const group of category.groups) {
+              const foundIndicator = group.indicators.find(
+                (indicator) => indicator.handle_name === handle_name
+              );
 
-            if (foundIndicator) {
-              return foundIndicator;
+              if (foundIndicator) {
+                return foundIndicator;
+              }
             }
           }
+          return null as unknown as Indicator;
+        };
+        const indicatorInfo = findIndicator(indicatorList);
+        if (indicatorInfo) {
+          draft.indicatorInfo = indicatorInfo;
+            const { param_schema } = indicatorInfo || {};
+            draft.extra_params = getDefaultExtraParams(param_schema);
         }
-        return null as unknown as Indicator;
-      };
-      const indicatorInfo = findIndicator(indicatorList);
-      if (indicatorInfo) {
-        draft.indicatorInfo = indicatorInfo;
-        const { param_schema } = indicatorInfo || {};
-        draft.extra_params = getDefaultExtraParams(param_schema);
-      }
-    });
+      });
+    }
   }, [indicatorList, setDraftData]);
 
   const { data: tokenList = [] } = useRequest(
     () => {
-      if (hasUrlInitParamsRef.current) {
-        hasUrlInitParamsRef.current = false;
-        return null as any;
-      }
       return getTokenList({ key: keywords, chain: selectedChain });
     },
     {
       refreshDeps: [keywords, selectedChain],
-      onSuccess: (res: TokenListResDto) => {
-        if (!currentToken && tokenInfo && res) {
+      onSuccess: (res) => {
+        if (tokenInfo && res) {
+          const matchUrlToken = res.find(
+            (token) => token.symbol === symbol && chain === token.chain
+          );
+          if (matchUrlToken) {
+            setCurrentToken(matchUrlToken);
+            return;
+          }
           const matchingToken = res.find(
             (token) =>
               token.symbol === tokenInfo.symbol && token.chain === token.chain
@@ -160,7 +167,11 @@ const Header = () => {
           end_time: "",
         };
       });
-      resetChartPanelData({ refreshChart: true });
+      if (hasUrlInitRef.current.resetFlag) {
+        hasUrlInitRef.current.resetFlag = false;
+      } else {
+        resetChartPanelData({ refreshChart: true });
+      }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentToken]);

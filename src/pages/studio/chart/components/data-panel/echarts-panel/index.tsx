@@ -80,7 +80,7 @@ const EchartsPanel = () => {
   );
 
   React.useEffect(() => {
-    if (indicatorDetailList?.length && priceList?.length && klineType && type) {
+    if (Array.isArray(indicatorDetailList) && Array.isArray(priceList) && klineType && type) {
       setDraftData(draft => {
         draft.options = generateOptions({
           type,

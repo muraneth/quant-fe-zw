@@ -3,7 +3,7 @@ import type { TabsProps } from "antd";
 import FullSearch from "./full";
 import CollectedSearch from "./collected";
 import { useRequest } from "ahooks";
-import { getIndicatorList } from "@/service/charts";
+import { getIndicatorList, IndicatorListResDto } from "@/service/charts";
 import { useChartStore } from "@/store/charts";
 import styles from "./index.module.scss";
 
@@ -22,14 +22,26 @@ const items: TabsProps["items"] = [
 
 const Search = () => {
   const setDraftData = useChartStore.use.setDraftData();
+  const { symbol, chain } = useChartStore.use.tokenInfo();
 
-  useRequest(getIndicatorList, {
-    onSuccess: (res) => {
-      setDraftData((draft) => {
-        draft.indicatorList = res;
-      });
+  useRequest(
+    () => {
+      if (symbol && chain) {
+        return getIndicatorList({ symbol, chain });
+      }
+      return null as any;
     },
-  });
+    {
+      onSuccess: (res: IndicatorListResDto) => {
+        if (res) {
+          setDraftData((draft) => {
+            draft.indicatorList = res;
+          });
+        }
+      },
+      refreshDeps: [symbol, chain]
+    }
+  );
 
   return (
     <div className={styles.searchWrapper}>
