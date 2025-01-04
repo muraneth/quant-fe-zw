@@ -8,6 +8,7 @@ import {
 import { useChartStore } from "@/store/charts";
 
 const ChartOperation = () => {
+  const { symbol, chain } = useChartStore.use.tokenInfo();
   const { handle_name, collected } = useChartStore.use.indicatorInfo();
   const base_params = useChartStore.use.base_params();
   const extra_params = useChartStore.use.extra_params();
@@ -30,11 +31,12 @@ const ChartOperation = () => {
         setDraftData((draft) => {
           draft.indicatorInfo.collected = true;
         });
-        runGetIndicatorList();
+        runGetIndicatorList({ symbol, chain });
       },
       onError: (error) => {
         console.error("Failed to toggle collection status:", error);
       },
+      refreshDeps: [symbol, chain]
     }
   );
 
@@ -46,11 +48,12 @@ const ChartOperation = () => {
         setDraftData((draft) => {
           draft.indicatorInfo.collected = false;
         });
-        runGetIndicatorList();
+        runGetIndicatorList({ symbol, chain });
       },
       onError: (error) => {
         console.error("Failed to toggle collection status:", error);
       },
+      refreshDeps: [symbol, chain]
     }
   );
 
