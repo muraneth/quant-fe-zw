@@ -40,12 +40,12 @@ const Charts = () => {
               } 
             }
           }
-          console.log("dont find match ind",handle_name,list );
-          
-          return {} as Indicator;
+          return null as unknown as Indicator;
         };
-  
-        draft.indicatorInfo = findIndicator(indicatorList);
+        const indicatorInfo = findIndicator(indicatorList);
+        if (indicatorInfo) {
+          draft.indicatorInfo = indicatorInfo;
+        }
       });
     }
   }, [symbol, handle_name,indicatorList, setDraftData]);
