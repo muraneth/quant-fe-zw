@@ -1,4 +1,4 @@
-import { Button, Checkbox, Popover,Divider } from "antd";
+import { Button, Checkbox, Popover, Divider } from "antd";
 import FormRender, { useForm } from "form-render";
 import { useChartStore } from "@/store/charts";
 import { svgMap } from "@/constants/svg";
@@ -21,6 +21,7 @@ const IndicatorParam = () => {
   const userInfo = getUserInfo();
   const base_params = useChartStore.use.base_params();
   const extra_params = useChartStore.use.extra_params();
+  const tokenInfo = useChartStore.use.tokenInfo();
   // const chart_options = useChartStore.use.options();
   const { param_schema, handle_name } = useChartStore.use.indicatorInfo();
   const { use_base_param, extra_params_schema } =
@@ -63,6 +64,8 @@ const IndicatorParam = () => {
       () =>
         saveIndicatorParam({
           handle_name,
+          symbol: tokenInfo.symbol,
+          chain: tokenInfo.chain,
           base_params: JSON.stringify(base_params),
           extra_params: JSON.stringify(extra_params),
         }),
@@ -78,41 +81,49 @@ const IndicatorParam = () => {
         <Popover
           placement="bottomLeft"
           content={
-            <div style={{
-              display: "flex",
-              flexDirection: "column",  // Stack items vertically
-              gap: "8px" 
-              }}>
-              <h3 style={{padding:0,margin:0}}>Recalculate the indicator after filtering specific wallets</h3>
-              
-              <Divider  style={{padding:0,margin:0}}/>
-              <Checkbox.Group
-              options={label_options.map(option => ({
-                ...option,
-                disabled: !checkIfAvailableForParam()
-              }))}
-              value={base_params?.exclude_wallets?.by_labels || []}
-              onChange={handleBaseChange}
-              className={styles.checkboxGrop}
-
-            />
-            {!checkIfAvailableForParam() && (
-              <div style={{
+            <div
+              style={{
                 display: "flex",
-                flexDirection: "column",
+                flexDirection: "column", // Stack items vertically
                 gap: "8px",
-                alignItems: "center"
-              }}>
-                <span style={{ color: "gray" }}>
-                  This feature requires Advanced plan
-                </span>
-                <Button type="primary" size="small" onClick={() => window.location.href = '/pricing'}>
-                  Upgrade Now
-                </Button>
-              </div>
-            )}
+              }}
+            >
+              <h3 style={{ padding: 0, margin: 0 }}>
+                Recalculate the indicator after filtering specific wallets
+              </h3>
+
+              <Divider style={{ padding: 0, margin: 0 }} />
+              <Checkbox.Group
+                options={label_options.map((option) => ({
+                  ...option,
+                  disabled: !checkIfAvailableForParam(),
+                }))}
+                value={base_params?.exclude_wallets?.by_labels || []}
+                onChange={handleBaseChange}
+                className={styles.checkboxGrop}
+              />
+              {!checkIfAvailableForParam() && (
+                <div
+                  style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    gap: "8px",
+                    alignItems: "center",
+                  }}
+                >
+                  <span style={{ color: "gray" }}>
+                    This feature requires Advanced plan
+                  </span>
+                  <Button
+                    type="primary"
+                    size="small"
+                    onClick={() => (window.location.href = "/pricing")}
+                  >
+                    Upgrade Now
+                  </Button>
+                </div>
+              )}
             </div>
-            
           }
           getPopupContainer={(triggerNode) => triggerNode.parentNode as any}
         >
