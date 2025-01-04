@@ -1,6 +1,6 @@
 import fetch from "isomorphic-fetch";
 import { getUserInfo } from "@/utils/common";
-import { setAuth } from "@/utils/common";
+// import { setAuth } from "@/utils/common";
 
 interface IFetchParams {
   url: string;

@@ -1,11 +1,10 @@
-import styles from "./index.module.scss";
 import UserTokenTable from "./user-table";
 import TokenTable from "./global-table";
 import React, { useState } from "react";
 import { Layout, Drawer, Button, Tabs } from "antd";
 import MyDrawer from "./drawer";
 
-const { Header, Content } = Layout;
+const { Content } = Layout;
 
 const Explorer: React.FC = () => {
   const [isDrawerOpen, setDrawerOpen] = useState(false);
