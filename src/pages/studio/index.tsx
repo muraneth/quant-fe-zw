@@ -22,7 +22,14 @@ const items: TabsProps["items"] = [
 const Studio = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const handleTabChange = (key: string) => {
-    setSearchParams({ tab: key });
+    const newSearchParams = new URLSearchParams(searchParams);
+    newSearchParams.set("tab", key);
+
+    if (key === "chart") {
+      newSearchParams.delete("wallet_address");
+      // newSearchParams.set("handle_name", "holer.all");
+    }
+    setSearchParams(newSearchParams);
   };
   const tab = (searchParams.get("tab") || "chart").toLowerCase();
 

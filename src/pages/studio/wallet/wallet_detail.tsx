@@ -1,10 +1,10 @@
 import React, { useEffect, useRef } from "react";
 import * as echarts from "echarts";
-
 import { useImmer } from "use-immer";
 import { useRequest } from "ahooks";
 import { getWalletInfo, WalletDailyInfo } from "@/service/wallets";
 import { useChartStore } from "@/store/charts";
+
 interface WalletDetailProps {
   wallet_address: string;
 }
@@ -17,7 +17,7 @@ const WalletDetail: React.FC<WalletDetailProps> = ({ wallet_address }) => {
   const pnlChartRef = useRef<HTMLDivElement>(null);
   const tokenMetricsChartRef = useRef<HTMLDivElement>(null);
 
-  useRequest(
+  const { run: fetchWalletInfo } = useRequest(
     () =>
       getWalletInfo({
         symbol: tokenInfo.symbol,
@@ -33,165 +33,116 @@ const WalletDetail: React.FC<WalletDetailProps> = ({ wallet_address }) => {
   );
 
   useEffect(() => {
-    if (
-      !walletDailyInfo.length ||
-      !balanceChartRef.current ||
-      !pnlChartRef.current ||
-      !tokenMetricsChartRef.current
-    )
-      return;
+    if (walletDailyInfo.length === 0) return;
 
-    // Balance and USD Value Chart
-    const balanceChart = echarts.init(balanceChartRef.current);
-    const balanceOption: echarts.EChartsOption = {
-      tooltip: {
-        trigger: "axis",
-        formatter: function (params: any) {
-          const date = format(new Date(params[0].axisValue), "MMM dd, yyyy");
-          let tooltipContent = `${date}<br/>`;
-          params.forEach((param: any) => {
-            const value = param.seriesName.includes("USD")
-              ? `$${param.value.toLocaleString()}`
-              : param.value.toLocaleString();
-            tooltipContent += `${param.seriesName}: ${value}<br/>`;
-          });
-          return tooltipContent;
-        },
-      },
-      legend: {
-        data: ["Token Balance", "USD Value"],
-      },
-      xAxis: {
-        type: "category",
-        data: walletDailyInfo.map((item) => item.day),
-        axisLabel: {
-          formatter: (value: string) => format(new Date(value), "MMM dd"),
-        },
-      },
+    // Extract data for charts
+    const days = walletDailyInfo.map((item) => item.day);
+    const balances = walletDailyInfo.map((item) => item.balance);
+    const idxPrices = walletDailyInfo.map((item) => item.idx_price);
+    const realizedPnLs = walletDailyInfo.map((item) => item.realized_pnl);
+    const unrealizedPnLs = walletDailyInfo.map((item) => item.unrealized_pnl);
+    const avgCosts = walletDailyInfo.map((item) => item.avg_cost);
+
+    // Initialize or update Balance Chart
+    const balanceChart = echarts.init(balanceChartRef.current!);
+    balanceChart.setOption({
+      title: { text: "Wallet Balance and Index Price", left: "center" },
+      tooltip: { trigger: "axis" },
+      xAxis: { type: "category", data: days },
       yAxis: [
-        {
-          type: "value",
-          name: "Token Balance",
-          position: "left",
-        },
-        {
-          type: "value",
-          name: "USD Value",
-          position: "right",
-        },
+        { type: "value", name: "Balance", position: "left" },
+        { type: "value", name: "Index Price", position: "right" },
       ],
       series: [
         {
-          name: "Token Balance",
+          name: "Balance",
           type: "line",
-          data: walletDailyInfo.map((item) => item.balance),
+          data: balances,
           smooth: true,
+          yAxisIndex: 0, // Use the left y-axis
+          lineStyle: { color: "#5470C6" },
         },
         {
-          name: "USD Value",
+          name: "Index Price",
           type: "line",
-          yAxisIndex: 1,
-          data: walletDailyInfo.map((item) => item.balance_usd),
+          data: idxPrices,
           smooth: true,
+          yAxisIndex: 1, // Use the right y-axis
+          lineStyle: { color: "#EE6666", type: "dashed" },
         },
       ],
-    };
-    balanceChart.setOption(balanceOption);
+    });
 
-    // PNL Chart
-    const pnlChart = echarts.init(pnlChartRef.current);
-    const pnlOption: echarts.EChartsOption = {
-      tooltip: {
-        trigger: "axis",
-        formatter: function (params: any) {
-          const date = format(new Date(params[0].axisValue), "MMM dd, yyyy");
-          let tooltipContent = `${date}<br/>`;
-          params.forEach((param: any) => {
-            tooltipContent += `${
-              param.seriesName
-            }: $${param.value.toLocaleString()}<br/>`;
-          });
-          return tooltipContent;
-        },
+    // Initialize or update PnL Chart
+    const pnlChart = echarts.init(pnlChartRef.current!);
+    pnlChart.setOption({
+      title: {
+        text: "Realized, Unrealized PnL and Index Price",
+        left: "center",
       },
-      legend: {
-        data: ["Unrealized P/L", "Total P/L"],
-      },
-      xAxis: {
-        type: "category",
-        data: walletDailyInfo.map((item) => item.day),
-        axisLabel: {
-          formatter: (value: string) => format(new Date(value), "MMM dd"),
-        },
-      },
-      yAxis: {
-        type: "value",
-        name: "USD",
-      },
-      series: [
-        {
-          name: "Unrealized P/L",
-          type: "line",
-          areaStyle: {},
-          data: walletDailyInfo.map((item) => item.unrealized_pnl),
-          smooth: true,
-        },
-        {
-          name: "Total P/L",
-          type: "line",
-          areaStyle: {},
-          data: walletDailyInfo.map((item) => item.total_pnl),
-          smooth: true,
-        },
+      tooltip: { trigger: "axis" },
+      xAxis: { type: "category", data: days },
+      yAxis: [
+        { type: "value", name: "PnL", position: "left" },
+        { type: "value", name: "Index Price", position: "right" },
       ],
-    };
-    pnlChart.setOption(pnlOption);
-
-    // Token Metrics Chart
-    const tokenMetricsChart = echarts.init(tokenMetricsChartRef.current);
-    const tokenMetricsOption: echarts.EChartsOption = {
-      tooltip: {
-        trigger: "axis",
-        formatter: function (params: any) {
-          const date = format(new Date(params[0].axisValue), "MMM dd, yyyy");
-          let tooltipContent = `${date}<br/>`;
-          params.forEach((param: any) => {
-            tooltipContent += `${
-              param.seriesName
-            }: ${param.value.toLocaleString()}<br/>`;
-          });
-          return tooltipContent;
-        },
-      },
-      legend: {
-        data: ["Average Token/Day", "Token Day Destroy"],
-      },
-      xAxis: {
-        type: "category",
-        data: walletDailyInfo.map((item) => item.day),
-        axisLabel: {
-          formatter: (value: string) => format(new Date(value), "MMM dd"),
-        },
-      },
-      yAxis: {
-        type: "value",
-      },
       series: [
         {
-          name: "Average Token/Day",
+          name: "Realized PnL",
           type: "bar",
-          data: walletDailyInfo.map((item) => item.avg_token_day),
+          data: realizedPnLs,
+          yAxisIndex: 0, // Use the left y-axis
+          itemStyle: { color: "#91CC75" },
         },
         {
-          name: "Token Day Destroy",
+          name: "Unrealized PnL",
           type: "line",
-          data: walletDailyInfo.map((item) => item.token_day_destory),
+          data: unrealizedPnLs,
+          smooth: true,
+          yAxisIndex: 0, // Use the left y-axis
+          lineStyle: { color: "#FAC858" },
+        },
+        {
+          name: "Index Price",
+          type: "line",
+          data: idxPrices,
+          smooth: true,
+          yAxisIndex: 1, // Use the right y-axis
+          lineStyle: { color: "#EE6666", type: "dashed" },
         },
       ],
-    };
-    tokenMetricsChart.setOption(tokenMetricsOption);
+    });
 
-    // Cleanup
+    // Initialize or update Token Metrics Chart
+    const tokenMetricsChart = echarts.init(tokenMetricsChartRef.current!);
+    tokenMetricsChart.setOption({
+      title: { text: "Average Cost and Index Price", left: "center" },
+      tooltip: { trigger: "axis" },
+      xAxis: { type: "category", data: days },
+      yAxis: [
+        { type: "value", name: "Average Cost", position: "left" },
+        { type: "value", name: "Index Price", position: "right" },
+      ],
+      series: [
+        {
+          name: "Average Cost",
+          type: "line",
+          data: avgCosts,
+          smooth: true,
+          yAxisIndex: 0, // Use the left y-axis
+          lineStyle: { color: "#73C0DE" },
+        },
+        {
+          name: "Index Price",
+          type: "line",
+          data: idxPrices,
+          smooth: true,
+          yAxisIndex: 1, // Use the right y-axis
+          lineStyle: { color: "#EE6666", type: "dashed" },
+        },
+      ],
+    });
+
     return () => {
       balanceChart.dispose();
       pnlChart.dispose();
@@ -199,39 +150,20 @@ const WalletDetail: React.FC<WalletDetailProps> = ({ wallet_address }) => {
     };
   }, [walletDailyInfo]);
 
-  // Handle resize
-  useEffect(() => {
-    const handleResize = () => {
-      const charts = [
-        echarts.getInstanceByDom(balanceChartRef.current),
-        echarts.getInstanceByDom(pnlChartRef.current),
-        echarts.getInstanceByDom(tokenMetricsChartRef.current),
-      ];
-      charts.forEach((chart) => chart?.resize());
-    };
-
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
-  }, []);
-
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 p-4">
-      <div className="col-span-1 md:col-span-2 bg-white rounded-lg shadow p-4">
-        <h2 className="text-xl font-semibold mb-4">
-          Token Balance & USD Value
-        </h2>
-        <div ref={balanceChartRef} className="h-64 w-full" />
-      </div>
-
-      <div className="bg-white rounded-lg shadow p-4">
-        <h2 className="text-xl font-semibold mb-4">Profit/Loss Analysis</h2>
-        <div ref={pnlChartRef} className="h-64 w-full" />
-      </div>
-
-      <div className="bg-white rounded-lg shadow p-4">
-        <h2 className="text-xl font-semibold mb-4">Token Metrics</h2>
-        <div ref={tokenMetricsChartRef} className="h-64 w-full" />
-      </div>
+    <div style={{ padding: "20px" }}>
+      <div
+        ref={balanceChartRef}
+        style={{ width: "100%", height: "400px", marginBottom: "20px" }}
+      ></div>
+      <div
+        ref={pnlChartRef}
+        style={{ width: "100%", height: "400px", marginBottom: "20px" }}
+      ></div>
+      <div
+        ref={tokenMetricsChartRef}
+        style={{ width: "100%", height: "400px" }}
+      ></div>
     </div>
   );
 };

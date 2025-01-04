@@ -27,7 +27,9 @@ const WalletTable = () => {
     }
   );
   const handleRowClick = (record: WalletBaseInfo) => {
-    navigate(`/studio?tab=wallet&wallet_address=${record.wallet_address}`);
+    navigate(
+      `/studio?symbol=${tokenInfo.symbol}&chain=${tokenInfo.chain}&tab=wallet&wallet_address=${record.wallet_address}`
+    );
   };
 
   const formatNumber = (num: number, decimals = 2) => {
@@ -50,7 +52,7 @@ const WalletTable = () => {
       dataIndex: "wallet_address",
       key: "wallet_address",
       fixed: "left",
-      width: 280,
+      width: 300,
       render: (text: string) => (
         <Typography.Text copyable>{text}</Typography.Text>
       ),
@@ -59,7 +61,7 @@ const WalletTable = () => {
       title: "Balance",
       dataIndex: "balance",
       key: "balance",
-      width: 120,
+      width: 180,
       render: (value: number) => formatNumber(value),
       sorter: (a, b) => a.balance - b.balance,
     },
@@ -79,14 +81,14 @@ const WalletTable = () => {
       render: (value: number) => formatUSD(value),
       sorter: (a, b) => a.balance_usd - b.balance_usd,
     },
-    {
-      title: "Total Token/Day",
-      dataIndex: "total_token_day",
-      key: "total_token_day",
-      width: 120,
-      render: (value: number) => formatNumber(value),
-      sorter: (a, b) => a.total_token_day - b.total_token_day,
-    },
+    // {
+    //   title: "Total Token/Day",
+    //   dataIndex: "total_token_day",
+    //   key: "total_token_day",
+    //   width: 120,
+    //   render: (value: number) => formatNumber(value),
+    //   sorter: (a, b) => a.total_token_day - b.total_token_day,
+    // },
     {
       title: "Avg Token/Day",
       dataIndex: "avg_token_day",
@@ -160,8 +162,8 @@ const WalletTable = () => {
             height: 48px !important;
           }
           .ant-table-tbody > tr > td {
-            height: 56px !important;  /* Adjust this value to change row height */
-            line-height: 40px !important; /* Adjust this for vertical text alignment */
+            // height: 0px !important;  /* Adjust this value to change row height */
+            line-height: 36px !important; /* Adjust this for vertical text alignment */
           }
           .ant-table-row {
             cursor: pointer;
