@@ -61,7 +61,7 @@ const WalletTable = () => {
       title: "Balance",
       dataIndex: "balance",
       key: "balance",
-      width: 180,
+      width: 140,
       render: (value: number) => formatNumber(value),
       sorter: (a, b) => a.balance - b.balance,
     },

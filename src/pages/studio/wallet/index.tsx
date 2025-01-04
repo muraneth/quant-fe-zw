@@ -1,9 +1,9 @@
-import React from "react";
 import WalletDetail from "./wallet_detail";
 import WalletTable from "./wallet_table";
 import { useLocation, useNavigate } from "react-router-dom";
-import { ArrowLeftOutlined } from "@ant-design/icons"; // Ant Design icon
-import { Button } from "antd"; // Ant Design Button
+import { ArrowLeftOutlined } from "@ant-design/icons";
+import { Button } from "antd";
+import styles from "./index.module.scss";
 
 const Wallets = () => {
   const location = useLocation();
@@ -11,15 +11,23 @@ const Wallets = () => {
   const queryParams = new URLSearchParams(location.search);
   const wallet_address = queryParams.get("wallet_address") as string;
 
+  const handleBack = () => {
+    // Remove wallet_address from the query parameters
+    queryParams.delete("wallet_address");
+    const newSearch = queryParams.toString();
+    const newPath = `${location.pathname}${newSearch ? `?${newSearch}` : ""}`;
+    navigate(newPath);
+  };
+
   return (
-    <div>
+    <div className={styles.wallet}>
       {wallet_address ? (
         <div>
           {/* Back button */}
           <Button
             type="link"
             icon={<ArrowLeftOutlined />}
-            onClick={() => navigate(-1)} // Navigate back to the previous page
+            onClick={handleBack} // Navigate back to the origin URL
             style={{
               position: "absolute",
               top: 10,

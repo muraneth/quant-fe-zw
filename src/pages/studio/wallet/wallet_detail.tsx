@@ -4,6 +4,7 @@ import { useImmer } from "use-immer";
 import { useRequest } from "ahooks";
 import { getWalletInfo, WalletDailyInfo } from "@/service/wallets";
 import { useChartStore } from "@/store/charts";
+import { Spin } from "antd";
 
 interface WalletDetailProps {
   wallet_address: string;
@@ -17,7 +18,7 @@ const WalletDetail: React.FC<WalletDetailProps> = ({ wallet_address }) => {
   const pnlChartRef = useRef<HTMLDivElement>(null);
   const tokenMetricsChartRef = useRef<HTMLDivElement>(null);
 
-  const { run: fetchWalletInfo } = useRequest(
+  const { run: fetchWalletInfo, loading: fetchWalletInfoLoading } = useRequest(
     () =>
       getWalletInfo({
         symbol: tokenInfo.symbol,
@@ -32,139 +33,131 @@ const WalletDetail: React.FC<WalletDetailProps> = ({ wallet_address }) => {
     }
   );
 
-  useEffect(() => {
-    if (walletDailyInfo.length === 0) return;
+  const renderChart = (
+    ref: React.RefObject<HTMLDivElement>,
+    title: string,
+    seriesData: { name: string; data: number[]; yAxisIndex: number }[],
+    xData: string[]
+  ) => {
+    if (!ref.current) return;
+    const chart = echarts.init(ref.current);
+    chart.setOption({
+      title: { text: title, left: "center" },
+      tooltip: { trigger: "axis" },
+      xAxis: { type: "category", data: xData },
+      yAxis: [
+        {
+          type: "value",
+          name: seriesData[0].name,
+          position: "left",
+          splitLine: {
+            show: true,
+            lineStyle: {
+              color: "rgba(200, 200, 200, 0.4)", // Very light gray with transparency
+              width: 0.3, // Thinner line
+              type: "solid", // or 'dashed', 'dotted'
+            },
+          },
+        },
+        {
+          type: "value",
+          name: "Index Price",
+          position: "right",
+          splitLine: {
+            show: false,
+          },
+        },
+      ],
+      series: seriesData.map((item) => ({
+        name: item.name,
+        type: "line",
+        data: item.data,
+        smooth: true,
+        yAxisIndex: item.yAxisIndex,
+        lineStyle:
+          item.name === "Index Price"
+            ? { color: "rgba(144, 238, 144, 0.3)" }
+            : {}, // Set opacity for the price line
+      })),
+    });
+    return () => chart.dispose();
+  };
 
-    // Extract data for charts
+  useEffect(() => {
+    if (!walletDailyInfo || walletDailyInfo.length === 0) return;
+
     const days = walletDailyInfo.map((item) => item.day);
     const balances = walletDailyInfo.map((item) => item.balance);
     const idxPrices = walletDailyInfo.map((item) => item.idx_price);
-    const realizedPnLs = walletDailyInfo.map((item) => item.realized_pnl);
     const unrealizedPnLs = walletDailyInfo.map((item) => item.unrealized_pnl);
     const avgCosts = walletDailyInfo.map((item) => item.avg_cost);
 
-    // Initialize or update Balance Chart
-    const balanceChart = echarts.init(balanceChartRef.current!);
-    balanceChart.setOption({
-      title: { text: "Wallet Balance and Index Price", left: "center" },
-      tooltip: { trigger: "axis" },
-      xAxis: { type: "category", data: days },
-      yAxis: [
-        { type: "value", name: "Balance", position: "left" },
-        { type: "value", name: "Index Price", position: "right" },
-      ],
-      series: [
-        {
-          name: "Balance",
-          type: "line",
-          data: balances,
-          smooth: true,
-          yAxisIndex: 0, // Use the left y-axis
-          lineStyle: { color: "#5470C6" },
-        },
-        {
-          name: "Index Price",
-          type: "line",
-          data: idxPrices,
-          smooth: true,
-          yAxisIndex: 1, // Use the right y-axis
-          lineStyle: { color: "#EE6666", type: "dashed" },
-        },
-      ],
-    });
+    const cleanupFns = [
+      renderChart(
+        balanceChartRef,
+        "Wallet Balance",
+        [
+          { name: "Balance", data: balances, yAxisIndex: 0 },
+          { name: "Index Price", data: idxPrices, yAxisIndex: 1 },
+        ],
+        days
+      ),
+      renderChart(
+        pnlChartRef,
+        "Unrealized PnL",
+        [
+          { name: "Unrealized PnL", data: unrealizedPnLs, yAxisIndex: 0 },
+          { name: "Index Price", data: idxPrices, yAxisIndex: 1 },
+        ],
+        days
+      ),
+      renderChart(
+        tokenMetricsChartRef,
+        "Average Cost",
+        [
+          { name: "Average Cost", data: avgCosts, yAxisIndex: 0 },
+          { name: "Index Price", data: idxPrices, yAxisIndex: 1 },
+        ],
+        days
+      ),
+    ];
 
-    // Initialize or update PnL Chart
-    const pnlChart = echarts.init(pnlChartRef.current!);
-    pnlChart.setOption({
-      title: {
-        text: "Realized, Unrealized PnL and Index Price",
-        left: "center",
-      },
-      tooltip: { trigger: "axis" },
-      xAxis: { type: "category", data: days },
-      yAxis: [
-        { type: "value", name: "PnL", position: "left" },
-        { type: "value", name: "Index Price", position: "right" },
-      ],
-      series: [
-        {
-          name: "Realized PnL",
-          type: "bar",
-          data: realizedPnLs,
-          yAxisIndex: 0, // Use the left y-axis
-          itemStyle: { color: "#91CC75" },
-        },
-        {
-          name: "Unrealized PnL",
-          type: "line",
-          data: unrealizedPnLs,
-          smooth: true,
-          yAxisIndex: 0, // Use the left y-axis
-          lineStyle: { color: "#FAC858" },
-        },
-        {
-          name: "Index Price",
-          type: "line",
-          data: idxPrices,
-          smooth: true,
-          yAxisIndex: 1, // Use the right y-axis
-          lineStyle: { color: "#EE6666", type: "dashed" },
-        },
-      ],
-    });
-
-    // Initialize or update Token Metrics Chart
-    const tokenMetricsChart = echarts.init(tokenMetricsChartRef.current!);
-    tokenMetricsChart.setOption({
-      title: { text: "Average Cost and Index Price", left: "center" },
-      tooltip: { trigger: "axis" },
-      xAxis: { type: "category", data: days },
-      yAxis: [
-        { type: "value", name: "Average Cost", position: "left" },
-        { type: "value", name: "Index Price", position: "right" },
-      ],
-      series: [
-        {
-          name: "Average Cost",
-          type: "line",
-          data: avgCosts,
-          smooth: true,
-          yAxisIndex: 0, // Use the left y-axis
-          lineStyle: { color: "#73C0DE" },
-        },
-        {
-          name: "Index Price",
-          type: "line",
-          data: idxPrices,
-          smooth: true,
-          yAxisIndex: 1, // Use the right y-axis
-          lineStyle: { color: "#EE6666", type: "dashed" },
-        },
-      ],
-    });
-
-    return () => {
-      balanceChart.dispose();
-      pnlChart.dispose();
-      tokenMetricsChart.dispose();
-    };
+    return () => cleanupFns.forEach((cleanup) => cleanup && cleanup());
   }, [walletDailyInfo]);
 
   return (
-    <div style={{ padding: "20px" }}>
+    <Spin spinning={fetchWalletInfoLoading}>
       <div
-        ref={balanceChartRef}
-        style={{ width: "100%", height: "400px", marginBottom: "20px" }}
-      ></div>
-      <div
-        ref={pnlChartRef}
-        style={{ width: "100%", height: "400px", marginBottom: "20px" }}
-      ></div>
-      <div
-        ref={tokenMetricsChartRef}
-        style={{ width: "100%", height: "400px" }}
-      ></div>
-    </div>
+        style={{
+          padding: "20px",
+          minHeight: "100vh",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+      >
+        {!walletDailyInfo || walletDailyInfo.length === 0 ? (
+          <div style={{ textAlign: "center", fontSize: "18px", color: "#888" }}>
+            No data for this wallet
+          </div>
+        ) : (
+          <div style={{ width: "100%" }}>
+            <div
+              ref={balanceChartRef}
+              style={{ width: "100%", height: "400px", marginBottom: "20px" }}
+            ></div>
+            <div
+              ref={pnlChartRef}
+              style={{ width: "100%", height: "400px", marginBottom: "20px" }}
+            ></div>
+            <div
+              ref={tokenMetricsChartRef}
+              style={{ width: "100%", height: "400px" }}
+            ></div>
+          </div>
+        )}
+      </div>
+    </Spin>
   );
 };
 
