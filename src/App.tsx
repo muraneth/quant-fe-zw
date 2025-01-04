@@ -7,7 +7,6 @@ import SignIn from "./pages/sign-in";
 import SignUp from "./pages/sign-up";
 import Payment from "@/pages/payment";
 import Compare from "./pages/compare";
-import Wallet from "./pages/wallet";
 import Subscribe from "./pages/subscribe";
 import Explorer from './pages/explorer';
 
@@ -41,7 +40,6 @@ function App() {
           <Route path="/sign-up" element={<SignUp />} />
           <Route path="/studio" element={<Studio />} />
           <Route path="/compare" element={<Compare />} />
-          <Route path="/wallet" element={<Wallet />} />
           <Route path="/pricing" element={<Subscribe />} />
           <Route path="/payment" element={<Payment />} />
         </Route>
