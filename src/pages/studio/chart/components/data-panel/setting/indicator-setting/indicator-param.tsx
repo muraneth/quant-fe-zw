@@ -1,4 +1,9 @@
+<<<<<<< HEAD
 import { Button, Checkbox, Popover, Divider } from "antd";
+=======
+import * as React from 'react';
+import { Button, Checkbox, Popover,Divider } from "antd";
+>>>>>>> main
 import FormRender, { useForm } from "form-render";
 import { useChartStore } from "@/store/charts";
 import { svgMap } from "@/constants/svg";
@@ -31,6 +36,11 @@ const IndicatorParam = () => {
   }
 
   const form = useForm();
+
+  React.useEffect(() => {
+    form.resetFields();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [handle_name]);
 
   const handleBaseChange: GetProp<typeof Checkbox.Group, "onChange"> = (
     checkedValues

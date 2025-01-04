@@ -103,13 +103,20 @@ export interface IndicatorCategory {
 
 export type IndicatorListResDto = Array<IndicatorCategory>;
 
+
+interface IndicatorListReq {
+  symbol: string;
+  chain: string;
+}
+
 /**
  * 获取指标列表
  */
-export function getIndicatorList(): Promise<IndicatorListResDto> {
+export function getIndicatorList(params: IndicatorListReq): Promise<IndicatorListResDto> {
   return request({
     url: "/data/api/base/indicatorList",
     method: "GET",
+    params
   });
 }
 

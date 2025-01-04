@@ -32,7 +32,7 @@ const studioMenuList = [
   },
   {
     name: "Studio",
-    path: "/studio?symbol=MSTR&handle_name=holder.all&type=independent_line&chain=ethereum",
+    path: "/studio?symbol=MSTR&handle_name=holder.all&chain=ethereum",
   },
   {
     name: "Document",
