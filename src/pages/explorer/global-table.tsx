@@ -123,7 +123,7 @@ const TokenTable = () => {
         setSelectedRowKeys(newSelectedRowKeys as string[]);
         const response = await saveUserConfig({
           tokens: newSelectedRowKeys as string[],
-          indicators: userConfig.indicators.map((ind) => ind.handle_name),
+          indicators: (userConfig.indicators || []).map((ind) => ind.handle_name),
         });
 
         if (response) {

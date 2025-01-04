@@ -40,7 +40,7 @@ export interface IndicatorUnit{
   value : number;
 }
 
-type TokenListResDto = Array<TokenBaseInfo>;
+export type TokenListResDto = Array<TokenBaseInfo>;
 
 /**
  * 搜索 token

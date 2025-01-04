@@ -44,16 +44,9 @@ const IndicatorParam = () => {
   };
 
   const handleExtraChange = (allValues: Record<string, any>) => {
-    console.log("schema all values:", allValues);
     setDraftData((draft) => {
-      draft.extra_params = {
-        ...extra_params,
-        ...allValues,
-      };
+      draft.extra_params = allValues;
     });
-    // setDraftData((draft) => {
-    //   draft.extra_params = allValues;
-    // });
   };
   // const onSmoothChange = () => {
   //   if (chart_options) {
@@ -76,9 +69,6 @@ const IndicatorParam = () => {
       { manual: true }
     );
 
-  // React.useEffect(() => {
-  //   form.resetFields();
-  // }, [form, extra_params_schema]);
   function checkIfAvailableForParam() {
     return userInfo?.level >= 3;
   }

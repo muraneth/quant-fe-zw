@@ -168,3 +168,31 @@ export const formatNumber = (data: any) => {
 export const numberToPercentage = (value: number) => {
   return (value * 100).toFixed(1) + "%";
 };
+
+export const getDefaultExtraParams = (param_schema: string) => {
+  const { extra_params_schema = {} } =
+    JSON.parse((param_schema || null) as string) || {};
+
+  if (extra_params_schema.properties) {
+    const defaultExtraParams: Record<string, any> = {};
+    const properties = extra_params_schema.properties;
+
+    Object.keys(properties).forEach((key) => {
+      const prop = properties[key];
+      const defaultValue = prop?.default;
+      const customWidgetDefaultValue = prop?.props?.default_value;
+      if (defaultValue !== undefined && defaultValue !== null) {
+        defaultExtraParams[key] = prop.default;
+      } else if (
+        customWidgetDefaultValue !== undefined &&
+        customWidgetDefaultValue !== null
+      ) {
+        defaultExtraParams[key] = prop.props.default_value;
+      }
+    });
+
+    return defaultExtraParams;
+  }
+
+  return {};
+};

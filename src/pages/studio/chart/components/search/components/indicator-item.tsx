@@ -4,6 +4,7 @@ import { useChartStore } from "@/store/charts";
 import classNames from "classnames";
 import styles from "../index.module.scss";
 import { useSearchParams } from "react-router-dom";
+import { getDefaultExtraParams } from '@/utils/common';
 
 type IndicatorItemProps = Indicator;
 
@@ -15,34 +16,6 @@ const IndicatorItem: React.FC<IndicatorItemProps> = (indicatorInfoItem) => {
   const indicatorInfo = useChartStore.use.indicatorInfo();
   const resetChartPanelData = useChartStore.use.resetChartPanelData();
   const [searchParams, setSearchParams] = useSearchParams();
-
-  const getDefaultExtraParams = () => {
-    const { extra_params_schema = {} } =
-      JSON.parse((param_schema || null) as string) || {};
-
-    if (extra_params_schema.properties) {
-      const defaultExtraParams: Record<string, any> = {};
-      const properties = extra_params_schema.properties;
-
-      Object.keys(properties).forEach((key) => {
-        const prop = properties[key];
-        const defaultValue = prop?.default;
-        const customWidgetDefaultValue = prop?.props?.default_value;
-        if (defaultValue !== undefined && defaultValue !== null) {
-          defaultExtraParams[key] = prop.default;
-        } else if (
-          customWidgetDefaultValue !== undefined &&
-          customWidgetDefaultValue !== null
-        ) {
-          defaultExtraParams[key] = prop.props.default_value;
-        }
-      });
-
-      return defaultExtraParams;
-    }
-
-    return {};
-  };
 
   const chooseIndicator = () => {
     resetChartPanelData({
@@ -56,7 +29,7 @@ const IndicatorItem: React.FC<IndicatorItemProps> = (indicatorInfoItem) => {
       draft.indicatorInfo = indicatorInfoItem;
     });
     setDraftData((draft) => {
-      draft.extra_params = getDefaultExtraParams();
+      draft.extra_params = getDefaultExtraParams(param_schema);
     });
   };
 
