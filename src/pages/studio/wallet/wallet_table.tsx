@@ -4,10 +4,12 @@ import { useImmer } from "use-immer";
 import { useChartStore } from "@/store/charts";
 import { Table, Typography } from "antd";
 import type { ColumnsType } from "antd/es/table";
+import { useNavigate } from "react-router-dom";
 
 const WalletTable = () => {
   const [walletList, setWalletList] = useImmer<WalletBaseInfo[]>([]);
   const tokenInfo = useChartStore.use.tokenInfo();
+  const navigate = useNavigate();
 
   useRequest(
     () =>
@@ -40,8 +42,7 @@ const WalletTable = () => {
   };
 
   const handleRowClick = (record: WalletBaseInfo) => {
-    console.log("Clicked wallet:", record.wallet_address);
-    // Add your row click handling logic here
+    navigate(`/studio?tab=wallet&wallet_address=${record.wallet_address}`);
   };
 
   const columns: ColumnsType<WalletBaseInfo> = [
