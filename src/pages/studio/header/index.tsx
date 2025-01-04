@@ -27,18 +27,17 @@ const chains = [
   { key: "base", label: "Base" },
 ];
 
-const queryParams = new URLSearchParams(location.search);
-const chain = queryParams.get("chain") as string;
-const symbol = queryParams.get("symbol");
-const handle_name = queryParams.get("handle_name");
-const hasUrlInitParams = Boolean(chain && symbol && handle_name);
-
 const Header = () => {
+  const queryParams = new URLSearchParams(location.search);
+  const chain = queryParams.get("chain") as string;
+  const symbol = queryParams.get("symbol");
+  const handle_name = queryParams.get("handle_name");
+  const hasUrlInitParams = Boolean(chain && symbol && handle_name);
   const [searchParams, setSearchParams] = useSearchParams();
 
-  const hasUrlInitRef = React.useRef<{ resetFlag: boolean }>({ 
+  const hasUrlInitRef = React.useRef<{ resetFlag: boolean }>({
     resetFlag: hasUrlInitParams,
-   });
+  });
 
   const [openPopover, setOpenPopover] = useImmer(false);
   const [keywords, setKeywords] = useImmer("");
@@ -77,12 +76,12 @@ const Header = () => {
         const indicatorInfo = findIndicator(indicatorList);
         if (indicatorInfo) {
           draft.indicatorInfo = indicatorInfo;
-            const { param_schema } = indicatorInfo || {};
-            draft.extra_params = getDefaultExtraParams(param_schema);
+          const { param_schema } = indicatorInfo || {};
+          draft.extra_params = getDefaultExtraParams(param_schema);
         }
       });
     }
-  }, [indicatorList, setDraftData]);
+  }, [indicatorList, setDraftData, handle_name]);
 
   const { data: tokenList = [] } = useRequest(
     () => {
