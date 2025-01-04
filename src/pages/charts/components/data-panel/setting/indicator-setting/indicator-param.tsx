@@ -1,4 +1,4 @@
-import { Button, Checkbox, Popover } from "antd";
+import { Button, Checkbox, Popover,Divider } from "antd";
 import FormRender, { useForm } from "form-render";
 import { useChartStore } from "@/store/charts";
 import { svgMap } from "@/constants/svg";
@@ -7,7 +7,7 @@ import styles from "./index.module.scss";
 import CustomDatePicker from "@/components/custom-date-picker";
 import { saveIndicatorParam } from "@/service/charts";
 import { useRequest } from "ahooks";
-
+import { getUserInfo } from "@/utils/common";
 const label_options = [
   { label: "DEX", value: "DEX" },
   { label: "CEX", value: "CEX" },
@@ -18,7 +18,7 @@ const label_options = [
 
 const IndicatorParam = () => {
   const setDraftData = useChartStore.use.setDraftData();
-
+  const userInfo = getUserInfo();
   const base_params = useChartStore.use.base_params();
   const extra_params = useChartStore.use.extra_params();
   // const chart_options = useChartStore.use.options();
@@ -79,19 +79,50 @@ const IndicatorParam = () => {
   // React.useEffect(() => {
   //   form.resetFields();
   // }, [form, extra_params_schema]);
-
+  function checkIfAvailableForParam() {
+    return userInfo?.level >= 3;
+  }
   return (
     <div className={styles.setting}>
       {use_base_param ? (
         <Popover
           placement="bottomLeft"
           content={
-            <Checkbox.Group
-              options={label_options}
+            <div style={{
+              display: "flex",
+              flexDirection: "column",  // Stack items vertically
+              gap: "8px" 
+              }}>
+              <h3 style={{padding:0,margin:0}}>Recalculate the indicator after filtering specific wallets</h3>
+              
+              <Divider  style={{padding:0,margin:0}}/>
+              <Checkbox.Group
+              options={label_options.map(option => ({
+                ...option,
+                disabled: !checkIfAvailableForParam()
+              }))}
               value={base_params?.exclude_wallets?.by_labels || []}
               onChange={handleBaseChange}
               className={styles.checkboxGrop}
+
             />
+            {!checkIfAvailableForParam() && (
+              <div style={{
+                display: "flex",
+                flexDirection: "column",
+                gap: "8px",
+                alignItems: "center"
+              }}>
+                <span style={{ color: "gray" }}>
+                  This feature requires Advanced plan
+                </span>
+                <Button type="primary" size="small" onClick={() => window.location.href = '/pricing'}>
+                  Upgrade Now
+                </Button>
+              </div>
+            )}
+            </div>
+            
           }
           getPopupContainer={(triggerNode) => triggerNode.parentNode as any}
         >

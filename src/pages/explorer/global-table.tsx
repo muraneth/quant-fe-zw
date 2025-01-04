@@ -4,7 +4,7 @@ import { useRequest } from "ahooks";
 import { useImmer } from "use-immer";
 import { useNavigate } from "react-router-dom";
 import { useExplorerStore } from "@/store/explorer";
-import { formatNumber } from "@/utils/common";
+
 import {
   getTokenSnap,
   getTokenByPage,
@@ -18,6 +18,7 @@ import {
   Indicator,
 } from "@/service/charts";
 import { getUserInfo } from "@/utils/common";
+import { createDynamicColumns } from "./common";
 
 const PAGE_SIZE = 20;
 const FETCH_DELAY = 50;
@@ -138,6 +139,8 @@ const TokenTable = () => {
       }
     },
   };
+  const dynamicColumns = createDynamicColumns(tokenDetailList);
+
 
   const columns = useMemo(() => {
     const baseColumns = [
@@ -200,51 +203,6 @@ const TokenTable = () => {
       },
     ];
 
-    const dynamicColumns =
-      tokenDetailList[0]?.indicator_snaps?.map((indicator, index) => ({
-        title: indicator.name,
-        key: `indicator_${index}`,
-        sorter: (a: TokenDetailInfo, b: TokenDetailInfo) => {
-          const snapA = a.indicator_snaps?.find(
-            (snap) => snap.name === indicator.name
-          );
-          const snapB = b.indicator_snaps?.find(
-            (snap) => snap.name === indicator.name
-          );
-          return (snapA?.value || 0) - (snapB?.value || 0);
-        },
-        render: (_: any, record: TokenDetailInfo) => {
-          const snap = record.indicator_snaps?.find(
-            (snap) => snap.name === indicator.name
-          );
-          const baseInfo = record.base_info;
-
-          if (!snap) return null;
-
-          return (
-            <div
-              style={{
-                cursor: snap.handle_name ? "pointer" : "default",
-                color: snap.handle_name ? "gray" : "inherit",
-              }}
-              onClick={() => {
-                if (snap.handle_name) {
-                  navigate(
-                    `/charts?symbol=${baseInfo.symbol}&handle_name=${snap.handle_name}&chain=${baseInfo.chain}`
-                  );
-                }
-              }}
-            >
-              <div>{formatNumber(snap.value)}</div>
-              <span
-                style={{ color: snap.value_chg >= 0 ? "#36F097" : "#EB5757" }}
-              >
-                {formatNumber(snap.value_chg * 100)}%
-              </span>
-            </div>
-          );
-        },
-      })) || [];
 
     return [...baseColumns, ...dynamicColumns];
   }, [tokenDetailList, navigate]);

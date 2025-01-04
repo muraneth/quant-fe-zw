@@ -12,18 +12,16 @@ import {
   TokenBaseInfo,
 } from "@/service/charts";
 import { useImmer } from "use-immer";
-import { formatNumber } from "@/utils/common";
 import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
 import type { TablePaginationConfig } from "antd/es/table";
 import { useExplorerStore } from "@/store/explorer";
-
+import { createDynamicColumns } from "./common";
 const UserTokenTable = () => {
   const [tokenDetailList, setTokenDetailList] = useImmer<
     Array<TokenDetailInfo>
   >([]);
   const [currentPage, setCurrentPage] = useImmer(1);
-  // const [userConfig, setUserConfig] = useImmer<UserConfig>({} as UserConfig);
   const userConfig = useExplorerStore.use.userConfig();
   const [existingToken, setExistingToken] = useImmer<Array<string>>([]);  
 
@@ -42,18 +40,13 @@ const UserTokenTable = () => {
     setCurrentPage(page);
   };
   const handleRemoveRow = async (symbol: string) => {
-    // Update both states
     setTokenDetailList((prev) =>
       prev.filter((item) => item.base_info.symbol !== symbol)
     );
-    
-    // Create the new token list
     const newTokenList = existingToken.filter(item => item !== symbol);
-    
-    // Update state
+  
     setExistingToken(newTokenList);
-    
-    // Save using the new list directly
+  
     await saveUserConfig({
       tokens: newTokenList,
       indicators: userConfig.indicators.map((ind) => ind.handle_name),
@@ -77,21 +70,17 @@ const UserTokenTable = () => {
     if (!userConfig.indicators || !userConfig.tokens) return;
   
     console.log("userConfig", userConfig);
-    
-    // Create indicator request array
+  
     const indReqTemp = userConfig.indicators.map(ind => ({
       handle_name: ind.handle_name,
     }));
   
     setExistingToken(userConfig.tokens);
   
-    // Process all tokens when indicators change, or only new tokens otherwise
     const processTokens = async () => {
-      // Check if indicators have changed by comparing with first token's indicators
       const hasIndicatorsChanged = tokenDetailList.length > 0 && 
         tokenDetailList[0].indicator_snaps.length !== userConfig.indicators.length;
   
-      // If indicators changed, clear the list and process all tokens
       if (hasIndicatorsChanged) {
         setTokenDetailList([]);
         
@@ -109,20 +98,14 @@ const UserTokenTable = () => {
           }
         }
       } else {
-        // Just process new tokens
         const existingTokens = new Set(
           tokenDetailList.map(item => item.base_info.symbol)
         );
-  
-        // Clean up removed tokens
         setTokenDetailList(prev => 
           prev.filter(item => userConfig.tokens.includes(item.base_info.symbol))
         );
-  
-        // Process only new tokens
         for (const token of userConfig.tokens) {
           if (existingTokens.has(token)) continue;
-  
           try {
             const result = await runGetTokenSnap({
               symbol: token,
@@ -147,10 +130,9 @@ const UserTokenTable = () => {
       manual: true,
     }
   );
+  const dynamicColumns = createDynamicColumns(tokenDetailList);
 
   const columns = useMemo(() => {
-    // Base columns for token info
-
     const baseColumns = [
       {
         title: "Token",
@@ -202,48 +184,8 @@ const UserTokenTable = () => {
       },
     
     ];
-    const dynamicColumns =
-      tokenDetailList[0]?.indicator_snaps?.map((indicator, index) => ({
-        title: indicator.name,
-        key: `indicator_${index}`,
-        sorter: (a: TokenDetailInfo, b: TokenDetailInfo) => {
-          const snapA = a.indicator_snaps?.find(
-            (snap) => snap.name === indicator.name
-          );
-          const snapB = b.indicator_snaps?.find(
-            (snap) => snap.name === indicator.name
-          );
-          return (snapA?.value || 0) - (snapB?.value || 0);
-        },
-        render: (_: any, record: TokenDetailInfo) => {
-          const snap = record.indicator_snaps?.find(
-            (snap) => snap.name === indicator.name
-          );
-          const baseInfo = record.base_info;
-          return snap ? (
-            <div
-              style={{
-                cursor: snap.handle_name ? "pointer" : "default",
-                color: snap.handle_name ? "gray" : "inherit",
-              }}
-              onClick={() => {
-                if (snap.handle_name) {
-                  navigate(
-                    `/charts?symbol=${baseInfo.symbol}&handle_name=${snap.handle_name}&chain=${baseInfo.chain}`
-                  );
-                }
-              }}
-            >
-              <div>{formatNumber(snap.value)}</div>
-              <span
-                style={{ color: snap.value_chg >= 0 ? "#36F097" : "#EB5757" }}
-              >
-                {formatNumber(snap.value_chg * 100)}%
-              </span>
-            </div>
-          ) : null;
-        },
-      })) || [];
+
+     
     return [
       ...baseColumns,
       ...dynamicColumns,

@@ -26,16 +26,19 @@ export interface TokenBaseInfo {
 }
 export interface TokenDetailInfo {
   base_info: TokenBaseInfo;
-  indicator_snaps: Array<IndicatorUnit>;
+  indicator_snaps: Array<IndicatorSnap>;
 }
-export interface IndicatorUnit {
+export interface IndicatorSnap {
   name: string;
   handle_name: string;
   type: IndicatorChartType;
-  value: number;
-  value_chg: number;
+  required_level: number;
+  data: Array<IndicatorUnit>;
 }
-
+export interface IndicatorUnit{
+  time : string;
+  value : number;
+}
 
 type TokenListResDto = Array<TokenBaseInfo>;
 
