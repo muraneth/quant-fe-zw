@@ -6,6 +6,7 @@ import { getIndicatorDetail, getBasePrice } from "@/service/charts";
 import BaseChart from "./base-chart";
 import { generateOptions } from "@/utils/echarts";
 import styles from "../index.module.scss";
+
 const EchartsPanel = () => {
   const { symbol, chain, start_time, end_time } = useChartStore.use.tokenInfo();
   const { handle_name, type } = useChartStore.use.indicatorInfo();
@@ -48,9 +49,9 @@ const EchartsPanel = () => {
         extra_params,
       ],
       onSuccess: (res) => {
-        setDraftData(draft => {
+        setDraftData((draft) => {
           draft.indicatorDetailList = res;
-        })
+        });
       },
     }
   );
@@ -72,23 +73,23 @@ const EchartsPanel = () => {
     {
       refreshDeps: [symbol, chain, start_time, end_time],
       onSuccess: (res) => {
-        setDraftData(draft => {
+        setDraftData((draft) => {
           draft.priceList = res;
-        })
+        });
       },
     }
   );
 
   React.useEffect(() => {
     if (indicatorDetailList?.length && priceList?.length && klineType && type) {
-      setDraftData(draft => {
+      setDraftData((draft) => {
         draft.options = generateOptions({
           type,
           indicatorDetailList,
           priceList,
           klineType,
-        })
-      })
+        });
+      });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [indicatorDetailList, priceList, klineType, type]);
