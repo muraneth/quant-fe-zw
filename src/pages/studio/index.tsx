@@ -3,39 +3,39 @@ import type { TabsProps } from "antd";
 import Chart from "./chart";
 import Header from "./header";
 import styles from "./index.module.scss";
+import Wallets from "./wallet";
+import { useSearchParams } from "react-router-dom";
 
 const items: TabsProps["items"] = [
   {
-    key: "CHART",
+    key: "chart",
     label: "CHART",
     children: <Chart />,
   },
   {
-    key: "WALLET",
+    key: "wallet",
     label: "WALLET",
-    children: "WALLET",
-  },
-  {
-    key: "COMPOSE",
-    label: "COMPOSE",
-    children: "COMPOSE",
-  },
-  {
-    key: "TRADINGVIEW",
-    label: "TRADINGVIEW",
-    children: "TRADINGVIEW",
+    children: <Wallets />,
   },
 ];
 
 const Studio = () => {
+  const [searchParams, setSearchParams] = useSearchParams();
+  const handleTabChange = (key: string) => {
+    setSearchParams({ tab: key });
+  };
+  const tab = (searchParams.get("tab") || "chart").toLowerCase();
+
   return (
     <div className={styles.studio}>
       <Header />
       <Divider style={{ margin: 0 }} />
       <Tabs
         type="line"
-        defaultActiveKey="CHART"
+        defaultActiveKey="chart"
+        activeKey={tab}
         items={items}
+        onChange={handleTabChange}
       />
     </div>
   );

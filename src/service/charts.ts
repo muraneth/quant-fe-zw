@@ -12,7 +12,7 @@ export enum IndicatorChartType {
 
 interface TokenListReqDto {
   key: string;
-  chain?:string;
+  chain?: string;
 }
 
 export interface TokenBaseInfo {
@@ -35,9 +35,9 @@ export interface IndicatorSnap {
   required_level: number;
   data: Array<IndicatorUnit>;
 }
-export interface IndicatorUnit{
-  time : string;
-  value : number;
+export interface IndicatorUnit {
+  time: string;
+  value: number;
 }
 
 export type TokenListResDto = Array<TokenBaseInfo>;
@@ -178,6 +178,12 @@ export function getBasePrice(
 
 interface CollectIndicatorReqDto {
   handle_name: string;
+
+}
+interface SaveParamReqDto {
+  handle_name: string;
+  symbol: string;
+  chain: string
   base_params?: string;
   extra_params?: string;
 }
@@ -200,7 +206,7 @@ export function unCollectIndicator(
   });
 }
 export function saveIndicatorParam(
-  params: CollectIndicatorReqDto
+  params: SaveParamReqDto
 ): Promise<void> {
   return request({
     url: "/data/api/userIndicator/saveIndParam",
