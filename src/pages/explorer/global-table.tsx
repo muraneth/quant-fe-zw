@@ -10,8 +10,7 @@ import {
   getTokenByPage,
   getDefaultIndList,
   saveUserTokens,
-  saveUserIndicator,
-  SaveUserTokenReq,
+  deleteUserToken,
 } from "@/service/explorer";
 import {
   TokenDetailInfo,
@@ -23,7 +22,7 @@ import { getUserInfo } from "@/utils/common";
 import { createDynamicColumns } from "./common";
 
 const PAGE_SIZE = 20;
-const FETCH_DELAY = 50;
+const FETCH_DELAY = 0;
 
 const TokenTable = () => {
   const [tokenDetailList, setTokenDetailList] = useImmer<
@@ -37,10 +36,7 @@ const TokenTable = () => {
   const [isLoading, setIsLoading] = useImmer(false);
   const [searchKey, setSearchKey] = useImmer("");
 
-  console.log(isLoading);
-
   const userConfig = useExplorerStore.use.userConfig();
-  const setDraftData = useExplorerStore.use.setDraftData();
   const navigate = useNavigate();
 
   const { runAsync: runGetTokenSnap } = useRequest(getTokenSnap, {
@@ -139,28 +135,30 @@ const TokenTable = () => {
   const rowSelection = {
     selectedRowKeys,
     onChange: async (newSelectedRowKeys: React.Key[]) => {
-      try {
-        if (!userInfo || !userInfo.uid) {
-          console.error("User config not loaded");
-          //   setSelectedRowKeys(selectedRowKeys);
-          return;
-        }
-        setSelectedRowKeys(newSelectedRowKeys as string[]);
-        const tks = findTokensByKeys(newSelectedRowKeys as string[]);
-        const response = await saveUserTokens({
-          tokens: tks,
-        });
+      if (!userInfo || !userInfo.uid) {
+        console.error("User config not loaded");
+        return;
+      }
+      setSelectedRowKeys(newSelectedRowKeys as string[]);
 
-        if (response) {
-          setDraftData((draft) => {
-            draft.userConfig.tokens = tks;
-          });
-        } else {
-          setSelectedRowKeys(selectedRowKeys);
-        }
-      } catch (error) {
-        console.error("Selection save error:", error);
-        setSelectedRowKeys(selectedRowKeys);
+      // Compute unselected keys using new state directly
+      const allRowKeys = tokenDetailList.map(
+        (record) => record.base_info.symbol + "_" + record.base_info.chain
+      );
+      const unselectedKeys = allRowKeys.filter(
+        (key) => !newSelectedRowKeys.includes(key)
+      );
+
+      console.log("Unselected Keys:", unselectedKeys);
+
+      const tks = findTokensByKeys(newSelectedRowKeys as string[]);
+      saveUserTokens({
+        tokens: tks,
+      });
+      const unselectedTokens = findTokensByKeys(unselectedKeys);
+      if (!unselectedTokens.length) return;
+      for (const token of unselectedTokens) {
+        deleteUserToken({ symbol: token.symbol, chain: token.chain });
       }
     },
   };
@@ -246,7 +244,7 @@ const TokenTable = () => {
           record.base_info.symbol + "_" + record.base_info.chain
         } // Add chain to avoid key conflict
         bordered
-        //   loading={isLoading}
+        loading={isLoading}
         scroll={{ x: "max-content" }}
         pagination={{
           total: totalToken,
