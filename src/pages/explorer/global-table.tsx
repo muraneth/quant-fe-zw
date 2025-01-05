@@ -9,14 +9,16 @@ import {
   getTokenSnap,
   getTokenByPage,
   getDefaultIndList,
-  saveUserConfig,
+  saveUserTokens,
+  saveUserIndicator,
+  SaveUserTokenReq,
 } from "@/service/explorer";
 import {
   TokenDetailInfo,
-  TokenBaseInfo,
   IndicatorDetailReqDto,
   Indicator,
 } from "@/service/charts";
+import { TokenBaseInfo, BaseToken } from "@/service/base";
 import { getUserInfo } from "@/utils/common";
 import { createDynamicColumns } from "./common";
 
@@ -45,6 +47,23 @@ const TokenTable = () => {
     manual: true,
   });
   const userInfo = getUserInfo();
+  const findTokenByKey = (key: string) => {
+    const [symbol, chain] = key.split("_");
+    return tokenDetailList.find(
+      (token) =>
+        token.base_info.symbol === symbol && token.base_info.chain === chain
+    );
+  };
+  const findTokensByKeys = (keys: string[]): BaseToken[] => {
+    const tk = keys
+      .map((key) => findTokenByKey(key))
+      .filter((token) => token !== undefined);
+
+    return tk.map((token) => ({
+      symbol: token.base_info.symbol,
+      chain: token.base_info.chain,
+    }));
+  };
 
   useRequest(
     () =>
@@ -73,7 +92,10 @@ const TokenTable = () => {
   };
 
   useEffect(() => {
-    setSelectedRowKeys(userConfig.tokens);
+    const keys = userConfig.tokens.map(
+      (item) => item.symbol + "_" + item.chain
+    );
+    setSelectedRowKeys(keys);
   }, [userConfig]);
 
   useEffect(() => {
@@ -84,6 +106,8 @@ const TokenTable = () => {
       setTokenDetailList([]);
 
       const indReqTemp: IndicatorDetailReqDto[] = indicatorList.map((ind) => ({
+        symbol: "",
+        chain: "",
         handle_name: ind.handle_name,
       }));
 
@@ -91,6 +115,7 @@ const TokenTable = () => {
         try {
           const result = await runGetTokenSnap({
             symbol: token.symbol,
+            chain: token.chain,
             indicators: indReqTemp,
           });
 
@@ -121,14 +146,14 @@ const TokenTable = () => {
           return;
         }
         setSelectedRowKeys(newSelectedRowKeys as string[]);
-        const response = await saveUserConfig({
-          tokens: newSelectedRowKeys as string[],
-          indicators: (userConfig.indicators || []).map((ind) => ind.handle_name),
+        const tks = findTokensByKeys(newSelectedRowKeys as string[]);
+        const response = await saveUserTokens({
+          tokens: tks,
         });
 
         if (response) {
           setDraftData((draft) => {
-            draft.userConfig.tokens = newSelectedRowKeys as string[];
+            draft.userConfig.tokens = tks;
           });
         } else {
           setSelectedRowKeys(selectedRowKeys);
@@ -140,7 +165,6 @@ const TokenTable = () => {
     },
   };
   const dynamicColumns = createDynamicColumns(tokenDetailList);
-
 
   const columns = useMemo(() => {
     const baseColumns = [
@@ -203,7 +227,6 @@ const TokenTable = () => {
       },
     ];
 
-
     return [...baseColumns, ...dynamicColumns];
   }, [tokenDetailList, navigate]);
 
@@ -219,7 +242,9 @@ const TokenTable = () => {
         rowSelection={rowSelection}
         columns={columns}
         dataSource={tokenDetailList}
-        rowKey={(record) => record.base_info.symbol}
+        rowKey={(record) =>
+          record.base_info.symbol + "_" + record.base_info.chain
+        } // Add chain to avoid key conflict
         bordered
         //   loading={isLoading}
         scroll={{ x: "max-content" }}

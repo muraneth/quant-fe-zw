@@ -1,4 +1,11 @@
 import { request } from "@/utils/request";
+import { TokenBaseInfo, BaseToken } from "./base";
+
+
+interface TokenListReqDto {
+  key: string;
+  chain?: string;
+}
 
 export enum IndicatorChartType {
   PRICE_LINE = "price_line",
@@ -10,24 +17,13 @@ export enum IndicatorChartType {
   AREA_STACK = "area_stack",
 }
 
-interface TokenListReqDto {
-  key: string;
-  chain?: string;
+
+
+export interface IndicatorUnit {
+  time: string;
+  value: number;
 }
 
-export interface TokenBaseInfo {
-  symbol: string;
-  name: string;
-  contract_address: string;
-  icon_url: string;
-  chain: string;
-  total_supply: number;
-  create_time: string;
-}
-export interface TokenDetailInfo {
-  base_info: TokenBaseInfo;
-  indicator_snaps: Array<IndicatorSnap>;
-}
 export interface IndicatorSnap {
   name: string;
   handle_name: string;
@@ -35,43 +31,13 @@ export interface IndicatorSnap {
   required_level: number;
   data: Array<IndicatorUnit>;
 }
-export interface IndicatorUnit {
-  time: string;
-  value: number;
+
+
+export interface TokenDetailInfo {
+  base_info: TokenBaseInfo;
+  indicator_snaps: Array<IndicatorSnap>;
 }
 
-export type TokenListResDto = Array<TokenBaseInfo>;
-
-/**
- * 搜索 token
- */
-export function getTokenList(
-  params?: TokenListReqDto
-): Promise<TokenListResDto> {
-  return request({
-    url: "/data/api/token/searchToken",
-    method: "GET",
-    params,
-  });
-}
-
-interface TokenMarketInfoReqDto {
-  symbol: string;
-  chain: string;
-}
-
-/**
- * 获取市场信息
- */
-export function getTokenMarketInfo(
-  params: TokenMarketInfoReqDto
-): Promise<TokenDetailInfo | null> {
-  return request({
-    url: "/data/api/token/getTokenMarketInfo",
-    method: "GET",
-    params,
-  });
-}
 
 export interface Indicator {
   id: string;
@@ -90,6 +56,36 @@ export interface Indicator {
   collected: boolean;
 }
 
+export type TokenListResDto = Array<TokenBaseInfo>;
+
+/**
+ * 搜索 token
+ */
+export function getTokenList(
+  params?: TokenListReqDto
+): Promise<TokenListResDto> {
+  return request({
+    url: "/data/api/token/searchToken",
+    method: "GET",
+    params,
+  });
+}
+
+
+/**
+ * 获取市场信息
+ */
+export function getTokenMarketInfo(
+  params: BaseToken
+): Promise<TokenDetailInfo | null> {
+  return request({
+    url: "/data/api/token/getTokenMarketInfo",
+    method: "GET",
+    params,
+  });
+}
+
+
 export interface Group {
   group_name: string;
   indicators: Indicator[];
@@ -104,9 +100,8 @@ export interface IndicatorCategory {
 export type IndicatorListResDto = Array<IndicatorCategory>;
 
 
-interface IndicatorListReq {
-  symbol: string;
-  chain: string;
+interface IndicatorListReq extends BaseToken {
+
 }
 
 /**
@@ -120,12 +115,11 @@ export function getIndicatorList(params: IndicatorListReq): Promise<IndicatorLis
   });
 }
 
-export interface IndicatorDetailReqDto {
-  symbol?: string;
-  chain?: string;
+export interface IndicatorDetailReqDto extends BaseToken {
+
   start_time?: string;
   end_time?: string;
-  handle_name?: string;
+  handle_name: string;
   base_params?: Record<string, any>;
   extra_params?: Record<string, any>;
 }
@@ -143,14 +137,12 @@ export function getIndicatorDetail(
   });
 }
 
-interface BasePriceReqDto {
-  symbol: string;
-  chain: string;
+interface BasePriceReqDto extends BaseToken {
   start_time: string;
   end_time: string;
 }
 
-interface BasePriceItem {
+export interface BasePriceItem {
   time: string;
   timestamp: number;
   avg_price: number;
@@ -180,10 +172,8 @@ interface CollectIndicatorReqDto {
   handle_name: string;
 
 }
-interface SaveParamReqDto {
+interface SaveParamReqDto extends BaseToken {
   handle_name: string;
-  symbol: string;
-  chain: string
   base_params?: string;
   extra_params?: string;
 }

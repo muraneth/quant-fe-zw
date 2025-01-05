@@ -5,12 +5,18 @@ import { CalendarOutlined } from "@ant-design/icons";
 import dayjs from "dayjs";
 import styles from "./index.module.scss";
 import { useChartStore } from "@/store/charts";
+import { getUserInfo } from "@/utils/common";
+import AlertModal from "@/components/common/alter-model";
 
 const { RangePicker } = DatePicker;
 
 const CalendarComponent: React.FC = () => {
   const [open, setOpen] = useImmer(false);
+  const [selectedPreset, setSelectedPreset] = useImmer("1Y"); // State to track selected option
+  const tokenInfo = useChartStore.use.tokenInfo();
   const setDraftData = useChartStore.use.setDraftData();
+  const userInfo = getUserInfo();
+  const [alertVisible, setAlertVisible] = useImmer(false);
 
   // Control dropdown visibility
   const handleOpenChange = (flag: boolean) => {
@@ -23,9 +29,10 @@ const CalendarComponent: React.FC = () => {
       const start_time = dayjs(dateStrings[0]).format("YYYY-MM-DD HH:mm:ss");
       const end_time = dayjs(dateStrings[1]).format("YYYY-MM-DD HH:mm:ss");
       setDraftData((draft) => {
-        draft.tokenInfo.start_time = start_time;
-        draft.tokenInfo.end_time = end_time;
+        draft.selectedTimeRange.start_time = start_time;
+        draft.selectedTimeRange.end_time = end_time;
       });
+      setSelectedPreset(""); // Reset selected preset when custom range is chosen
     }
   };
 
@@ -48,27 +55,28 @@ const CalendarComponent: React.FC = () => {
         start_time = dayjs().startOf("year").format("YYYY-MM-DD 00:00:00");
         break;
       case "All":
-        start_time = "";
-        end_time = "";
+        start_time = tokenInfo.create_time;
+        if (userInfo.level < 3) {
+          setAlertVisible(true);
+          return; // Do not set the time range if level is insufficient
+        }
         break;
       default:
+        start_time = dayjs().subtract(1, "year").format("YYYY-MM-DD 00:00:00");
         break;
     }
 
     setDraftData((draft) => {
-      draft.tokenInfo.start_time = start_time;
-      draft.tokenInfo.end_time = end_time;
+      draft.selectedTimeRange.start_time = start_time;
+      draft.selectedTimeRange.end_time = end_time;
     });
+    setSelectedPreset(option); // Highlight the selected option
   };
 
   // Render the DatePicker popup
   const dropdownContent = (
     <div className={styles.datePickerContainer}>
-      <RangePicker
-        // showTime
-        // format="YYYY-MM-DD HH:mm:ss"
-        onChange={handleDateChange}
-      />
+      <RangePicker onChange={handleDateChange} />
     </div>
   );
 
@@ -76,36 +84,17 @@ const CalendarComponent: React.FC = () => {
     <div className={styles.calendarContainer}>
       <div className={styles.calendarOptions}>
         {/* Preset Calendar Options */}
-        <span
-          className={styles.calendarOption}
-          onClick={() => setPresetTime("1M")}
-        >
-          1M
-        </span>
-        <span
-          className={styles.calendarOption}
-          onClick={() => setPresetTime("3M")}
-        >
-          3M
-        </span>
-        <span
-          className={styles.calendarOption}
-          onClick={() => setPresetTime("1Y")}
-        >
-          1Y
-        </span>
-        <span
-          className={styles.calendarOption}
-          onClick={() => setPresetTime("YTD")}
-        >
-          YTD
-        </span>
-        <span
-          className={styles.calendarOption}
-          onClick={() => setPresetTime("All")}
-        >
-          All
-        </span>
+        {["1M", "3M", "1Y", "YTD", "All"].map((option) => (
+          <span
+            key={option}
+            className={`${styles.calendarOption} ${
+              selectedPreset === option ? styles.selected : ""
+            }`}
+            onClick={() => setPresetTime(option)}
+          >
+            {option}
+          </span>
+        ))}
 
         {/* Calendar Icon with DatePicker */}
         <Dropdown
@@ -121,6 +110,10 @@ const CalendarComponent: React.FC = () => {
           />
         </Dropdown>
       </div>
+      <AlertModal
+        visible={alertVisible}
+        onClose={() => setAlertVisible(false)}
+      />
     </div>
   );
 };

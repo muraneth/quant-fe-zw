@@ -6,7 +6,7 @@ import { svgMap } from "@/constants/svg";
 import type { GetProp } from "antd";
 import styles from "./index.module.scss";
 import CustomDatePicker from "@/components/custom-date-picker";
-import { saveIndicatorParam } from "@/service/charts";
+import { saveIndicatorParam, getIndicatorList } from "@/service/charts";
 import { useRequest } from "ahooks";
 import { getUserInfo } from "@/utils/common";
 const label_options = [
@@ -23,7 +23,6 @@ const IndicatorParam = () => {
   const base_params = useChartStore.use.base_params();
   const extra_params = useChartStore.use.extra_params();
   const tokenInfo = useChartStore.use.tokenInfo();
-  // const chart_options = useChartStore.use.options();
   const { param_schema, handle_name } = useChartStore.use.indicatorInfo();
   const { use_base_param, extra_params_schema } =
     JSON.parse((param_schema || null) as string) || {};
@@ -64,7 +63,14 @@ const IndicatorParam = () => {
   //     });
   //   }
   // };
-
+  const { run: runGetIndicatorList } = useRequest(getIndicatorList, {
+    manual: true,
+    onSuccess: (res) => {
+      setDraftData((draft) => {
+        draft.indicatorList = res;
+      });
+    },
+  });
   const { runAsync: runSaveIndicator, loading: runSaveIndicatorLoading } =
     useRequest(
       () =>
@@ -75,7 +81,15 @@ const IndicatorParam = () => {
           base_params: JSON.stringify(base_params),
           extra_params: JSON.stringify(extra_params),
         }),
-      { manual: true }
+      {
+        manual: true,
+        onSuccess: () => {
+          runGetIndicatorList({
+            symbol: tokenInfo.symbol,
+            chain: tokenInfo.chain,
+          });
+        },
+      }
     );
 
   function checkIfAvailableForParam() {

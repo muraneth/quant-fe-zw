@@ -3,8 +3,12 @@ import * as echarts from "echarts";
 import { useImmer } from "use-immer";
 import { useRequest } from "ahooks";
 import { getWalletInfo, WalletDailyInfo } from "@/service/wallets";
+import { getBasePrice, BasePriceItem } from "@/service/charts";
 import { useChartStore } from "@/store/charts";
 import { Spin } from "antd";
+import { padArrayAhead } from "@/utils/echarts/common";
+import { getUserInfo } from "@/utils/common";
+import { getYearAgoTime, getTimeBefore } from "@/utils/time";
 
 interface WalletDetailProps {
   wallet_address: string;
@@ -14,17 +18,51 @@ const WalletDetail: React.FC<WalletDetailProps> = ({ wallet_address }) => {
   const [walletDailyInfo, setWalletDailyInfo] = useImmer<WalletDailyInfo[]>([]);
   const tokenInfo = useChartStore.use.tokenInfo();
 
-  const balanceChartRef = useRef<HTMLDivElement>(null);
-  const pnlChartRef = useRef<HTMLDivElement>(null);
-  const tokenMetricsChartRef = useRef<HTMLDivElement>(null);
+  const chartRefs = useRef<(HTMLDivElement | null)[]>([]);
+  const charts: echarts.ECharts[] = [];
+  const [priceList, setPriceList] = useImmer<BasePriceItem[]>([]);
+  const userInfo = getUserInfo();
+  const getStartTime = () => {
+    if (!userInfo || userInfo.level <= 1) {
+      return getTimeBefore(90);
+    } else if (userInfo.level === 2) {
+      return getYearAgoTime();
+    } else {
+      return tokenInfo.create_time;
+    }
+  };
 
-  const { run: fetchWalletInfo, loading: fetchWalletInfoLoading } = useRequest(
-    () =>
-      getWalletInfo({
+  useRequest(
+    () => {
+      if (!tokenInfo || !tokenInfo.symbol || !tokenInfo.chain) {
+        return Promise.resolve([]);
+      }
+      return getBasePrice({
         symbol: tokenInfo.symbol,
         chain: tokenInfo.chain,
+        start_time: getStartTime(),
+        end_time: "",
+      });
+    },
+    {
+      refreshDeps: [tokenInfo],
+      onSuccess: (data) => {
+        setPriceList(data);
+      },
+    }
+  );
+  const { run: fetchWalletInfo, loading: fetchWalletInfoLoading } = useRequest(
+    () => {
+      if (!tokenInfo || !tokenInfo.symbol || !tokenInfo.chain) {
+        return Promise.resolve([]);
+      }
+      return getWalletInfo({
+        symbol: tokenInfo.symbol,
+        chain: tokenInfo.chain,
+        start_time: getStartTime(),
         wallet_address,
-      }),
+      });
+    },
     {
       refreshDeps: [tokenInfo],
       onSuccess: (data: WalletDailyInfo[]) => {
@@ -32,15 +70,16 @@ const WalletDetail: React.FC<WalletDetailProps> = ({ wallet_address }) => {
       },
     }
   );
-
   const renderChart = (
     ref: React.RefObject<HTMLDivElement>,
     title: string,
     seriesData: { name: string; data: number[]; yAxisIndex: number }[],
-    xData: string[]
+    xData: string[],
+    type: string
   ) => {
     if (!ref.current) return;
     const chart = echarts.init(ref.current);
+
     chart.setOption({
       title: { text: title, left: "center" },
       tooltip: { trigger: "axis" },
@@ -52,78 +91,191 @@ const WalletDetail: React.FC<WalletDetailProps> = ({ wallet_address }) => {
           position: "left",
           splitLine: {
             show: true,
-            lineStyle: {
-              color: "rgba(200, 200, 200, 0.4)", // Very light gray with transparency
-              width: 0.3, // Thinner line
-              type: "solid", // or 'dashed', 'dotted'
-            },
+            lineStyle: { color: "rgba(200, 200, 200, 0.4)", width: 0.3 },
           },
         },
         {
           type: "value",
           name: "Index Price",
           position: "right",
-          splitLine: {
-            show: false,
-          },
+          splitLine: { show: false },
         },
       ],
       series: seriesData.map((item) => ({
         name: item.name,
-        type: "line",
+        type: item.name === "Index Price" ? "line" : type,
         data: item.data,
         smooth: true,
+        symbol: "none",
         yAxisIndex: item.yAxisIndex,
         lineStyle:
           item.name === "Index Price"
             ? { color: "rgba(144, 238, 144, 0.3)" }
-            : {}, // Set opacity for the price line
+            : {},
+        itemStyle:
+          type === "bar"
+            ? {
+                color: (params: any) =>
+                  params.value < 0
+                    ? "rgba(255, 127, 80, 0.8)"
+                    : "rgba(30, 214, 255, 0.8)",
+              }
+            : {
+                color: "rgba(30, 214, 255, 0.8)",
+              },
       })),
+      dataZoom: [
+        {
+          type: "slider",
+          xAxisIndex: 0,
+          start: 0,
+          end: 100,
+        },
+        {
+          type: "inside",
+          xAxisIndex: 0,
+          start: 0,
+          end: 100,
+        },
+      ],
     });
-    return () => chart.dispose();
+
+    return chart;
   };
 
   useEffect(() => {
-    if (!walletDailyInfo || walletDailyInfo.length === 0) return;
+    if (
+      !walletDailyInfo ||
+      walletDailyInfo.length === 0 ||
+      !priceList ||
+      priceList.length === 0
+    )
+      return;
 
-    const days = walletDailyInfo.map((item) => item.day);
-    const balances = walletDailyInfo.map((item) => item.balance);
-    const idxPrices = walletDailyInfo.map((item) => item.idx_price);
-    const unrealizedPnLs = walletDailyInfo.map((item) => item.unrealized_pnl);
-    const avgCosts = walletDailyInfo.map((item) => item.avg_cost);
+    const idxPrices = priceList.map((item) => item?.avg_price);
+    const days = priceList.map((item) => item?.time);
+    const priceLength = priceList?.length;
+    const newWalletInfo = padArrayAhead(walletDailyInfo, priceLength);
 
-    const cleanupFns = [
+    const balances = newWalletInfo.map((item) => item?.balance);
+    const unrealizedPnLs = newWalletInfo.map((item) => item?.unrealized_pnl);
+    const avgCosts = newWalletInfo.map((item) => item?.avg_cost);
+
+    // Render all charts
+    const renderedCharts = [
       renderChart(
-        balanceChartRef,
+        { current: chartRefs.current[0] },
         "Wallet Balance",
         [
           { name: "Balance", data: balances, yAxisIndex: 0 },
           { name: "Index Price", data: idxPrices, yAxisIndex: 1 },
         ],
-        days
+        days,
+        "line"
       ),
       renderChart(
-        pnlChartRef,
+        { current: chartRefs.current[1] },
+        "Balance Change",
+        [
+          {
+            name: "Balance Change",
+            data: newWalletInfo.map((item) => item?.balance_chg),
+            yAxisIndex: 0,
+          },
+          { name: "Index Price", data: idxPrices, yAxisIndex: 1 },
+        ],
+        days,
+        "bar"
+      ),
+      renderChart(
+        { current: chartRefs.current[2] },
+        "Average Cost",
+        [
+          { name: "Average Cost", data: avgCosts, yAxisIndex: 0 },
+          { name: "Index Price", data: idxPrices, yAxisIndex: 0 },
+        ],
+        days,
+        "line"
+      ),
+      renderChart(
+        { current: chartRefs.current[3] },
         "Unrealized PnL",
         [
           { name: "Unrealized PnL", data: unrealizedPnLs, yAxisIndex: 0 },
           { name: "Index Price", data: idxPrices, yAxisIndex: 1 },
         ],
-        days
+        days,
+        "line"
       ),
       renderChart(
-        tokenMetricsChartRef,
-        "Average Cost",
+        { current: chartRefs.current[4] },
+        "Realized PnL",
         [
-          { name: "Average Cost", data: avgCosts, yAxisIndex: 0 },
+          {
+            name: "Realized PnL",
+            data: newWalletInfo.map((item) => item?.realized_pnl),
+            yAxisIndex: 0,
+          },
           { name: "Index Price", data: idxPrices, yAxisIndex: 1 },
         ],
-        days
+        days,
+        "bar"
+      ),
+      renderChart(
+        { current: chartRefs.current[5] },
+        "Total PnL",
+        [
+          {
+            name: "Total PnL",
+            data: newWalletInfo.map((item) => item?.total_pnl),
+            yAxisIndex: 0,
+          },
+          { name: "Index Price", data: idxPrices, yAxisIndex: 1 },
+        ],
+        days,
+        "line"
+      ),
+
+      renderChart(
+        { current: chartRefs.current[6] },
+        "Avg Token Day",
+        [
+          {
+            name: "Avg Token Day",
+            data: newWalletInfo.map((item) => item?.avg_token_day),
+            yAxisIndex: 0,
+          },
+          { name: "Index Price", data: idxPrices, yAxisIndex: 1 },
+        ],
+        days,
+        "line"
+      ),
+      renderChart(
+        { current: chartRefs.current[7] },
+        "Token Day Destroyed",
+        [
+          {
+            name: "Token Day Destroyed",
+            data: newWalletInfo.map((item) => item?.token_day_destory),
+            yAxisIndex: 0,
+          },
+          { name: "Index Price", data: idxPrices, yAxisIndex: 1 },
+        ],
+        days,
+        "bar"
       ),
     ];
 
-    return () => cleanupFns.forEach((cleanup) => cleanup && cleanup());
-  }, [walletDailyInfo]);
+    // Save references to charts and connect them
+    renderedCharts.forEach((chart, index) => {
+      if (chart) charts[index] = chart;
+    });
+    echarts.connect(charts);
+
+    return () => {
+      renderedCharts.forEach((chart) => chart && chart.dispose());
+    };
+  }, [walletDailyInfo, priceList]);
 
   return (
     <Spin spinning={fetchWalletInfoLoading}>
@@ -131,30 +283,23 @@ const WalletDetail: React.FC<WalletDetailProps> = ({ wallet_address }) => {
         style={{
           padding: "20px",
           minHeight: "100vh",
-          display: "flex",
-          alignItems: "center",
+          // display: "flex",
+          // alignItems: "center",
           justifyContent: "center",
         }}
       >
         {!walletDailyInfo || walletDailyInfo.length === 0 ? (
           <div style={{ textAlign: "center", fontSize: "18px", color: "#888" }}>
-            No data for this wallet
+            No data for this wallet with token {tokenInfo.symbol}
           </div>
         ) : (
-          <div style={{ width: "100%" }}>
+          [0, 1, 2, 3, 4, 5, 6, 7].map((_, index) => (
             <div
-              ref={balanceChartRef}
-              style={{ width: "100%", height: "400px", marginBottom: "20px" }}
-            ></div>
-            <div
-              ref={pnlChartRef}
-              style={{ width: "100%", height: "400px", marginBottom: "20px" }}
-            ></div>
-            <div
-              ref={tokenMetricsChartRef}
-              style={{ width: "100%", height: "400px" }}
-            ></div>
-          </div>
+              key={index}
+              ref={(el) => (chartRefs.current[index] = el)}
+              style={{ width: "100%", height: "300px", marginBottom: "20px" }}
+            />
+          ))
         )}
       </div>
     </Spin>

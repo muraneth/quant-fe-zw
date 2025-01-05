@@ -66,7 +66,7 @@ export const getIndenpendYAxis = () => {
     splitLine: {
       show: true,
       lineStyle: {
-        color: "rgba(200, 200, 200, 0.4)", // Very light gray with transparency
+        color: "rgba(200, 200, 200, 0.6)", // Very light gray with transparency
         width: 0.3, // Thinner line
         type: "solid", // or 'dashed', 'dotted'
       },

@@ -5,13 +5,14 @@ import { useChartStore } from "@/store/charts";
 import { Table, Typography } from "antd";
 import type { ColumnsType } from "antd/es/table";
 import { useNavigate } from "react-router-dom";
+import { formatNumber } from "@/utils/common";
 
 const WalletTable = () => {
   const [walletList, setWalletList] = useImmer<WalletBaseInfo[]>([]);
   const tokenInfo = useChartStore.use.tokenInfo();
   const navigate = useNavigate();
 
-  useRequest(
+  const { loading: walleTableLoading } = useRequest(
     () =>
       getTopWalletList({
         symbol: tokenInfo.symbol,
@@ -32,27 +33,13 @@ const WalletTable = () => {
     );
   };
 
-  const formatNumber = (num: number, decimals = 2) => {
-    return new Intl.NumberFormat("en-US", {
-      minimumFractionDigits: decimals,
-      maximumFractionDigits: decimals,
-    }).format(num);
-  };
-
-  const formatUSD = (num: number) => {
-    return new Intl.NumberFormat("en-US", {
-      style: "currency",
-      currency: "USD",
-    }).format(num);
-  };
-
   const columns: ColumnsType<WalletBaseInfo> = [
     {
       title: "Wallet Address",
       dataIndex: "wallet_address",
       key: "wallet_address",
       fixed: "left",
-      width: 300,
+      width: 260,
       render: (text: string) => (
         <Typography.Text copyable>{text}</Typography.Text>
       ),
@@ -61,7 +48,7 @@ const WalletTable = () => {
       title: "Balance",
       dataIndex: "balance",
       key: "balance",
-      width: 140,
+      width: 80,
       render: (value: number) => formatNumber(value),
       sorter: (a, b) => a.balance - b.balance,
     },
@@ -77,8 +64,8 @@ const WalletTable = () => {
       title: "Balance USD",
       dataIndex: "balance_usd",
       key: "balance_usd",
-      width: 120,
-      render: (value: number) => formatUSD(value),
+      width: 80,
+      render: (value: number) => formatNumber(value),
       sorter: (a, b) => a.balance_usd - b.balance_usd,
     },
     // {
@@ -93,7 +80,7 @@ const WalletTable = () => {
       title: "Avg Token/Day",
       dataIndex: "avg_token_day",
       key: "avg_token_day",
-      width: 120,
+      width: 80,
       render: (value: number) => formatNumber(value),
       sorter: (a, b) => a.avg_token_day - b.avg_token_day,
     },
@@ -101,26 +88,26 @@ const WalletTable = () => {
       title: "Avg Cost",
       dataIndex: "avg_cost",
       key: "avg_cost",
-      width: 120,
-      render: (value: number) => formatUSD(value),
+      width: 80,
+      render: (value: number) => formatNumber(value),
       sorter: (a, b) => a.avg_cost - b.avg_cost,
     },
     {
       title: "Total Cost",
       dataIndex: "total_cost",
       key: "total_cost",
-      width: 120,
-      render: (value: number) => formatUSD(value),
+      width: 80,
+      render: (value: number) => formatNumber(value),
       sorter: (a, b) => a.total_cost - b.total_cost,
     },
     {
       title: "Total PNL",
       dataIndex: "total_pnl",
       key: "total_pnl",
-      width: 120,
+      width: 80,
       render: (value: number) => (
         <Typography.Text type={value >= 0 ? "success" : "danger"}>
-          {formatUSD(value)}
+          {formatNumber(value)}
         </Typography.Text>
       ),
       sorter: (a, b) => a.total_pnl - b.total_pnl,
@@ -129,21 +116,48 @@ const WalletTable = () => {
       title: "Unrealized PNL",
       dataIndex: "unrealized_pnl",
       key: "unrealized_pnl",
-      width: 120,
+      width: 80,
       render: (value: number) => (
         <Typography.Text type={value >= 0 ? "success" : "danger"}>
-          {formatUSD(value)}
+          {formatNumber(value)}
         </Typography.Text>
       ),
       sorter: (a, b) => a.unrealized_pnl - b.unrealized_pnl,
     },
+
+    {
+      title: "Txs In",
+      dataIndex: "tx_in_count",
+      key: "tx_in_count",
+      width: 80,
+
+      render: (value: number) => value,
+      sorter: (a, b) => a.tx_in_count - b.tx_in_count,
+    },
+    {
+      title: "Txs Out",
+      dataIndex: "tx_out_count",
+      key: "tx_out_count",
+      width: 80,
+      render: (value: number) => value,
+      sorter: (a, b) => a.tx_out_count - b.tx_out_count,
+    },
+    {
+      title: "Win Rate",
+      dataIndex: "win_rate",
+      key: "win_rate",
+      width: 80,
+      render: (value: number) => `${formatNumber(value * 100)}%`,
+      sorter: (a, b) => a.win_rate - b.win_rate,
+    },
+
     {
       title: "Txs",
       dataIndex: "total_txs",
       key: "total_txs",
       width: 80,
       fixed: "right",
-      render: (value: number) => formatNumber(value, 0),
+      render: (value: number) => value,
       sorter: (a, b) => a.total_txs - b.total_txs,
     },
   ];
@@ -185,6 +199,7 @@ const WalletTable = () => {
           showSizeChanger: true,
           showTotal: (total) => `Total ${total} items`,
         }}
+        loading={walleTableLoading}
         onRow={(record) => ({
           onClick: () => handleRowClick(record),
         })}

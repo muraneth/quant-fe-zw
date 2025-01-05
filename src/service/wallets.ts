@@ -11,6 +11,7 @@ export interface WalletListReqDto {
 export interface WalletInfoReq {
     symbol: string;
     chain: string;
+    start_time?: string;
     wallet_address: string;
 }
 export interface WalletBaseInfo {
@@ -25,6 +26,9 @@ export interface WalletBaseInfo {
     total_pnl: number;
     unrealized_pnl: number;
     total_txs: number;
+    tx_in_count: number;
+    tx_out_count: number;
+    win_rate: number;
 
 }
 export interface WalletDailyInfo {

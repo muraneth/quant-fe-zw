@@ -17,7 +17,7 @@ import {
   ExtractedTokenMarketInfoItem,
 } from "@/utils/common";
 import { useChartStore } from "@/store/charts";
-import type { TokenBaseInfo } from "@/service/charts";
+import type { TokenBaseInfo } from "@/service/base";
 import classNames from "classnames";
 import styles from "./index.module.scss";
 import { formatNumber, getDefaultExtraParams } from "@/utils/common";
@@ -162,8 +162,7 @@ const Header = () => {
         draft.tokenInfo = {
           symbol: currentToken.symbol,
           chain: currentToken.chain,
-          start_time: "",
-          end_time: "",
+          create_time: currentToken.create_time,
         };
       });
       if (hasUrlInitRef.current.resetFlag) {

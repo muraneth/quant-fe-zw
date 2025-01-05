@@ -5,7 +5,7 @@ import { useImmer } from "use-immer";
 import {
   getUserConfig,
   getIndicatorList,
-  saveUserConfig,
+  saveUserIndicator,
 } from "@/service/explorer";
 import { useRequest } from "ahooks";
 import { Indicator, IndicatorCategory } from "@/service/charts";
@@ -16,7 +16,7 @@ const MyDrawer: React.FC = () => {
 
   const [categories, setCategories] = useImmer<Array<IndicatorCategory>>([]);
   const [checkedKeys, setCheckedKeys] = useImmer<React.Key[]>([]);
-  const  setDraftData  = useExplorerStore.use.setDraftData();
+  const setDraftData = useExplorerStore.use.setDraftData();
   const userConfig = useExplorerStore.use.userConfig();
   useRequest(() => getUserConfig(), {
     onSuccess: (res) => {
@@ -30,7 +30,7 @@ const MyDrawer: React.FC = () => {
       setCategories(res);
     },
   });
-  
+
   const getSelectedCount = (indicators: Indicator[]): number => {
     return indicators.filter((indicator) =>
       checkedKeys.includes(indicator.handle_name)
@@ -38,7 +38,7 @@ const MyDrawer: React.FC = () => {
   };
   const checkIfLeafAvailable = (indicator: Indicator): boolean => {
     return userInfo.level >= indicator.required_level;
-  }
+  };
   const getCategorySelectedCount = (category: IndicatorCategory): number => {
     return category.groups.reduce(
       (sum, group) => sum + getSelectedCount(group.indicators),
@@ -97,7 +97,6 @@ const MyDrawer: React.FC = () => {
           title: (
             <div>
               <span>{indicator.name}</span>
-              
             </div>
           ),
           key: indicator.handle_name,
@@ -107,8 +106,10 @@ const MyDrawer: React.FC = () => {
         })),
       })),
     }));
-    
-  const handleCheck = async (checked: React.Key[] | { checked: React.Key[] }) => {
+
+  const handleCheck = async (
+    checked: React.Key[] | { checked: React.Key[] }
+  ) => {
     const keys = Array.isArray(checked) ? checked : checked.checked;
     setCheckedKeys(keys);
 
@@ -122,41 +123,37 @@ const MyDrawer: React.FC = () => {
     );
 
     try {
-      saveUserConfig({
-        tokens: userConfig.tokens,
+      saveUserIndicator({
         indicators: newSelectedIndicators.map((ind) => ind.handle_name),
-      })
+      });
       setDraftData((draft) => {
         draft.userConfig.indicators = newSelectedIndicators;
       });
     } catch (error) {
-      console.error('Failed to save settings:', error);
+      console.error("Failed to save settings:", error);
       // You might want to add error handling here
     }
   };
-  
-  const upgradeHit= ()=>{
-     return (
+
+  const upgradeHit = () => {
+    return (
       <div>
-        {userInfo.level<2?(<div>
-          If you want more indicators, you can upgrade your plan 
-          <Button
-          size="small"
-          href="/pricing"
-          >Upgrade plan</Button>
-        </div>):null}
+        {userInfo.level < 2 ? (
+          <div>
+            If you want more indicators, you can upgrade your plan
+            <Button size="small" href="/pricing">
+              Upgrade plan
+            </Button>
+          </div>
+        ) : null}
       </div>
-     )
-  }
+    );
+  };
   return (
     <div>
       <div style={{ display: "flex", flexDirection: "column" }}>
         <h3>Choose Indicator</h3>
-        <div>
-        {upgradeHit()}
-        </div>
-       
-        
+        <div>{upgradeHit()}</div>
       </div>
 
       <Tree

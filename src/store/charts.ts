@@ -14,6 +14,11 @@ interface ChartStore {
   tokenInfo: {
     symbol: string;
     chain: string;
+    create_time: string;
+    // start_time: string;
+    // end_time: string;
+  };
+  selectedTimeRange: {
     start_time: string;
     end_time: string;
   };
@@ -52,6 +57,10 @@ const initialState = {
   tokenInfo: {
     symbol: "",
     chain: "",
+    create_time: "",
+
+  },
+  selectedTimeRange: {
     start_time: "",
     end_time: "",
   },

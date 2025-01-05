@@ -1,5 +1,6 @@
 .studio {
   width: 100%;
+  
 
   :global {
     .ant-tabs >.ant-tabs-nav .ant-tabs-nav-wrap {
@@ -13,5 +14,18 @@
   .segmented {
     height: 40px;
     line-height: 40px;
+  }
+}
+.custom-tabs {
+  .ant-tabs-nav {
+    font-size: 16px; // Adjust the font size
+  }
+
+  .ant-tabs-tab {
+    padding: 12px 24px; // Adjust padding for width
+  }
+
+  .ant-tabs-tab-btn {
+    font-weight: bold; // Optional: make the font bold
   }
 }

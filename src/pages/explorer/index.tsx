@@ -47,7 +47,7 @@ const Explorer: React.FC = () => {
   ];
 
   return (
-    <Layout style={{ height: "100vh" }}>
+    <Layout style={{ height: "90vh" }}>
       <Drawer
         title="Explorer Setting"
         placement="right"

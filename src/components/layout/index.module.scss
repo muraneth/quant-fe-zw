@@ -46,7 +46,9 @@
       }
 
       .menuItemActive {
-        background: #2d2e30;
+        // background: #2d2e30;
+        color: #f0eaea;
+        font-size: large;
         border-radius: 2px;
         transition: all 200ms ease;
       }

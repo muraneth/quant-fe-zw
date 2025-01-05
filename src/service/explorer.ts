@@ -1,18 +1,22 @@
 import { request } from "@/utils/request";
-import { TokenDetailInfo, TokenBaseInfo, Indicator, IndicatorDetailReqDto, IndicatorListResDto } from "./charts";
+import { TokenDetailInfo, Indicator, IndicatorDetailReqDto, IndicatorListResDto } from "./charts";
+import { TokenBaseInfo, BaseToken } from "./base";
 
 
 export interface UserConfig {
-    tokens: Array<string>;
+    tokens: Array<BaseToken>;
     indicators: Array<Indicator>;
 }
 export interface SaveUserConfigReq {
     tokens?: Array<string>;
     indicators: Array<string>;
 }
-export interface TokenSnapReq {
-    symbol: string;
-    chain?: string;
+
+export interface SaveUserTokenReq {
+    tokens: Array<BaseToken>;
+}
+export interface TokenSnapReq extends BaseToken {
+
     indicators: Array<IndicatorDetailReqDto>;
 }
 export interface TokenPageResponse {
@@ -33,9 +37,23 @@ export function getUserConfig(): Promise<UserConfig> {
     });
 }
 
-export function saveUserConfig(params: SaveUserConfigReq): Promise<any> {
+export function saveUserIndicator(params: SaveUserConfigReq): Promise<any> {
     return request({
-        url: "/data/api/explorer/saveUserConfig",
+        url: "/data/api/explorer/saveUserIndicator",
+        method: "POST",
+        params,
+    });
+}
+export function saveUserTokens(params: SaveUserTokenReq): Promise<any> {
+    return request({
+        url: "/data/api/explorer/saveUserTokens",
+        method: "POST",
+        params,
+    });
+}
+export function deleteUserToken(params: BaseToken): Promise<any> {
+    return request({
+        url: "/data/api/explorer/deleteUserToken",
         method: "POST",
         params,
     });
