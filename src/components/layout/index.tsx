@@ -24,7 +24,19 @@ const homeMenuList = [
     path: "/pricing",  
   },
 ];
-
+const footerLinks = {
+  company: [
+    { name: "About Us", path: "/about" },
+    { name: "Contact", path: "/contact" },
+    { name: "Terms", path: "/terms" },
+    { name: "Privacy", path: "/privacy" }
+  ],
+  resources: [
+    { name: "Blog", path: "/blog" },
+    { name: "Documentation", path: "https://doc.tokenalytic.com" },
+    { name: "Support", path: "/support" }
+  ]
+};
 const studioMenuList = [
   {
     name: "Explorer",
@@ -114,8 +126,61 @@ const MainLayout = () => {
           <Outlet />
         </ErrorBoundary>
       </main>
-      <Footer>
+      <Divider style={{ margin: 0 }} />
 
+      <Footer className={styles.footer}>
+        <div className={styles.footerContent}>
+          <div className={styles.footerSection}>
+            <h3>Tokenalytic</h3>
+            <p>Empowering crypto analytics for everyone</p>
+          </div>
+          
+          <div className={styles.footerSection}>
+            <h4>Company</h4>
+            <div className={styles.footerLinks}>
+              {footerLinks.company.map((link, index) => (
+                <Link key={index} to={link.path}>
+                  {link.name}
+                </Link>
+              ))}
+            </div>
+          </div>
+          
+          <div className={styles.footerSection}>
+            <h4>Resources</h4>
+            <div className={styles.footerLinks}>
+              {footerLinks.resources.map((link, index) => (
+                link.path.startsWith('http') ? (
+                  <a key={index} href={link.path} target="_blank" rel="noopener noreferrer">
+                    {link.name}
+                  </a>
+                ) : (
+                  <Link key={index} to={link.path}>
+                    {link.name}
+                  </Link>
+                )
+              ))}
+            </div>
+          </div>
+          
+          <div className={styles.footerSection}>
+            <h4>Connect With Us</h4>
+            <div className={styles.footerSocial}>
+              <a href="https://twitter.com/tokenalytic" target="_blank" rel="noopener noreferrer">
+                Twitter
+              </a>
+              <a href="https://discord.gg/tokenalytic" target="_blank" rel="noopener noreferrer">
+                Discord
+              </a>
+            </div>
+          </div>
+        </div>
+        
+        <Divider style={{ margin: '24px 0' }} />
+        
+        <div className={styles.footerBottom}>
+          <p>© {new Date().getFullYear()} Tokenalytic. All rights reserved.</p>
+        </div>
       </Footer>
     </div>
   );
