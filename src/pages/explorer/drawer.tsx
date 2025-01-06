@@ -138,12 +138,12 @@ const MyDrawer: React.FC = () => {
   const upgradeHit = () => {
     return (
       <div>
-        {userInfo.level < 2 ? (
+        {userInfo.level <=2 ? (
           <div>
             If you want more indicators, you can upgrade your plan
-            <Button size="small" href="/pricing">
+            <a  href="/pricing">
               Upgrade plan
-            </Button>
+            </a>
           </div>
         ) : null}
       </div>
@@ -153,7 +153,8 @@ const MyDrawer: React.FC = () => {
     <div>
       <div style={{ display: "flex", flexDirection: "column" }}>
         <h3>Choose Indicator</h3>
-        <div>{upgradeHit()}</div>
+        <div style={{marginBottom:"10px",color:"gray"}}>{upgradeHit()}</div>
+
       </div>
 
       <Tree

@@ -2,47 +2,86 @@ import { getTopWalletList, WalletBaseInfo } from "@/service/wallets";
 import { useRequest } from "ahooks";
 import { useImmer } from "use-immer";
 import { useChartStore } from "@/store/charts";
-import { Table, Typography } from "antd";
+import { Table, Typography, Segmented } from "antd";
 import type { ColumnsType } from "antd/es/table";
 import { useNavigate } from "react-router-dom";
-import { formatNumber } from "@/utils/common";
+import { formatNumber, getUserInfo } from "@/utils/common";
+import MaskGuide from "./mask-guide";
+const TOP_OPTIONS = {
+  TOP_50: 50,
+  TOP_100: 100,
+  TOP_500: 500,
+};
+const TOP_OPTIONS2 = [
+  { label: 'TOP_50', value: "TOP_50", requiredLevel: 0,disabled:false }, // Free tier
+  { label: 'TOP_100', value: "TOP_100", requiredLevel: 2,disabled:true }, // Paid tier
+  { label: 'TOP_500', value: "TOP_500", requiredLevel: 3,disabled:true }  // Premium tier
+];
+const getOptions = (userLevel:number) => {
+  if (!userLevel) {
+    return TOP_OPTIONS2;
+  }
+  for (const option of TOP_OPTIONS2) {
+    if (userLevel >= option.requiredLevel) {
+      option.disabled = false;
+    } else {
+      option.disabled = true;
+    }
+  }
+  return TOP_OPTIONS2;
+}
+
+type TopOption = keyof typeof TOP_OPTIONS;
 
 const WalletTable = () => {
   const [walletList, setWalletList] = useImmer<WalletBaseInfo[]>([]);
   const tokenInfo = useChartStore.use.tokenInfo();
   const navigate = useNavigate();
+  const userInfo = getUserInfo();
 
+  const [selectedSize, setSelectedSize] = useImmer<TopOption>("TOP_50");
+  const options =getOptions(userInfo.level);
   const { loading: walleTableLoading } = useRequest(
-    () =>
-      getTopWalletList({
+    () =>  {
+      if (!tokenInfo || !tokenInfo.symbol || !tokenInfo.chain) {
+        return Promise.resolve([]);
+      }
+      return getTopWalletList({
         symbol: tokenInfo.symbol,
         chain: tokenInfo.chain,
         order_by: "balance",
         start_time: "2024-12-01",
-      }),
+        top_count:TOP_OPTIONS[selectedSize]
+      })
+    }         
+      ,
     {
-      refreshDeps: [tokenInfo],
+      refreshDeps: [tokenInfo, selectedSize],
       onSuccess: (data) => {
         setWalletList(() => data);
       },
     }
   );
+
   const handleRowClick = (record: WalletBaseInfo) => {
     navigate(
       `/studio?symbol=${tokenInfo.symbol}&chain=${tokenInfo.chain}&tab=wallet&wallet_address=${record.wallet_address}`
     );
   };
-
+  const checkIfUserPaid = () => {
+     return userInfo.level > 1;
+  }
   const columns: ColumnsType<WalletBaseInfo> = [
     {
       title: "Wallet Address",
       dataIndex: "wallet_address",
       key: "wallet_address",
       fixed: "left",
-      width: 260,
-      render: (text: string) => (
-        <Typography.Text copyable>{text}</Typography.Text>
-      ),
+      width: 100,
+      render: (text: string) => {
+        const shortenedAddress = `${text.slice(0, 6)}...${text.slice(-6)}`;
+        return <Typography.Text copyable={{ text: text }}>{shortenedAddress}</Typography.Text>;
+      },
     },
     {
       title: "Balance",
@@ -68,14 +107,7 @@ const WalletTable = () => {
       render: (value: number) => formatNumber(value),
       sorter: (a, b) => a.balance_usd - b.balance_usd,
     },
-    // {
-    //   title: "Total Token/Day",
-    //   dataIndex: "total_token_day",
-    //   key: "total_token_day",
-    //   width: 120,
-    //   render: (value: number) => formatNumber(value),
-    //   sorter: (a, b) => a.total_token_day - b.total_token_day,
-    // },
+  
     {
       title: "Avg Token/Day",
       dataIndex: "avg_token_day",
@@ -161,11 +193,21 @@ const WalletTable = () => {
       sorter: (a, b) => a.total_txs - b.total_txs,
     },
   ];
-
+  const handleSizeChange = (value: TopOption) => {
+    setSelectedSize(value);
+  };
   return (
-    <div className="w-full overflow-hidden">
+    <div>
+      <div  style={{display:"flex", justifyContent:"flex-end"}}>
+        <Segmented
+            options={options}
+            value={selectedSize}
+            onChange={(value) => handleSizeChange(value as TopOption)}
+            disabled={walleTableLoading}
+          />
+      </div>
       <style>
-        {`
+      {`
           .ant-table-cell {
             white-space: nowrap;
             padding: 8px 16px !important;
@@ -176,8 +218,7 @@ const WalletTable = () => {
             height: 48px !important;
           }
           .ant-table-tbody > tr > td {
-            // height: 0px !important;  /* Adjust this value to change row height */
-            line-height: 36px !important; /* Adjust this for vertical text alignment */
+            line-height: 28px !important;
           }
           .ant-table-row {
             cursor: pointer;
@@ -185,8 +226,12 @@ const WalletTable = () => {
           .ant-table-row:hover {
             background-color: rgba(0, 0, 0, 0.02);
           }
-          /* Make header row slightly darker for better distinction */
           
+          /* Ensure header remains clickable */
+          .ant-table-header {
+            z-index: 11;
+            position: relative;
+          }
         `}
       </style>
       <Table
@@ -194,17 +239,21 @@ const WalletTable = () => {
         dataSource={walletList}
         rowKey="wallet_address"
         scroll={{ x: 1600, y: 600 }}
-        pagination={{
-          pageSize: 20,
-          showSizeChanger: true,
-          showTotal: (total) => `Total ${total} items`,
-        }}
+        pagination={false}  
+        // pagination={{
+        //   pageSize: 10,
+        //   showSizeChanger: true,
+        //   showTotal: (total) => `Total ${total} items`,
+        // }}
         loading={walleTableLoading}
         onRow={(record) => ({
           onClick: () => handleRowClick(record),
         })}
         sticky
       />
+      {!checkIfUserPaid() && (
+        <MaskGuide type="table"/>
+      )}
     </div>
   );
 };

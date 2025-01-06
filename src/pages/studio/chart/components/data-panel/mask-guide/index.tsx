@@ -1,4 +1,4 @@
-import { Button } from "antd";
+import { Button,Typography } from "antd";
 import { svgMap } from "@/constants/svg";
 import styles from "./index.module.scss";
 import { getUserInfo } from '@/utils/common';
@@ -20,11 +20,12 @@ const MaskGuide = () => {
       
       <div className={styles.content}>
         {svgMap["lock"]}
-        <span className={styles.text}>when to buy token?</span>
-        <span className={styles.text}>When to sell ?</span>
-        <span className={styles.text}>
-          Find out the best timing to by token
-        </span>
+        <Typography.Title level={4}>
+              Unlock Full Access
+            </Typography.Title>
+            <Typography.Paragraph >
+              Upgrade your plan to view the chart
+            </Typography.Paragraph>
           <div>
             {(!userInfo||!userInfo.level)?(
                 <div style={{display:"flex", gap:'12px'}}>
@@ -45,9 +46,7 @@ const MaskGuide = () => {
                >
                  <span className={styles.upgradeBtnText}>Upgrade Now</span>
                </Button>
-               {/* <span className={styles.text}>
-                 Get access to unique indicator that no where else provide
-               </span> */}
+             
            </div>
             )
             }

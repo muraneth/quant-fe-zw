@@ -19,7 +19,7 @@ export function updateUserInfo(userInfo: SignInResDto) {
       storageKey["userInfo"],
       JSON.stringify(userInfo || {})
     );
-    window.location.href = "/charts";
+    window.history.back();
   } catch (err) {
     console.error(err);
   }
@@ -47,6 +47,9 @@ export function getUserInfo(): SignInResDto {
   } catch {
     return {} as unknown as SignInResDto;
   }
+}
+export function deleteUserInfo() {
+  localStorage.removeItem(storageKey["userInfo"]);
 }
 
 interface Auth {

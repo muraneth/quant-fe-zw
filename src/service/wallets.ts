@@ -7,6 +7,7 @@ export interface WalletListReqDto {
     chain: string;
     order_by: string;
     start_time: string;
+    top_count: number;
 }
 export interface WalletInfoReq {
     symbol: string;

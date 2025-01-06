@@ -3,7 +3,6 @@ import { formatNumber } from "@/utils/common";
 import { useNavigate } from "react-router-dom";
 import SparklineChart from "./SimpleChart";
 import { getUserInfo } from "@/utils/common";
-import { userInfo } from "os";
 const getColor = (current: number, previous: number) =>
   current - previous >= 0 ? "#36F097" : "#EB5757";
 const calculateChange = (current: number, previous: number) =>

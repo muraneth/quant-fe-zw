@@ -1,24 +1,24 @@
 :root {
+    /* 全局 css 变量 */
+  /* 黑色主题 */
+  --primary-content-color: #090912;
+  /* 主要内容背景暗灰 */
+  --primary-theme-color: #030306;
+  /* 主要蓝 */
+  --primary-blue-color: #7451ff;
   font-family: "SF Pro Display";
   line-height: 1.5;
   font-weight: 400;
 
   color-scheme: light dark;
   color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
+  background-color: var(--primary-content-color);
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 
-  /* 全局 css 变量 */
-  /* 黑色主题 */
-  --primary-theme-color: #0b0e1b;
-  /* 主要内容背景暗灰 */
-  --primary-content-color: #0b0e1b;
-  /* 主要蓝 */
-  --primary-blue-color: #2255ff;
 }
 
 /* 滚动条样式自定义 */
@@ -184,7 +184,7 @@ button:focus-visible {
 }
 
 .ant-collapse > .ant-collapse-item {
-  border-bottom: 1px solid var(--primary-theme-color);
+  border-bottom: 1px solid var(--primary-content-color);
 }
 
 .ant-collapse .ant-collapse-content {
@@ -207,7 +207,7 @@ button:focus-visible {
 .ant-segmented {
   padding: 4px;
   border-radius: 36px;
-  background: var(--primary-theme-color);
+  background: var(--primary-content-color);
 }
 
 .ant-segmented .ant-segmented-item {

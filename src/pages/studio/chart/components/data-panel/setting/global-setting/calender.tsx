@@ -6,18 +6,18 @@ import dayjs from "dayjs";
 import styles from "./index.module.scss";
 import { useChartStore } from "@/store/charts";
 import { getUserInfo } from "@/utils/common";
-import AlertModal from "@/components/common/alter-model";
+import AlertModal,{AlertType} from "@/components/common/alter-model";
 
 const { RangePicker } = DatePicker;
 
 const CalendarComponent: React.FC = () => {
   const [open, setOpen] = useImmer(false);
-  const [selectedPreset, setSelectedPreset] = useImmer("1Y"); // State to track selected option
+  const [selectedPreset, setSelectedPreset] = useImmer("3M"); // State to track selected option
   const tokenInfo = useChartStore.use.tokenInfo();
   const setDraftData = useChartStore.use.setDraftData();
   const userInfo = getUserInfo();
   const [alertVisible, setAlertVisible] = useImmer(false);
-
+  const [alertType, setAlertType] = useImmer<AlertType>("upgrade");
   // Control dropdown visibility
   const handleOpenChange = (flag: boolean) => {
     setOpen(flag);
@@ -49,20 +49,36 @@ const CalendarComponent: React.FC = () => {
         start_time = dayjs().subtract(3, "month").format("YYYY-MM-DD 00:00:00");
         break;
       case "1Y":
+        if (!userInfo.uid) {
+          setAlertType("login");
+          setAlertVisible(true);
+          return;
+        }
+        if (!userInfo.level || userInfo.level < 2) {
+          setAlertType("upgrade");
+          setAlertVisible(true);
+          return; 
+        }
         start_time = dayjs().subtract(1, "year").format("YYYY-MM-DD 00:00:00");
         break;
       case "YTD":
         start_time = dayjs().startOf("year").format("YYYY-MM-DD 00:00:00");
         break;
       case "All":
-        start_time = tokenInfo.create_time;
-        if (userInfo.level < 3) {
+        if (!userInfo.uid) {
+          setAlertType("login");
+          setAlertVisible(true);
+          return;
+        }
+        if (!userInfo.level || userInfo.level < 3) {
+          setAlertType("upgrade");
           setAlertVisible(true);
           return; // Do not set the time range if level is insufficient
         }
+        start_time = tokenInfo.create_time;
         break;
       default:
-        start_time = dayjs().subtract(1, "year").format("YYYY-MM-DD 00:00:00");
+        start_time = dayjs().subtract(3, "month").format("YYYY-MM-DD 00:00:00");
         break;
     }
 
@@ -111,6 +127,7 @@ const CalendarComponent: React.FC = () => {
         </Dropdown>
       </div>
       <AlertModal
+        type={alertType}
         visible={alertVisible}
         onClose={() => setAlertVisible(false)}
       />

@@ -1,11 +1,11 @@
 import { Outlet, useLocation } from "react-router-dom";
 import { Link } from "react-router-dom";
-import { Divider, Button } from "antd";
+import { Divider, Button,Layout } from "antd";
 import PersonalInfo from "./personal-info";
 import ErrorBoundary from "@/components/error-boundary";
 import styles from "./index.module.scss";
 import classNames from "classnames";
-
+const { Footer } = Layout;
 const homeMenuList = [
   {
     name: "Home",
@@ -21,7 +21,7 @@ const homeMenuList = [
   },
   {
     name: "Pricing",
-    path: "/pricing",
+    path: "/pricing",  
   },
 ];
 
@@ -44,10 +44,10 @@ const studioMenuList = [
   },
 ];
 
-const Layout = () => {
+const MainLayout = () => {
   const location = useLocation();
   const { pathname } = location;
-  const landingPage = pathname === "/landing";
+  const landingPage = pathname === "/home";
 
   const getMenuList = () => {
     const domain = window.location.hostname;
@@ -64,7 +64,7 @@ const Layout = () => {
   return (
     <div className={styles.layout}>
       <div className={styles.header}>
-        <a className={styles.left} href="/landing">
+        <a className={styles.left} href="/home">
           Tokenalytic
         </a>
         <div className={styles.menu}>
@@ -106,14 +106,19 @@ const Layout = () => {
           <PersonalInfo />
         )}
       </div>
+
       <Divider style={{ margin: 0 }} />
+      
       <main className={styles.main}>
         <ErrorBoundary>
           <Outlet />
         </ErrorBoundary>
       </main>
+      <Footer>
+
+      </Footer>
     </div>
   );
 };
 
-export default Layout;
+export default MainLayout;

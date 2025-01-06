@@ -11,7 +11,17 @@ export const getYearAgoTime = (): string => {
         String(yearAgo.getDate()).padStart(2, "0")
     );
 };
-
+export const get3MonthAgoTime = (): string => {
+    var now = new Date();
+    var monthAgo = new Date(now.getFullYear(), now.getMonth() - 3, now.getDate());
+    return (
+        monthAgo.getFullYear() +
+        "-" +
+        String(monthAgo.getMonth() + 1).padStart(2, "0") +
+        "-" +
+        String(monthAgo.getDate()).padStart(2, "0")
+    );
+}
 export const getTimeBefore = (days: number): string => {
     var now = new Date();
     var before = new Date(now.getTime() - days * 24 * 60 * 60 * 1000);

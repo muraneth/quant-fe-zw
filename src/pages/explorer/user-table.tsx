@@ -33,7 +33,13 @@ const UserTokenTable = () => {
       });
     },
   });
-
+  const removeToken = (key: string) =>
+    setDraftData((draft) => {
+      if (!draft.userConfig.tokens) return;
+      draft.userConfig.tokens = draft.userConfig.tokens.filter(
+        (token) => token.symbol + "_" + token.chain !== key
+      );
+    });
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
   };
@@ -46,7 +52,7 @@ const UserTokenTable = () => {
     );
 
     setExistingToken(newTokenList);
-
+    removeToken(token.symbol + "_" + token.chain);
     await deleteUserToken({
       symbol: token.symbol,
       chain: token.chain,
@@ -97,7 +103,7 @@ const UserTokenTable = () => {
             } as TokenSnapReq);
 
             setTokenDetailList((prev) => [...prev, result]);
-            await sleep(100);
+            // await sleep(100);
           } catch (error) {
             console.error(`Error processing token ${token}:`, error);
           }
@@ -208,13 +214,15 @@ const UserTokenTable = () => {
   }, [tokenDetailList]);
 
   return (
-    <div>
+    <div style={{background:"#0b0e1b"}}>
+     
       <Table
         columns={columns}
         dataSource={tokenDetailList}
         rowKey={(record) =>
           record.base_info.symbol + "_" + record.base_info.chain
         }
+        
         bordered
         scroll={{ x: "max-content", y: 600 }}
         pagination={paginationConfig}

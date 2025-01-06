@@ -40,6 +40,7 @@ export const getPriceSeries = (priceList, klineType) => {
           type: "line",
           smooth: true,
           yAxisIndex: 0,
+          symbol: "none",
           z: 0
         };
     }
@@ -160,9 +161,9 @@ export const commonOption = {
       top: 'center',
       style: {
         text: 'tokenalytic.com',
-        fontSize: 80,
+        fontSize: 60,
         // fontWeight: 'bold',
-        fill: 'rgba(100, 100, 0, 0.4)', // Semi-transparent watermark
+        fill: 'rgba(100, 100, 0, 0.3)', // Semi-transparent watermark
         textAlign: 'center'
       }
     }

@@ -51,8 +51,8 @@ export function xBarTransform({ indicatorDetailList, priceList, klineType }) {
         color: (params) => {
           // params.value is the value of the bar
           return params.value < 0
-            ? "rgba(255, 127, 80, 0.4)" // Red with 60% opacity for negative values
-            : "rgba(30, 214, 255, 0.4)";
+            ? "rgba(255, 127, 80, 0.8)" // Red with 60% opacity for negative values
+            : "rgba(30, 214, 255, 0.8)";
         },
       },
     });

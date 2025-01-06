@@ -11,7 +11,7 @@ interface ExplorerStore {
 const useExplorerStore = createSelectors(
     create<ExplorerStore>()(
         immer((set) => ({
-            // ...initialState,
+
             userConfig: {} as UserConfig,
             setDraftData: (callback) =>
                 set((draft) => {

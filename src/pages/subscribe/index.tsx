@@ -15,7 +15,7 @@ import styles from "./index.module.scss";
 import { getUserInfo, updateUserInfo } from "@/utils/common";
 import { useEffect, useMemo } from "react";
 import { CheckCircleFilled } from "@ant-design/icons";
-
+import AlertModal,{AlertType} from "@/components/common/alter-model";
 const { Paragraph, Text } = Typography;
 
 interface Payment {
@@ -38,6 +38,8 @@ const Subscribe = () => {
   const [selectedAddress, setSelectedAddress] = useImmer("");
   const [currentPlan, setCurrentPlan] = useImmer(1);
   const userInfo = getUserInfo();
+  const [alertVisible, setAlertVisible] = useImmer(false);
+  const [alertType, setAlertType] = useImmer<AlertType>("upgrade");
 
   useEffect(() => {
     if (userInfo) {
@@ -64,8 +66,9 @@ const Subscribe = () => {
     }
   );
 
-  const { loading: methodsLoading } = useRequest(() => getPaymentMethods(), {
+  const { run:getPayMethd, loading: methodsLoading } = useRequest(() =>  getPaymentMethods(), {
     ready: true,
+    manual: true,
     onSuccess: (data) => {
       const methods = data.map((item: UserPayMethod) => ({
         label: item.chain,
@@ -98,7 +101,9 @@ const Subscribe = () => {
     return (selectedPlan.price * currentMonth).toFixed(2);
   };
 
-  const handleSubscribeClick = (planId: number) => {
+  const handleSubscribeClick = async (planId: number) => {
+   
+    await getPayMethd();
     setSelectedPlanId(planId);
     setIsModalVisible(true);
   };
@@ -143,7 +148,13 @@ const Subscribe = () => {
         </div>
       );
     }
-
+    if (plan.isPopolar) {
+      return (
+        <div className={`${styles.btn} ${styles.popolarPlan}`} onClick={() => handleSubscribeClick(plan.id)}>
+          Subscribe
+        </div>
+      );
+    }
     return (
       <div className={styles.btn} onClick={() => handleSubscribeClick(plan.id)}>
         Subscribe
@@ -193,14 +204,15 @@ const Subscribe = () => {
             </Radio.Group>
           </div>
           <div className={styles.qrcode}>
-            <QRCodeSVG
+            { selectedAddress  && <QRCodeSVG
               value={selectedAddress || "Loading..."}
               title="Payment Address QR Code"
               size={88}
               bgColor="#ffffff"
               fgColor="#000000"
               level="L"
-            />
+            />}
+            
           </div>
           <Paragraph style={{ marginTop: 12 }} copyable>
             {selectedAddress || "Loading..."}
@@ -238,8 +250,8 @@ const Subscribe = () => {
     <div className={styles.subscribe}>
       <div className={styles.content}>
         <div className={styles.top}>
-          <div>{svgMap["price"]}</div>
-          <div className={styles.desc}>Pay by USDT from Layer2</div>
+          {/* <div>{svgMap["price"]}</div> */}
+          <div className={styles.title}>Easy pay in USDT using Layer2</div>
         </div>
         <div className={styles.subscribeList}>
           {plans?.map((plan) => (
@@ -274,6 +286,11 @@ const Subscribe = () => {
       >
         {paymentModalContent}
       </Modal>
+      <AlertModal
+        type={alertType}
+        visible={alertVisible}
+        onClose={() => setAlertVisible(false)}
+      />
     </div>
   );
 };
