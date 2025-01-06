@@ -10,11 +10,11 @@
   .content {
     .top {
       text-align: center;
-
+      padding-top: 30px;
       .title {
         font-family: 'SF Pro Display';
         font-weight: 800;
-        font-size: 38px;
+        font-size: 24px;
         color: rgba(255, 255, 255, 0.85);
       }
 
@@ -27,7 +27,7 @@
     }
 
     .subscribeList {
-      margin-top: 50px;
+      margin-top: 30px;
       display: flex;
 
       .item:not(:last-child) {
@@ -35,17 +35,19 @@
       }
 
       .item {
-        background-color: #2D2E30;
-        width: 240px;
-        height: 334px;
+        background-color: var(--primary-content-color);
+        width: 250px;
+        height: 450px;
         padding: 24px;
         display: flex;
         flex-direction: column;
+        border-radius: 8px;
         &:hover{
           .btn{
-            background-color: #2255FF;
+            background-color: #7451ff;
             // border-style: #2255FF;
-            border: 1px solid #2255FF;
+            border: 1px solid #7451ff;
+            color: #FFFFFF;
           }
         }
 
@@ -62,18 +64,20 @@
           }
 
           .popolar {
-            background: rgba(34, 85, 255, 0.1);
+            // background: rgba(34, 85, 255, 0.1);
             border-radius: 2px;
             padding: 2px 4px;
             font-family: 'DIN Alternate';
             font-weight: 700;
             font-size: 12px;
-            color: #2255FF;
+            color: #7451ff;
           }
+          
         }
 
         .priceInfo {
           margin-top: 12px;
+
 
           span {
             font-family: 'DIN Alternate';
@@ -96,7 +100,7 @@
         .descList {
           border-top: 1px solid rgba(0, 0, 0, 0.2);
           flex: 1;
-          padding-top: 16px;
+          // padding-top: 16px;
           margin-top: 16px;
           overflow-y: scroll;
 
@@ -110,7 +114,7 @@
           }
 
           p:not(:last-child) {
-            margin-bottom: 12px;
+            margin-bottom: 8px;
           }
 
         }
@@ -130,6 +134,15 @@
           font-size: 16px;
           color: rgba(255, 255, 255, 0.85);
         }
+        .popolarPlan{
+          background-color: #7451ff;
+          border: 1px solid #7451ff;
+        }
+        .currentPlan{
+          color: #7451ff;
+        }
+        
+
       }
     }
   }

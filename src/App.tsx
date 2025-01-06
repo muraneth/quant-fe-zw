@@ -1,12 +1,10 @@
 import * as React from 'react';
 import { Routes, Route, Navigate } from "react-router-dom";
 import { ConfigProvider, theme } from "antd";
-import Layout from "@/components/layout";
+import MainLayout from "@/components/layout";
 import Home from "./pages/home";
 import SignIn from "./pages/sign-in";
 import SignUp from "./pages/sign-up";
-import Payment from "@/pages/payment";
-import Compare from "./pages/compare";
 import Subscribe from "./pages/subscribe";
 import Explorer from './pages/explorer';
 
@@ -33,17 +31,17 @@ function App() {
       }}
     >
       <Routes>
-        <Route path="/" element={<Layout />}>
+        <Route path="/" element={<MainLayout />}>
           <Route path="/explorer" element={<Explorer />} />
           <Route path="/home" element={<Home />} />
           <Route path="/sign-in" element={<SignIn />} />
           <Route path="/sign-up" element={<SignUp />} />
           <Route path="/studio" element={<Studio />} />
-          <Route path="/compare" element={<Compare />} />
+          {/* <Route path="/compare" element={<Compare />} /> */}
           <Route path="/pricing" element={<Subscribe />} />
-          <Route path="/payment" element={<Payment />} />
+
         </Route>
-        <Route path="*" element={<Navigate to="/" />} />
+        <Route path="*" element={<Navigate to="/home" />} />
       </Routes>
     </ConfigProvider>
   );

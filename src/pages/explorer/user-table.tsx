@@ -5,12 +5,10 @@ import {
   getUserConfig,
   getTokenSnap,
   TokenSnapReq,
-  saveUserConfig,
+  deleteUserToken,
 } from "@/service/explorer";
-import {
-  TokenDetailInfo,
-  TokenBaseInfo,
-} from "@/service/charts";
+import { TokenDetailInfo } from "@/service/charts";
+import { TokenBaseInfo } from "@/service/base";
 import { useImmer } from "use-immer";
 import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
@@ -23,7 +21,7 @@ const UserTokenTable = () => {
   >([]);
   const [currentPage, setCurrentPage] = useImmer(1);
   const userConfig = useExplorerStore.use.userConfig();
-  const [existingToken, setExistingToken] = useImmer<Array<string>>([]);  
+  const [existingToken, setExistingToken] = useImmer<Array<string>>([]);
 
   const setDraftData = useExplorerStore.use.setDraftData();
   const navigate = useNavigate();
@@ -35,21 +33,29 @@ const UserTokenTable = () => {
       });
     },
   });
-
+  const removeToken = (key: string) =>
+    setDraftData((draft) => {
+      if (!draft.userConfig.tokens) return;
+      draft.userConfig.tokens = draft.userConfig.tokens.filter(
+        (token) => token.symbol + "_" + token.chain !== key
+      );
+    });
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
   };
-  const handleRemoveRow = async (symbol: string) => {
+  const handleRemoveRow = async (token: TokenBaseInfo) => {
     setTokenDetailList((prev) =>
-      prev.filter((item) => item.base_info.symbol !== symbol)
+      prev.filter((item) => item.base_info.symbol !== token.symbol)
     );
-    const newTokenList = existingToken.filter(item => item !== symbol);
-  
+    const newTokenList = existingToken.filter(
+      (item) => item !== token.symbol + "_" + token.chain
+    );
+
     setExistingToken(newTokenList);
-  
-    await saveUserConfig({
-      tokens: newTokenList,
-      indicators: userConfig.indicators.map((ind) => ind.handle_name),
+    removeToken(token.symbol + "_" + token.chain);
+    await deleteUserToken({
+      symbol: token.symbol,
+      chain: token.chain,
     });
   };
 
@@ -68,68 +74,75 @@ const UserTokenTable = () => {
     new Promise((resolve) => setTimeout(resolve, ms));
   useEffect(() => {
     if (!userConfig.indicators || !userConfig.tokens) return;
-  
+
     console.log("userConfig", userConfig);
-  
-    const indReqTemp = userConfig.indicators.map(ind => ({
+
+    const indReqTemp = userConfig.indicators.map((ind) => ({
       handle_name: ind.handle_name,
     }));
-  
-    setExistingToken(userConfig.tokens);
-  
+    const keys = userConfig.tokens.map(
+      (item) => item.symbol + "_" + item.chain
+    );
+
+    setExistingToken(keys);
+
     const processTokens = async () => {
-      const hasIndicatorsChanged = tokenDetailList.length > 0 && 
-        tokenDetailList[0].indicator_snaps.length !== userConfig.indicators.length;
-  
+      const hasIndicatorsChanged =
+        tokenDetailList.length > 0 &&
+        tokenDetailList[0].indicator_snaps.length !==
+          userConfig.indicators.length;
+
       if (hasIndicatorsChanged) {
         setTokenDetailList([]);
-        
+
         for (const token of userConfig.tokens) {
           try {
             const result = await runGetTokenSnap({
-              symbol: token,
+              symbol: token.symbol,
               indicators: indReqTemp,
             } as TokenSnapReq);
-  
-            setTokenDetailList(prev => [...prev, result]);
-            await sleep(100);
+
+            setTokenDetailList((prev) => [...prev, result]);
+            // await sleep(100);
           } catch (error) {
             console.error(`Error processing token ${token}:`, error);
           }
         }
       } else {
         const existingTokens = new Set(
-          tokenDetailList.map(item => item.base_info.symbol)
+          tokenDetailList.map(
+            (item) => item.base_info.symbol + "_" + item.base_info.chain
+          )
         );
-        setTokenDetailList(prev => 
-          prev.filter(item => userConfig.tokens.includes(item.base_info.symbol))
+        setTokenDetailList((prev) =>
+          prev.filter((item) =>
+            keys.includes(item.base_info.symbol + "_" + item.base_info.chain)
+          )
         );
         for (const token of userConfig.tokens) {
-          if (existingTokens.has(token)) continue;
+          const key = token.symbol + "_" + token.chain;
+          if (existingTokens.has(key)) continue;
           try {
             const result = await runGetTokenSnap({
-              symbol: token,
+              symbol: token.symbol,
               indicators: indReqTemp,
             } as TokenSnapReq);
-  
-            setTokenDetailList(prev => [...prev, result]);
-            await sleep(100);
+
+            setTokenDetailList((prev) => [...prev, result]);
+            // await sleep(100);
           } catch (error) {
             console.error(`Error processing token ${token}:`, error);
           }
         }
       }
     };
-  
+
     processTokens();
   }, [userConfig]);
 
-  const { runAsync: runGetTokenSnap } = useRequest(
-    getTokenSnap,
-    {
-      manual: true,
-    }
-  );
+  const { runAsync: runGetTokenSnap } = useRequest(getTokenSnap, {
+    manual: true,
+  });
   const dynamicColumns = createDynamicColumns(tokenDetailList);
 
   const columns = useMemo(() => {
@@ -182,10 +195,8 @@ const UserTokenTable = () => {
           </div>
         ),
       },
-    
     ];
 
-     
     return [
       ...baseColumns,
       ...dynamicColumns,
@@ -194,10 +205,7 @@ const UserTokenTable = () => {
         key: "actions",
         width: "120px",
         render: (_: any, record: TokenDetailInfo) => (
-          <Button
-            danger
-            onClick={() => handleRemoveRow(record.base_info.symbol)}
-          >
+          <Button danger onClick={() => handleRemoveRow(record.base_info)}>
             Remove
           </Button>
         ),
@@ -206,13 +214,17 @@ const UserTokenTable = () => {
   }, [tokenDetailList]);
 
   return (
-    <div>
+    <div style={{background:"#0b0e1b"}}>
+     
       <Table
         columns={columns}
         dataSource={tokenDetailList}
-        rowKey={(record) => record.base_info.symbol}
+        rowKey={(record) =>
+          record.base_info.symbol + "_" + record.base_info.chain
+        }
+        
         bordered
-        scroll={{ x: "max-content" }}
+        scroll={{ x: "max-content", y: 600 }}
         pagination={paginationConfig}
       />
     </div>

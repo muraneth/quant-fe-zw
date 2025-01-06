@@ -6,9 +6,10 @@ import { getIndicatorDetail, getBasePrice } from "@/service/charts";
 import BaseChart from "./base-chart";
 import { generateOptions } from "@/utils/echarts";
 import styles from "../index.module.scss";
-
+import { get3MonthAgoTime } from "@/utils/time";
 const EchartsPanel = () => {
-  const { symbol, chain, start_time, end_time } = useChartStore.use.tokenInfo();
+  const { symbol, chain } = useChartStore.use.tokenInfo();
+  const { start_time, end_time } = useChartStore.use.selectedTimeRange();
   const { handle_name, type } = useChartStore.use.indicatorInfo();
 
   const indicatorDetailList = useChartStore.use.indicatorDetailList();
@@ -28,10 +29,17 @@ const EchartsPanel = () => {
     () => {
       if (!symbol || !chain || !handle_name)
         return [] as unknown as Promise<any>;
+      var start: string;
+      if (!start_time) {
+        start = get3MonthAgoTime();
+      } else {
+        start = start_time;
+      }
+
       return getIndicatorDetail({
         symbol,
         chain,
-        start_time,
+        start_time: start,
         end_time,
         handle_name,
         base_params,
@@ -63,10 +71,16 @@ const EchartsPanel = () => {
   } = useRequest(
     () => {
       if (!symbol || !chain) return [] as unknown as Promise<any>;
+      var start: string;
+      if (!start_time) {
+        start = get3MonthAgoTime();
+      } else {
+        start = start_time;
+      }
       return getBasePrice({
         symbol,
         chain,
-        start_time,
+        start_time: start,
         end_time,
       });
     },

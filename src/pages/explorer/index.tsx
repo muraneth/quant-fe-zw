@@ -3,25 +3,52 @@ import TokenTable from "./global-table";
 import React, { useState } from "react";
 import { Layout, Drawer, Button, Tabs } from "antd";
 import MyDrawer from "./drawer";
-
-const { Content } = Layout;
+import styles from "./index.module.scss";
+const { Content,Header } = Layout;
+import { getUserInfo } from "@/utils/common";
 
 const Explorer: React.FC = () => {
   const [isDrawerOpen, setDrawerOpen] = useState(false);
-
+  const userInfo = getUserInfo();
   const items = [
+    
     {
       key: "1",
+      label: "Explore All",
+      children: (
+        <div
+          style={{
+            marginBottom: "120px",
+            // marginTop: "20px",
+          }}
+        >
+          <TokenTable />
+        </div>
+      ),
+    },
+    {
+      key: "2",
       label: "My Watch List",
       children: (
         <div style={{ marginTop: "1px" }}>
           <div
             style={{
               display: "flex",
-              justifyContent: "flex-end",
+              justifyContent: "space-between",
               marginBottom: "5px",
             }}
           >
+         <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+            {!userInfo||userInfo.level<=2 ? (
+              <>
+               <span>Advance Subscribe user will get more tokens and more indicators to watch </span>
+                <a type="primary" href="/pricing">
+                  upgrade plan
+                </a>
+              </>
+            ):null
+          }
+          </div>
             <Button onClick={() => setDrawerOpen(!isDrawerOpen)}>
               Set Indicator
             </Button>
@@ -29,25 +56,11 @@ const Explorer: React.FC = () => {
           <UserTokenTable />
         </div>
       ),
-    },
-    {
-      key: "2",
-      label: "Explore All",
-      children: (
-        <div
-          style={{
-            marginBottom: "120px",
-            marginTop: "20px",
-          }}
-        >
-          <TokenTable />
-        </div>
-      ),
-    },
+    }
   ];
 
   return (
-    <Layout style={{ height: "100vh" }}>
+    <Layout className={styles.layout}>
       <Drawer
         title="Explorer Setting"
         placement="right"
@@ -56,25 +69,11 @@ const Explorer: React.FC = () => {
       >
         <MyDrawer />
       </Drawer>
-
-      <Layout
-        style={{
-          transition: "margin-left 0.3s ease",
-        }}
-      >
-        {/* <Header className={styles.header}>
-          <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-            <h3>Subscribe user will get more than 100 token list</h3>
-            <Button type="primary" href="/pricing">
-              Get Subscribed
-            </Button>
-          </div>
-          <div></div>
-        </Header> */}
-
+      <Layout className={styles.layout}>
         <Content
           style={{
-            padding: "16px",
+            paddingLeft: "16px",
+            paddingRight: "16px",
             // height: "calc(100vh - 6px)",
             overflow: "auto",
           }}
@@ -83,7 +82,7 @@ const Explorer: React.FC = () => {
             defaultActiveKey="1"
             items={items}
             size="large"
-            style={{ marginTop: "20px" }}
+            // style={{ marginTop: "20px" }}
           />
         </Content>
       </Layout>

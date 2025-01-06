@@ -21,16 +21,27 @@ const items: TabsProps["items"] = [
 
 const Studio = () => {
   const [searchParams, setSearchParams] = useSearchParams();
-  const handleTabChange = (key: string) => {
-    setSearchParams({ tab: key });
-  };
   const tab = (searchParams.get("tab") || "chart").toLowerCase();
+
+  const handleTabChange = (key: string) => {
+    const newSearchParams = new URLSearchParams(searchParams);
+    newSearchParams.set("tab", key);
+
+    if (key === "chart") {
+      newSearchParams.delete("wallet_address");
+      if (!newSearchParams.get("handle_name")) {
+        newSearchParams.set("handle_name", "holder.all");
+      }
+    }
+    setSearchParams(newSearchParams);
+  };
 
   return (
     <div className={styles.studio}>
       <Header />
       <Divider style={{ margin: 0 }} />
       <Tabs
+        className={styles.customTabs}
         type="line"
         defaultActiveKey="chart"
         activeKey={tab}

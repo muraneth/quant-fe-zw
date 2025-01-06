@@ -20,7 +20,7 @@ const DataPanel = () => {
 
   const maskGuide = (
     <>
-      <div className={styles.maskBackground}>{svgMap["maskBackground"]}</div>
+      {/* <div className={styles.maskBackground}>{svgMap["maskBackground"]}</div> */}
       <MaskGuide />
     </>
   );

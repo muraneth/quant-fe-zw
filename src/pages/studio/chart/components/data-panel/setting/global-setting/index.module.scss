@@ -87,3 +87,7 @@ $hover-color: #c3c6ca;   // Hover state color
       transition: transform 0.1s ease;
   }
 }
+.selected {
+  font-weight: bold;
+  color: #f0f3f1;
+}

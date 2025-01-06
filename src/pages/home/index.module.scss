@@ -1,6 +1,6 @@
 .landingPage {
   height: calc(100vh - 40px);
-  background: var(--primary-theme-color);
+  background: var(--primary-content-color);
   padding-top: 10%;
 
   .introduce {
@@ -86,7 +86,7 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        background:var( --primary-theme-color);
+        background:var( --primary-content-color);
         border-radius: 50%;
 
         .coinImgBack2 {
