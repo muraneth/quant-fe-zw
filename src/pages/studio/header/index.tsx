@@ -90,23 +90,18 @@ const Header = () => {
     {
       refreshDeps: [keywords, selectedChain],
       onSuccess: (res) => {
-        if (tokenInfo && res) {
+        if ( res) {
           const matchUrlToken = res.find(
             (token) => token.symbol === symbol && chain === token.chain
           );
+
           if (matchUrlToken) {
-            setCurrentToken(matchUrlToken);
-            return;
+            if (!tokenInfo || tokenInfo.symbol !== matchUrlToken.symbol) {
+              setCurrentToken(matchUrlToken);
+              return;
+            }
           }
-          const matchingToken = res.find(
-            (token) =>
-              token.symbol === tokenInfo.symbol && token.chain === token.chain
-          );
-          if (matchingToken) {
-            setCurrentToken(matchingToken);
-          } else {
-            setCurrentToken(res[0]);
-          }
+         
         }
       },
     }
@@ -266,6 +261,7 @@ const Header = () => {
                 <EllipsisMiddle
                   className={styles.leftBottom}
                   title={currentToken?.contract_address}
+                  chain={currentToken?.chain}
                 >
                   {currentToken?.contract_address}
                 </EllipsisMiddle>
