@@ -8,7 +8,6 @@ import { useNavigate } from "react-router-dom";
 import { formatNumber, getUserInfo } from "@/utils/common";
 import { getTimeBefore } from "@/utils/time";
 import MaskGuide from "./mask-guide";
-import { get } from "http";
 const TOP_OPTIONS = {
   TOP_50: 50,
   TOP_100: 100,
