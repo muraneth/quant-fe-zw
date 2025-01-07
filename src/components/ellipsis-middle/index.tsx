@@ -25,7 +25,7 @@ const EllipsisMiddle: React.FC<EllipsisMiddleProps> = ({
   const start = children?.slice(0, children?.length - suffixCount);
   const suffix = children?.slice(-suffixCount).trim();
   return (
-    <div style={{display:"flex", alignContent:"center",marginLeft:"6px"}}>
+    <div style={{display:"flex", marginLeft:"6px",alignItems:"center"}}>
       {
         chain&&CHAIN_LOGO[chain] 
       } 

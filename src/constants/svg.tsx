@@ -513,7 +513,7 @@ export const svgMap = {
     <svg 
     xmlns="http://www.w3.org/2000/svg"
     viewBox="0 0 784.37 1277.39"
-    style={{ width: '16', height: '16' }}
+    style={{ width: '14', height: '14' }}
   >
     <g>
       <polygon fill="#343434" points="392.07,0 383.5,29.11 383.5,873.74 392.07,882.29 784.13,650.54" />
