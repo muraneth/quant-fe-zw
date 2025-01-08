@@ -82,7 +82,7 @@ const WalletDetail: React.FC<WalletDetailProps> = ({ wallet_address }) => {
       },
     }
   );
-  const {  loading: fetchWalletInfoLoading } = useRequest(
+  const { loading: fetchWalletInfoLoading } = useRequest(
     () => {
       if (!tokenInfo || !tokenInfo.symbol || !tokenInfo.chain) {
         return Promise.resolve([]);
