@@ -6,6 +6,7 @@ import { Table, Typography, Segmented } from "antd";
 import type { ColumnsType } from "antd/es/table";
 import { useNavigate } from "react-router-dom";
 import { formatNumber, getUserInfo } from "@/utils/common";
+import { getTimeBefore } from "@/utils/time";
 import MaskGuide from "./mask-guide";
 const TOP_OPTIONS = {
   TOP_50: 50,
@@ -50,7 +51,7 @@ const WalletTable = () => {
         symbol: tokenInfo.symbol,
         chain: tokenInfo.chain,
         order_by: "balance",
-        start_time: "2024-12-01",
+        start_time: getTimeBefore(1),
         top_count:TOP_OPTIONS[selectedSize]
       })
     }         

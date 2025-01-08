@@ -1,6 +1,5 @@
 import fetch from "isomorphic-fetch";
-import { getUserInfo,deleteUserInfo } from "@/utils/common";
-import { setAuth } from "@/utils/common";
+import { getUserInfo, deleteUserInfo } from "@/utils/common";
 
 interface IFetchParams {
   url: string;
@@ -14,6 +13,8 @@ enum ResponseCode {
   NOT_SIGN_IN_1 = 1008,
   // 未登录
   NOT_SIGN_IN_2 = 1009,
+  USER_EMAIL_EXIST = 1013,
+  USER_NAME_EXIST = 1014,
   // token 校验失败
   TOKEN_ERROR = 1010,
   // 无权限
@@ -67,6 +68,10 @@ const request = ({ url, method, params = {} }: IFetchParams) => {
           deleteUserInfo();
           window.location.href = "/sign-in";
           return Promise.reject();
+        case ResponseCode.USER_EMAIL_EXIST:
+          return Promise.reject(new Error("USER_EMAIL_EXIST"));
+        case ResponseCode.USER_NAME_EXIST:
+          return Promise.reject(new Error("USER_NAME_EXIST"));
       }
       return Promise.reject(res.msg || "fetch error");
     })

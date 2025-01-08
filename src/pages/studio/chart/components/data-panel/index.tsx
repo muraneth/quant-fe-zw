@@ -2,7 +2,6 @@ import EchartsPanel from "./echarts-panel";
 import MaskGuide from "./mask-guide";
 import ChartInfo from "./chart-info";
 import ChartSetting from "./setting";
-import { svgMap } from "@/constants/svg";
 import { getUserInfo } from "@/utils/common";
 import { useChartStore } from "@/store/charts";
 import styles from "./index.module.scss";

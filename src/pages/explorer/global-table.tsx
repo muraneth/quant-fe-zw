@@ -23,7 +23,7 @@ import { createDynamicColumns } from "./common";
 import AlertModal,{AlertType} from "@/components/common/alter-model";
 
 
-const PAGE_SIZE = 20;
+const PAGE_SIZE = 10;
 const FETCH_DELAY = 0;
 
 const TokenTable = () => {
@@ -35,7 +35,6 @@ const TokenTable = () => {
   const [totalToken, setTotalToken] = useImmer(0);
   const [indicatorList, setIndicatorList] = useImmer<Array<Indicator>>([]);
   const [selectedRowKeys, setSelectedRowKeys] = useImmer<string[]>([]);
-  const [isLoading, setIsLoading] = useImmer(false);
   const [searchKey, setSearchKey] = useImmer("");
   const setDraftData = useExplorerStore.use.setDraftData();
   const userInfo = getUserInfo();
@@ -128,7 +127,7 @@ const TokenTable = () => {
     const fetchTokenDetails = async () => {
       if (!indicatorList.length || !tokenList.length) return;
 
-      setIsLoading(true);
+      // setIsLoading(true);
       setTokenDetailList([]);
 
       const indReqTemp: IndicatorDetailReqDto[] = indicatorList.map((ind) => ({
@@ -152,7 +151,7 @@ const TokenTable = () => {
         }
       }
 
-      setIsLoading(false);
+      // setIsLoading(false);
     };
 
     fetchTokenDetails();
@@ -308,7 +307,8 @@ const TokenTable = () => {
           record.base_info.symbol + "_" + record.base_info.chain
         } // Add chain to avoid key conflict
         bordered
-        loading={isLoading}
+        // loading={isLoading}
+
         scroll={{ x: "max-content" }}
         pagination={{
           total: totalToken,

@@ -1,5 +1,5 @@
 import { Carousel, Button } from "antd";
-import { svgMap } from "@/constants/svg";
+// import { svgMap } from "@/constants/svg";
 import styles from "./index.module.scss";
 import { coinImgList } from "./coinlist";
 // google 压缩后，转 base64，或者 svg，直接打进 html
@@ -11,20 +11,20 @@ const chartImgList = [
   { path: "/chart_3.png" },
 ];
 
-const buttomList = [
-  {
-    icon: svgMap["email"],
-    link: "tokenalytic@gmail.com",
-  },
-  {
-    icon: svgMap["telegram"],
-    link: "",
-  },
-  {
-    icon: svgMap["x"],
-    link: "https://x.com/tokenalytic",
-  },
-];
+// const buttomList = [
+//   {
+//     icon: svgMap["email"],
+//     link: "tokenalytic@gmail.com",
+//   },
+//   {
+//     icon: svgMap["telegram"],
+//     link: "",
+//   },
+//   {
+//     icon: svgMap["x"],
+//     link: "https://x.com/tokenalytic",
+//   },
+// ];
 
 const LangingPage = () => {
   const renderCoinItem = (key: number, path: string) => {
@@ -46,7 +46,7 @@ const LangingPage = () => {
             <h3>We mainly focus on meme coins that</h3>
             <h3>have 100% token in circulation</h3>
             <div>
-              <Button type="primary" href="/explorer">
+              <Button type="primary" href="https://studio.tokenalytic.com/explorer">
                 Get Started
               </Button>
             </div>
@@ -71,7 +71,7 @@ const LangingPage = () => {
           {coinImgList.map((item, index) => renderCoinItem(index, item.path))}
         </div>
       </section>
-      <section className={styles.bottom}>
+      {/* <section className={styles.bottom}>
         {buttomList.map((item, index) => (
           <a
             className={styles.bottomIcon}
@@ -82,7 +82,7 @@ const LangingPage = () => {
             {item.icon}
           </a>
         ))}
-      </section>
+      </section> */}
     </div>
   );
 };
