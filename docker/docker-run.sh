@@ -1,3 +1,6 @@
+
+docker rm -f quant-fe
+
 docker run -d \
   --name quant-fe \
   --network lytic_network \
