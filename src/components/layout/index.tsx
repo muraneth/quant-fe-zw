@@ -12,8 +12,8 @@ const homeMenuList = [
     path: "/home",
   },
   {
-    name: "Alytic",
-    path: "/studio",
+    name: "Studio",
+    path: "https://studio.tokenalytic.com/explorer",
   },
   {
     name: "Document",
@@ -28,13 +28,10 @@ const footerLinks = {
   company: [
     { name: "About Us", path: "/about" },
     { name: "Contact", path: "/contact" },
-    { name: "Terms", path: "/terms" },
-    { name: "Privacy", path: "/privacy" }
   ],
   resources: [
     { name: "Blog", path: "/blog" },
     { name: "Documentation", path: "https://docs.tokenalytic.com" },
-    { name: "Support", path: "/support" }
   ]
 };
 const studioMenuList = [
@@ -44,7 +41,7 @@ const studioMenuList = [
   },
   {
     name: "Studio",
-    path: "/studio?symbol=MSTR&handle_name=holder.all&chain=ethereum",
+    path: "/studio?tab=chart&symbol=MSTR&handle_name=holder.all&chain=ethereum",
   },
   {
     name: "Document",
