@@ -5,7 +5,7 @@ import { signUpService, signInService } from "@/service/sign-in-up";
 import type { SignUpReqDto } from "@/service/sign-in-up";
 import { svgMap } from "@/constants/svg";
 import { passwordRule } from "@/constants/regexp";
-import { signInSuccessAction } from '@/utils/common';
+import { signInSuccessAction } from "@/utils/common";
 import styles from "./index.module.scss";
 
 const SignUp = () => {
@@ -24,6 +24,24 @@ const SignUp = () => {
       const params = form.getFieldsValue();
       params.source = "email";
       runSignIn(params);
+    },
+    onError: (error) => {
+      if (error.message === "USER_EMAIL_EXIST") {
+        form.setFields([
+          {
+            name: "email",
+            errors: ["This email is already registered"],
+          },
+        ]);
+      }
+      if (error.message === "USER_NAME_EXIST") {
+        form.setFields([
+          {
+            name: "username",
+            errors: ["This username is already registered"],
+          },
+        ]);
+      }
     },
   });
 
@@ -121,7 +139,9 @@ const SignUp = () => {
           </Form.Item>
         </Form>
         <a className={styles.signInWrapper} href="/sign-in">
-          <span className={styles.signInWrapperDesc}>Already have an account？</span>
+          <span className={styles.signInWrapperDesc}>
+            Already have an account？
+          </span>
           <span className={styles.signInWrapperAction}>Sign in</span>
         </a>
       </div>
