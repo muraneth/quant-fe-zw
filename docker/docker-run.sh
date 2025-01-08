@@ -1,6 +1,6 @@
 docker run -d \
   --name quant-fe \
-  --network lytic-network \
+  --network lytic_network \
   --restart always \
   -p 80:80 \
   -v $(pwd)/quant-fe/nginx.conf:/etc/nginx/nginx.conf \
