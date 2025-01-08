@@ -9,11 +9,11 @@ const { Footer } = Layout;
 const homeMenuList = [
   {
     name: "Home",
-    path: "https://tokenalytic.com/home",
+    path: "/home",
   },
   {
     name: "Studio",
-    path: "https://studio.tokenalytic.com/explorer",
+    path: "/explorer",
   },
   {
     name: "Docs",
@@ -21,11 +21,11 @@ const homeMenuList = [
   },
   {
     name: "Blog",
-    path: "https://tokenalytic.com/blog",
+    path: "/blog",
   },
   {
     name: "Pricing",
-    path: "https://tokenalytic.com/pricing",
+    path: "/pricing",
   },
 ];
 const footerLinks = {
@@ -42,11 +42,11 @@ const footerLinks = {
 const studioMenuList = [
   {
     name: "Explorer",
-    path: "https://studio.tokenalytic.com/explorer",
+    path: "/explorer",
   },
   {
     name: "Studio",
-    path: "https://studio.tokenalytic.com/studio?tab=chart&symbol=NPC&handle_name=holder.all&chain=ethereum",
+    path: "/studio?tab=chart&symbol=NPC&handle_name=holder.all&chain=ethereum",
   },
   {
     name: "Docs",

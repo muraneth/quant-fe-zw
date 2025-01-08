@@ -1,27 +1,25 @@
-import UserTokenTable from "./user-table";
-import TokenTable from "./global-table";
 import React, { useState } from "react";
 import { Layout, Drawer, Button, Tabs } from "antd";
+import UserTokenTable from "./user-table";
+import TokenTable from "./global-table";
 import MyDrawer from "./drawer";
-import styles from "./index.module.scss";
-const { Content } = Layout;
 import { getUserInfo } from "@/utils/common";
+import styles from "./index.module.scss";
+
+const { Content } = Layout;
 
 const Explorer: React.FC = () => {
   const [isDrawerOpen, setDrawerOpen] = useState(false);
   const userInfo = getUserInfo();
+  
+  const defaultActiveKey = userInfo&&userInfo.uid ? "2" : "1";
+
   const items = [
-    
     {
       key: "1",
       label: "Explore All",
       children: (
-        <div
-          style={{
-            marginBottom: "120px",
-            // marginTop: "20px",
-          }}
-        >
+        <div style={{ marginBottom: "120px" }}>
           <TokenTable />
         </div>
       ),
@@ -38,18 +36,15 @@ const Explorer: React.FC = () => {
               marginBottom: "5px",
             }}
           >
-         <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-            {!userInfo||userInfo.level<=2 ? (
-              <>
-               <span>Advance Subscribe user will get more tokens and more indicators to watch </span>
-                <a type="primary" href="/pricing">
-                  upgrade plan
-                </a>
-              </>
-            ):null
-          }
-          </div>
-            <Button onClick={() => setDrawerOpen(!isDrawerOpen)}>
+            <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+              {(!userInfo || userInfo.level <= 2) && (
+                <>
+                  <span>Advance Subscribe user will get more tokens and more indicators to watch</span>
+                  <a href="/pricing">upgrade plan</a>
+                </>
+              )}
+            </div>
+            <Button onClick={() => setDrawerOpen(true)}>
               Set Indicator
             </Button>
           </div>
@@ -74,15 +69,13 @@ const Explorer: React.FC = () => {
           style={{
             paddingLeft: "16px",
             paddingRight: "16px",
-            // height: "calc(100vh - 6px)",
             overflow: "auto",
           }}
         >
           <Tabs
-            defaultActiveKey="1"
+            defaultActiveKey={defaultActiveKey}
             items={items}
             size="large"
-            // style={{ marginTop: "20px" }}
           />
         </Content>
       </Layout>
