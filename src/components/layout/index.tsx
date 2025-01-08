@@ -17,7 +17,7 @@ const homeMenuList = [
   },
   {
     name: "Document",
-    path: "https://doc.tokenalytic.com",
+    path: "https://docs.tokenalytic.com",
   },
   {
     name: "Pricing",
@@ -33,7 +33,7 @@ const footerLinks = {
   ],
   resources: [
     { name: "Blog", path: "/blog" },
-    { name: "Documentation", path: "https://doc.tokenalytic.com" },
+    { name: "Documentation", path: "https://docs.tokenalytic.com" },
     { name: "Support", path: "/support" }
   ]
 };
@@ -48,7 +48,7 @@ const studioMenuList = [
   },
   {
     name: "Document",
-    path: "https://doc.tokenalytic.com",
+    path: "https://docs.tokenalytic.com",
   },
   {
     name: "Pricing",
@@ -66,7 +66,7 @@ const MainLayout = () => {
     switch (domain) {
       case "tokenalytic.com":
         return homeMenuList;
-      case "app.tokenalytic.com":
+      case "studio.tokenalytic.com":
         return studioMenuList;
       default:
         return studioMenuList;

@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import { Layout, Drawer, Button, Tabs } from "antd";
 import MyDrawer from "./drawer";
 import styles from "./index.module.scss";
-const { Content,Header } = Layout;
+const { Content } = Layout;
 import { getUserInfo } from "@/utils/common";
 
 const Explorer: React.FC = () => {

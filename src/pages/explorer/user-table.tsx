@@ -70,8 +70,8 @@ const UserTokenTable = () => {
     // showQuickJumper: true, // Allow quick jump to page
   };
 
-  const sleep = (ms: number) =>
-    new Promise((resolve) => setTimeout(resolve, ms));
+  // const sleep = (ms: number) =>
+  //   new Promise((resolve) => setTimeout(resolve, ms));
   useEffect(() => {
     if (!userConfig.indicators || !userConfig.tokens) return;
 

@@ -1,4 +1,4 @@
-import { svgMap } from "@/constants/svg";
+
 import { Button, Divider, InputNumber, Radio, Typography, Modal } from "antd";
 import { QRCodeSVG } from "qrcode.react";
 import { useImmer } from "use-immer";
@@ -15,7 +15,6 @@ import styles from "./index.module.scss";
 import { getUserInfo, updateUserInfo } from "@/utils/common";
 import { useEffect, useMemo } from "react";
 import { CheckCircleFilled } from "@ant-design/icons";
-import AlertModal,{AlertType} from "@/components/common/alter-model";
 const { Paragraph, Text } = Typography;
 
 interface Payment {
@@ -38,8 +37,6 @@ const Subscribe = () => {
   const [selectedAddress, setSelectedAddress] = useImmer("");
   const [currentPlan, setCurrentPlan] = useImmer(1);
   const userInfo = getUserInfo();
-  const [alertVisible, setAlertVisible] = useImmer(false);
-  const [alertType, setAlertType] = useImmer<AlertType>("upgrade");
 
   useEffect(() => {
     if (userInfo) {
@@ -286,11 +283,7 @@ const Subscribe = () => {
       >
         {paymentModalContent}
       </Modal>
-      <AlertModal
-        type={alertType}
-        visible={alertVisible}
-        onClose={() => setAlertVisible(false)}
-      />
+      
     </div>
   );
 };

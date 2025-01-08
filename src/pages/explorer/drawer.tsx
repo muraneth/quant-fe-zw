@@ -1,4 +1,4 @@
-import { Tree, Button } from "antd";
+import { Tree } from "antd";
 import type { DataNode } from "antd/es/tree";
 
 import { useImmer } from "use-immer";
@@ -17,7 +17,6 @@ const MyDrawer: React.FC = () => {
   const [categories, setCategories] = useImmer<Array<IndicatorCategory>>([]);
   const [checkedKeys, setCheckedKeys] = useImmer<React.Key[]>([]);
   const setDraftData = useExplorerStore.use.setDraftData();
-  const userConfig = useExplorerStore.use.userConfig();
   useRequest(() => getUserConfig(), {
     onSuccess: (res) => {
       const keys = res.indicators.map((ind) => ind.handle_name);
