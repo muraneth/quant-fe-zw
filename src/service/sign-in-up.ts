@@ -45,3 +45,13 @@ export function signInService(params: SignInReqDto): Promise<SignInResDto> {
     params: removeSpacesFromObject(params),
   });
 }
+// group.POST("/googleLogin", func(ctx *gin.Context) {
+//   idToken := ctx.GetHeader("Idtoken")
+//   fmt.Println("idToken", idToken)
+export function signInWithGoogle(params: { token: string }) {
+  return request({
+    url: "/data/api/user/googleLogin",
+    method: "POST",
+    params: removeSpacesFromObject(params),
+  });
+}
