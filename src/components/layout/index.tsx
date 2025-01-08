@@ -9,48 +9,50 @@ const { Footer } = Layout;
 const homeMenuList = [
   {
     name: "Home",
-    path: "/home",
+    path: "https://tokenalytic.com/home",
   },
   {
     name: "Studio",
     path: "https://studio.tokenalytic.com/explorer",
   },
   {
-    name: "Document",
+    name: "Docs",
     path: "https://docs.tokenalytic.com",
   },
   {
+    name: "Blog",
+    path: "https://tokenalytic.com/blog",
+  },
+  {
     name: "Pricing",
-    path: "/pricing",  
+    path: "https://tokenalytic.com/pricing",
   },
 ];
 const footerLinks = {
   company: [
-    { name: "About Us", path: "/about" },
-    { name: "Contact", path: "/contact" },
+    { name: "About Us", path: "https://tokenalytic.com/about" },
+    { name: "Contact", path: "https://tokenalytic.com/contact" },
   ],
   resources: [
-    { name: "Blog", path: "/blog" },
+    { name: "Blog", path: "https://tokenalytic.com/blog" },
     { name: "Documentation", path: "https://docs.tokenalytic.com" },
+    { name: "Pricing", path: "https://tokenalytic.com/pricing" },
   ]
 };
 const studioMenuList = [
   {
     name: "Explorer",
-    path: "/explorer",
+    path: "https://studio.tokenalytic.com/explorer",
   },
   {
     name: "Studio",
-    path: "/studio?tab=chart&symbol=MSTR&handle_name=holder.all&chain=ethereum",
+    path: "https://studio.tokenalytic.com/studio?tab=chart&symbol=NPC&handle_name=holder.all&chain=ethereum",
   },
   {
-    name: "Document",
+    name: "Docs",
     path: "https://docs.tokenalytic.com",
   },
-  {
-    name: "Pricing",
-    path: "/pricing",
-  },
+  
 ];
 
 const MainLayout = () => {
@@ -107,7 +109,7 @@ const MainLayout = () => {
         </div>
         {landingPage ? (
           <div className={styles.right}>
-            <Button type="primary" href="/explorer">
+            <Button type="primary" href="https://studio.tokenalytic.com/explorer">
               Explore
             </Button>
           </div>

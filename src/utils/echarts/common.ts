@@ -151,7 +151,6 @@ export const commonOption = {
     bottom: "12%",
     containLabel: true,
   },
-  legend: {},
   graphic: [
     {
       type: 'text',
