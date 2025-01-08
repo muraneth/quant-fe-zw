@@ -1,6 +1,6 @@
 import { Outlet, useLocation } from "react-router-dom";
 import { Link } from "react-router-dom";
-import { Divider, Button,Layout } from "antd";
+import { Divider, Button, Layout } from "antd";
 import PersonalInfo from "./personal-info";
 import ErrorBoundary from "@/components/error-boundary";
 import styles from "./index.module.scss";
@@ -13,7 +13,7 @@ const homeMenuList = [
   },
   {
     name: "Studio",
-    path: "/explorer",
+    path: "https://studio.tokenalytic.com/studio?tab=chart&symbol=NPC&handle_name=holder.all&chain=ethereum",
   },
   {
     name: "Docs",
@@ -37,7 +37,7 @@ const footerLinks = {
     { name: "Blog", path: "https://tokenalytic.com/blog" },
     { name: "Documentation", path: "https://docs.tokenalytic.com" },
     { name: "Pricing", path: "https://tokenalytic.com/pricing" },
-  ]
+  ],
 };
 const studioMenuList = [
   {
@@ -52,7 +52,6 @@ const studioMenuList = [
     name: "Docs",
     path: "https://docs.tokenalytic.com",
   },
-  
 ];
 
 const MainLayout = () => {
@@ -109,7 +108,10 @@ const MainLayout = () => {
         </div>
         {landingPage ? (
           <div className={styles.right}>
-            <Button type="primary" href="https://studio.tokenalytic.com/explorer">
+            <Button
+              type="primary"
+              href="https://studio.tokenalytic.com/explorer"
+            >
               Explore
             </Button>
           </div>
@@ -119,7 +121,7 @@ const MainLayout = () => {
       </div>
 
       <Divider style={{ margin: 0 }} />
-      
+
       <main className={styles.main}>
         <ErrorBoundary>
           <Outlet />
@@ -133,7 +135,7 @@ const MainLayout = () => {
             <h3>Tokenalytic</h3>
             <p>Empowering crypto analytics for everyone</p>
           </div>
-          
+
           <div className={styles.footerSection}>
             <h4>Company</h4>
             <div className={styles.footerLinks}>
@@ -144,13 +146,18 @@ const MainLayout = () => {
               ))}
             </div>
           </div>
-          
+
           <div className={styles.footerSection}>
             <h4>Resources</h4>
             <div className={styles.footerLinks}>
-              {footerLinks.resources.map((link, index) => (
-                link.path.startsWith('http') ? (
-                  <a key={index} href={link.path} target="_blank" rel="noopener noreferrer">
+              {footerLinks.resources.map((link, index) =>
+                link.path.startsWith("http") ? (
+                  <a
+                    key={index}
+                    href={link.path}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
                     {link.name}
                   </a>
                 ) : (
@@ -158,25 +165,33 @@ const MainLayout = () => {
                     {link.name}
                   </Link>
                 )
-              ))}
+              )}
             </div>
           </div>
-          
+
           <div className={styles.footerSection}>
             <h4>Connect With Us</h4>
             <div className={styles.footerSocial}>
-              <a href="https://twitter.com/tokenalytic" target="_blank" rel="noopener noreferrer">
+              <a
+                href="https://twitter.com/tokenalytic"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
                 Twitter
               </a>
-              <a href="https://discord.gg/tokenalytic" target="_blank" rel="noopener noreferrer">
+              <a
+                href="https://discord.gg/tokenalytic"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
                 Discord
               </a>
             </div>
           </div>
         </div>
-        
-        <Divider style={{ margin: '24px 0' }} />
-        
+
+        <Divider style={{ margin: "24px 0" }} />
+
         <div className={styles.footerBottom}>
           <p>© {new Date().getFullYear()} Tokenalytic. All rights reserved.</p>
         </div>
