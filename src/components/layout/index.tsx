@@ -75,7 +75,7 @@ const MainLayout = () => {
   return (
     <div className={styles.layout}>
       <div className={styles.header}>
-        <a className={styles.left} href="/home">
+        <a className={styles.left} href="https://tokenalytic.com/home">
           Tokenalytic
         </a>
         <div className={styles.menu}>
