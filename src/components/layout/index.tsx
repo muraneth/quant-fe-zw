@@ -40,10 +40,10 @@ const footerLinks = {
   ],
 };
 const studioMenuList = [
-  {
-    name: "Explorer",
-    path: "/explorer",
-  },
+  // {
+  //   name: "Explorer",
+  //   path: "/explorer",
+  // },
   {
     name: "Studio",
     path: "/studio?tab=chart&symbol=NPC&handle_name=holder.all&chain=ethereum",
