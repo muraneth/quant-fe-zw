@@ -125,9 +125,9 @@ const MyDrawer: React.FC = () => {
       saveUserIndicator({
         indicators: newSelectedIndicators.map((ind) => ind.handle_name),
       });
-      setDraftData((draft) => {
-        draft.userConfig.indicators = newSelectedIndicators;
-      });
+      // setDraftData((draft) => {
+      //   draft.userConfig.indicators = newSelectedIndicators;
+      // });
     } catch (error) {
       console.error("Failed to save settings:", error);
       // You might want to add error handling here

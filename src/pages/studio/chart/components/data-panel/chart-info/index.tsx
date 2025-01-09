@@ -15,7 +15,7 @@ const ChartInfo = () => {
 
     return (
       <Tooltip title={description}>
-        <span style={{color:"gray"}}>{truncatedDescription}</span>
+        <span style={{ color: "#f5f5f5", fontWeight: "normal" }}>{truncatedDescription}</span>
       </Tooltip>
     );
   };

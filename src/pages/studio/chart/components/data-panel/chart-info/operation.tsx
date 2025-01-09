@@ -1,4 +1,3 @@
-import { StarOutlined, StarFilled } from "@ant-design/icons";
 import { useRequest } from "ahooks";
 import {
   collectIndicator,
@@ -6,7 +5,7 @@ import {
   getIndicatorList,
 } from "@/service/charts";
 import { useChartStore } from "@/store/charts";
-
+import CollectItem from "@/components/common/colletct";
 const ChartOperation = () => {
   const { symbol, chain } = useChartStore.use.tokenInfo();
   const { handle_name, collected } = useChartStore.use.indicatorInfo();
@@ -69,31 +68,9 @@ const ChartOperation = () => {
       runCollect(params);
     }
   };
-
   return (
-    <div
-      onClick={handleStarClick}
-      style={{
-        cursor: collectLoading || uncollectLoading ? "wait" : "pointer",
-        padding: "8px",
-      }}
-    >
-      {collected ? (
-        <StarFilled
-          style={{
-            color: "#fadb14",
-            opacity: collectLoading || uncollectLoading ? 0.5 : 1,
-          }}
-        />
-      ) : (
-        <StarOutlined
-          style={{
-            opacity: collectLoading || uncollectLoading ? 0.5 : 1,
-          }}
-        />
-      )}
-    </div>
-  );
+    <CollectItem handleStarClick={handleStarClick} collected={collected} loading={collectLoading ||uncollectLoading} />
+  )
 };
 
 export default ChartOperation;

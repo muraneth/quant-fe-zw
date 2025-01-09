@@ -24,6 +24,9 @@ export interface SignInReqDto {
   email: string;
   password: string;
 }
+export interface GoogleSignInReqDto {
+  id_token: string;
+}
 
 export interface SignInResDto {
   uid: string;
@@ -43,5 +46,13 @@ export function signInService(params: SignInReqDto): Promise<SignInResDto> {
     url: "/data/api/user/login",
     method: "POST",
     params: removeSpacesFromObject(params),
+  });
+}
+
+export function googleSignInService(params: GoogleSignInReqDto) {
+  return request({
+    url: "/data/api/user/googleLogin",
+    method: "POST",
+    params:  removeSpacesFromObject(params),
   });
 }

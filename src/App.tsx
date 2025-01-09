@@ -7,11 +7,15 @@ import SignIn from "./pages/sign-in";
 import SignUp from "./pages/sign-up";
 import Subscribe from "./pages/subscribe";
 import Explorer from "./pages/explorer";
+import { GoogleOAuthProvider } from '@react-oauth/google';
 
 const Studio = React.lazy(() => import("./pages/studio"));
+const CLIENT_ID = '586510859498-n781b8iru79em2he06oevvo65alr719r.apps.googleusercontent.com';
 
 function App() {
   return (
+    <GoogleOAuthProvider clientId={CLIENT_ID}>
+
     <ConfigProvider
       theme={{
         token: {
@@ -43,6 +47,7 @@ function App() {
         <Route path="*" element={<Navigate to="/home" />} />
       </Routes>
     </ConfigProvider>
+    </GoogleOAuthProvider>
   );
 }
 

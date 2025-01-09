@@ -13,4 +13,5 @@ export interface TokenBaseInfo {
     chain: string;
     total_supply: number;
     create_time: string;
+    collected: boolean;
 }

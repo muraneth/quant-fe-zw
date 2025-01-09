@@ -5,7 +5,7 @@ import { useRequest } from "ahooks";
 import { signInService, SignInReqDto } from "@/service/sign-in-up";
 import { signInSuccessAction } from "@/utils/common";
 import styles from "./index.module.scss";
-
+import { MyGoogleLogin } from "@/components/google";
 const SignIn = () => {
   const { run, loading } = useRequest(signInService, {
     manual: true,
@@ -24,9 +24,9 @@ const SignIn = () => {
       <div className={styles.signInContent}>
         {svgMap["signInLogo"]}
         <span className={styles.title}>Sign In</span>
-        <Button className={styles.googleBtn} icon={svgMap["google"]}>
-          Sign in with Google
-        </Button>
+        {/* <Button className={styles.googleBtn} icon={svgMap["google"]}> */}
+        <MyGoogleLogin />
+        {/* </Button> */}
         <div className={styles.or}>
           <div className={styles.orLine} />
           <div className={styles.orText}>or</div>
