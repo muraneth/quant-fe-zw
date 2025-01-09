@@ -140,7 +140,7 @@ const Subscribe = () => {
     if (isCurrentPlan) {
       return (
         <div className={`${styles.btn} ${styles.currentPlan}`}>
-          <CheckCircleFilled />
+          <CheckCircleFilled style={{ marginRight: 4}} />
           <div>Current Plan</div>
         </div>
       );

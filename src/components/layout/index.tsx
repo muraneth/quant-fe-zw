@@ -73,54 +73,55 @@ const MainLayout = () => {
 
   return (
     <div className={styles.layout}>
-      <div className={styles.header}>
-        <a className={styles.left} href="https://tokenalytic.com/home">
-          Tokenalytic
-        </a>
-        <div className={styles.menu}>
-          {getMenuList().map((item, index) => {
-            const activePath = pathname === `/${item.name}`.toLowerCase();
-            const outsidePath = item.path.startsWith("http");
-            if (outsidePath) {
+      <div className={styles.headerWrapper}>
+        <div className={styles.header}>
+          <a className={styles.left} href="https://tokenalytic.com/home">
+            Tokenalytic
+          </a>
+          <div className={styles.menu}>
+            {getMenuList().map((item, index) => {
+              const activePath = pathname === `/${item.name}`.toLowerCase();
+              const outsidePath = item.path.startsWith("http");
+              if (outsidePath) {
+                return (
+                  <a
+                    className={styles.menuItem}
+                    key={index}
+                    href={item.path}
+                    target="_blank"
+                  >
+                    {item.name}
+                  </a>
+                );
+              }
               return (
-                <a
-                  className={styles.menuItem}
+                <Link
+                  className={classNames(styles.menuItem, {
+                    [styles.menuItemActive]: activePath,
+                  })}
                   key={index}
-                  href={item.path}
-                  target="_blank"
+                  to={item.path}
                 >
                   {item.name}
-                </a>
+                </Link>
               );
-            }
-            return (
-              <Link
-                className={classNames(styles.menuItem, {
-                  [styles.menuItemActive]: activePath,
-                })}
-                key={index}
-                to={item.path}
-              >
-                {item.name}
-              </Link>
-            );
-          })}
-        </div>
-        {landingPage ? (
-          <div className={styles.right}>
-            <Button
-              type="primary"
-              href="https://studio.tokenalytic.com/explorer"
-            >
-              Explore
-            </Button>
+            })}
           </div>
-        ) : (
-          <PersonalInfo />
-        )}
+          {landingPage ? (
+            <div className={styles.right}>
+              <Button
+                type="primary"
+                href="https://studio.tokenalytic.com/explorer"
+              >
+                Explore
+              </Button>
+            </div>
+          ) : (
+            <PersonalInfo />
+          )}
+        </div>
+        <Divider style={{ margin: 0 }} />
       </div>
-
-      <Divider style={{ margin: 0 }} />
 
       <main className={styles.main}>
         <ErrorBoundary>
