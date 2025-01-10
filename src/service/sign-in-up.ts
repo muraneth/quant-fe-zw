@@ -24,6 +24,9 @@ export interface SignInReqDto {
   email: string;
   password: string;
 }
+export interface GoogleSignInReqDto {
+  id_token: string;
+}
 
 export interface SignInResDto {
   uid: string;
@@ -45,10 +48,8 @@ export function signInService(params: SignInReqDto): Promise<SignInResDto> {
     params: removeSpacesFromObject(params),
   });
 }
-// group.POST("/googleLogin", func(ctx *gin.Context) {
-//   idToken := ctx.GetHeader("Idtoken")
-//   fmt.Println("idToken", idToken)
-export function signInWithGoogle(params: { token: string }) {
+
+export function googleSignInService(params: GoogleSignInReqDto) {
   return request({
     url: "/data/api/user/googleLogin",
     method: "POST",

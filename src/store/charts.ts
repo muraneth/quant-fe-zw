@@ -15,6 +15,7 @@ interface ChartStore {
     symbol: string;
     chain: string;
     create_time: string;
+    collected: boolean;
     // start_time: string;
     // end_time: string;
   };
@@ -58,7 +59,7 @@ const initialState = {
     symbol: "",
     chain: "",
     create_time: "",
-
+    collected:false
   },
   selectedTimeRange: {
     start_time: "",

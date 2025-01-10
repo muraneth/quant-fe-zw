@@ -21,7 +21,8 @@ import type { TokenBaseInfo } from "@/service/base";
 import classNames from "classnames";
 import styles from "./index.module.scss";
 import { formatNumber, getDefaultExtraParams } from "@/utils/common";
-
+import CollectItem from "@/components/common/colletct";
+import { saveUserTokens,deleteUserToken } from "@/service/explorer";
 const chains = [
   { key: "ethereum", label: "Ethereum" },
   { key: "base", label: "Base" },
@@ -150,6 +151,44 @@ const Header = () => {
       wait: 200,
     }
   );
+  const { run: runSaveUserToken,loading:isSaveTokenLoging } = useRequest(saveUserTokens, {
+    manual: true,
+    onSuccess: () => {
+      console.log("save token success");
+      setDraftData((draft) => {
+        draft.tokenInfo.collected = true;
+      })
+    },
+  });
+  const { run: runDeleteUserToken,loading:isDeleteTokenLoging } = useRequest(deleteUserToken, {
+    manual: true,
+    onSuccess: () => {
+      console.log("delete token success");
+      setDraftData((draft) => {
+        draft.tokenInfo.collected = false;
+      })
+    },
+  });
+  const handleStarClick = () => {
+    if (!tokenInfo||!tokenInfo.symbol) return;
+    if (tokenInfo.collected){
+      runDeleteUserToken(
+        {
+          symbol: tokenInfo.symbol,
+          chain: tokenInfo.chain,
+        }
+    );
+    }else {
+      runSaveUserToken({ tokens:[
+        {
+          symbol: tokenInfo.symbol,
+          chain: tokenInfo.chain,
+        }
+      
+      ]
+    });}
+    
+  }
 
   React.useEffect(() => {
     if (currentToken) {
@@ -158,6 +197,7 @@ const Header = () => {
           symbol: currentToken.symbol,
           chain: currentToken.chain,
           create_time: currentToken.create_time,
+          collected: currentToken.collected,
         };
       });
       if (hasUrlInitRef.current.resetFlag) {
@@ -312,6 +352,7 @@ const Header = () => {
           );
         })}
       </div>
+      <CollectItem handleStarClick={handleStarClick} collected={tokenInfo.collected} loading={isSaveTokenLoging||isDeleteTokenLoging} />
     </div>
   );
 };

@@ -1,12 +1,13 @@
 import { Button, Form, Input } from "antd";
 import type { FormProps } from "antd";
 import { useRequest } from "ahooks";
-import { signUpService, signInService } from "@/service/sign-in-up";
+import { signUpService, signInService,googleSignInService } from "@/service/sign-in-up";
 import type { SignUpReqDto } from "@/service/sign-in-up";
 import { svgMap } from "@/constants/svg";
 import { passwordRule } from "@/constants/regexp";
 import { signInSuccessAction } from "@/utils/common";
 import styles from "./index.module.scss";
+import { MyGoogleLogin } from "@/components/google";
 
 const SignUp = () => {
   const [form] = Form.useForm();
@@ -52,12 +53,16 @@ const SignUp = () => {
     delete values.passwordConfirm;
     runSignUp(values);
   };
+  
+
 
   return (
     <div className={styles.signUp}>
       <div className={styles.signUpContent}>
         {svgMap["signInLogo"]}
         <span className={styles.title}>Sign Up</span>
+        <MyGoogleLogin />
+
         <Form
           className={styles.signUpForm}
           name="signUp"

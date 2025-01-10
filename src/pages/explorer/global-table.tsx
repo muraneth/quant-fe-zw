@@ -300,7 +300,7 @@ const TokenTable = () => {
           </div>
      
       <Table
-        rowSelection={rowSelection}
+        // rowSelection={rowSelection}
         columns={columns}
         dataSource={tokenDetailList}
         rowKey={(record) =>

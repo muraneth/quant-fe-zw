@@ -1,0 +1,11 @@
+.googleBtn {
+    margin-top: 32px;
+    width: 224px;
+    height: 40px;
+
+    :global {
+      .ant-btn-icon {
+        margin-right: 16px;
+      }
+    }
+  }
