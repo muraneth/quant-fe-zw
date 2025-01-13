@@ -20,7 +20,7 @@ export const getPriceSeries = (priceList, klineType) => {
     switch (klineType) {
       case "kline":
         return {
-          name: "KLine",
+          name: "Price",
           data: parsePriceToKlineSeriesData(priceList),
           type: "candlestick",
           itemStyle: {
@@ -77,8 +77,10 @@ export const getIndenpendYAxis = () => {
 
 export const getToolTipFormater = (params) => {
   // refer to : https://echarts.apache.org/handbook/zh/how-to/interaction/drag/#%E6%B7%BB%E5%8A%A0-tooltip-%E7%BB%84%E4%BB%B6
-  let result = `<strong>Date:</strong> ${params[0].axisValue}<br/>`;
-  // console.log("params", params);
+  // let result = `<strong>Date:</strong> ${params[0].axisValue}<br/>`;
+  let result = `<div style="font-size: 12px; line-height: 1.2; padding: 0px; margin: 0;">
+                  <strong>Date:</strong> ${params[0].axisValue}<br/>`;
+
 
   params.forEach((param) => {
     if (param.seriesType === "candlestick") {
@@ -87,23 +89,36 @@ export const getToolTipFormater = (params) => {
       const percentageChange = (((close - open) / open) * 100).toFixed(2);
       const amplitude = (((high - low) / low) * 100).toFixed(2);
       result += `
-              <div style="margin: 5px 0; line-height: 1.5;">
+              <div style="margin: 2px 0; line-height: 1.2;">
                 <strong>${param.seriesName}:</strong> 
-                <span style="color: #999;">O:</span> ${formatNumber(open)} 
-                <span style="color: #999;">C:</span> ${formatNumber(close)} 
-                <span style="color: #999;">L:</span> ${formatNumber(low)} 
-                <span style="color: #999;">H:</span> ${formatNumber(high)}
+                <div style="padding-left: 10px;">
+                   <span style="color: #999; font-size: 10px;">Open:</span>
+                   <span style="font-size: 10px;">${formatNumber(open)}</span>
+                </div>
+                <div style="padding-left: 10px;">
+                   <span style="color: #999; font-size: 10px;">Close:</span>
+                   <span style="font-size: 10px;">${formatNumber(close)}</span>
+                </div>
+                <div style="padding-left: 10px;">
+
+                   <span style="color: #999; font-size: 10px;">Low:</span>
+                   <span style="font-size: 10px;">${formatNumber(low)}</span>
+                </div>
+                <div style="padding-left: 10px;">
+                   <span style="color: #999; font-size: 10px;">High:</span>
+                   <span style="font-size: 10px;">${formatNumber(high)}</span>
+                </div>
+                 <div style="padding-left: 10px;">
+                   <span style="color: #999; font-size: 10px;">Change:</span>
+                  <span style="color: ${percentageChange >= 0 ? "green" : "red"};">${percentageChange}%</span>
+                </div>
+                <div style="padding-left: 10px;">
+                   <span style="color: #999; font-size: 10px;">Amplitude:</span>
+                  <span  style="font-size: 10px;">${amplitude}%</span>
+                </div>
+
               </div>
-              <div>
-              <div>
-              <strong>Change:</strong> 
-              <span style="color: ${percentageChange >= 0 ? "green" : "red"};">${percentageChange}%</span>
-              </div>
-              <div>
-              <strong>Amplitude:</strong>
-              <span">${amplitude}%</span>
-              </div>
-              </div>
+              
             `;
     } else {
       // For other series, just display series name and value
@@ -116,7 +131,6 @@ export const getToolTipFormater = (params) => {
           `;
       } else if (param.axisType === "xAxis.value") {
         //skip
-
       }
       else {
         result += `
@@ -127,6 +141,7 @@ export const getToolTipFormater = (params) => {
       }
     }
   });
+  
   return result;
 };
 export const commonOption = {
