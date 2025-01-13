@@ -1,7 +1,7 @@
 import { Button, Form, Input } from "antd";
 import type { FormProps } from "antd";
 import { useRequest } from "ahooks";
-import { signUpService, signInService,googleSignInService } from "@/service/sign-in-up";
+import { signUpService, signInService } from "@/service/sign-in-up";
 import type { SignUpReqDto } from "@/service/sign-in-up";
 import { svgMap } from "@/constants/svg";
 import { passwordRule } from "@/constants/regexp";
@@ -53,8 +53,6 @@ const SignUp = () => {
     delete values.passwordConfirm;
     runSignUp(values);
   };
-  
-
 
   return (
     <div className={styles.signUp}>

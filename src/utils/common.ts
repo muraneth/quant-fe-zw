@@ -32,7 +32,7 @@ export function signInSuccessAction(userInfo: SignInResDto) {
     );
     const searchIns = new URLSearchParams(location.search);
     const redirectUrl = searchIns.get("redirectUrl");
-    window.location.href = redirectUrl || "/explorer";
+    window.location.href = redirectUrl || "/studio?tab=chart&symbol=NPC&handle_name=holder.all&chain=ethereum"
   } catch (err) {
     console.error(err);
   }
@@ -103,18 +103,18 @@ export interface ExtractedTokenMarketInfoItem {
 export function extractedTokenMarketInfo(
   tokenMarketInfo?: TokenDetailInfo
 ): Array<ExtractedTokenMarketInfoItem> {
-  if (!tokenMarketInfo||!tokenMarketInfo.indicator_snaps) return [];
+  if (!tokenMarketInfo || !tokenMarketInfo.indicator_snaps) return [];
   return tokenMarketInfo.indicator_snaps.map((item) => {
     if (!item.data || item.data.length < 7) {
       return {
-        title: item.name, 
+        title: item.name,
         handle_name: item.handle_name,
         chart_type: item.type,
       }
     }
     var chg = item.data[6].value - item.data[5].value;
-    var chgPercentage =0;
-    if (item.data[5].value!=0){
+    var chgPercentage = 0;
+    if (item.data[5].value != 0) {
       chgPercentage = chg / item.data[5].value;
     }
     return {
@@ -122,11 +122,11 @@ export function extractedTokenMarketInfo(
       value: item.data[6].value,
       handle_name: item.handle_name,
       chart_type: item.type,
-      type: chg > 0 ? "rise" :chg < 0 ? "fall" : "neutral",
+      type: chg > 0 ? "rise" : chg < 0 ? "fall" : "neutral",
       percentage: numberToPercentage(chgPercentage),
     };
   })
- 
+
 }
 
 export const formatNumber = (data: any) => {

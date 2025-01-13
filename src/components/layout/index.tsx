@@ -110,9 +110,9 @@ const MainLayout = () => {
           <div className={styles.right}>
             <Button
               type="primary"
-              href="https://studio.tokenalytic.com/explorer"
+              href="https://studio.tokenalytic.com/studio?tab=chart&symbol=NPC&handle_name=holder.all&chain=ethereum"
             >
-              Explore
+              Run App
             </Button>
           </div>
         ) : (

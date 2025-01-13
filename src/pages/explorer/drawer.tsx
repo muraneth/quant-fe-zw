@@ -9,14 +9,12 @@ import {
 } from "@/service/explorer";
 import { useRequest } from "ahooks";
 import { Indicator, IndicatorCategory } from "@/service/charts";
-import { useExplorerStore } from "@/store/explorer";
 import { getUserInfo } from "@/utils/common";
 const MyDrawer: React.FC = () => {
   const userInfo = getUserInfo();
 
   const [categories, setCategories] = useImmer<Array<IndicatorCategory>>([]);
   const [checkedKeys, setCheckedKeys] = useImmer<React.Key[]>([]);
-  const setDraftData = useExplorerStore.use.setDraftData();
   useRequest(() => getUserConfig(), {
     onSuccess: (res) => {
       const keys = res.indicators.map((ind) => ind.handle_name);
@@ -137,12 +135,10 @@ const MyDrawer: React.FC = () => {
   const upgradeHit = () => {
     return (
       <div>
-        {userInfo.level <=2 ? (
+        {userInfo.level <= 2 ? (
           <div>
             If you want more indicators, you can upgrade your plan
-            <a  href="/pricing">
-              Upgrade plan
-            </a>
+            <a href="/pricing">Upgrade plan</a>
           </div>
         ) : null}
       </div>
@@ -152,8 +148,9 @@ const MyDrawer: React.FC = () => {
     <div>
       <div style={{ display: "flex", flexDirection: "column" }}>
         <h3>Choose Indicator</h3>
-        <div style={{marginBottom:"10px",color:"gray"}}>{upgradeHit()}</div>
-
+        <div style={{ marginBottom: "10px", color: "gray" }}>
+          {upgradeHit()}
+        </div>
       </div>
 
       <Tree
