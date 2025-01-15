@@ -7,7 +7,6 @@ import MyDrawer from "./drawer";
 import { getUserInfo } from "@/utils/common";
 import StickyBox from "react-sticky-box";
 import styles from "./index.module.scss";
-import { calc } from "antd/es/theme/internal";
 
 const { Content } = Layout;
 
