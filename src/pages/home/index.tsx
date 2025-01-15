@@ -6,11 +6,11 @@ import { coinImgList } from "./coinlist";
 // 走请求拿图片效果不好
 // 需要提供 svg 的图，目前的 figma 导出的 svg 有问题
 const chartImgList = [
-  { path: "/chart_1.png" },
-  { path: "/chart_2.png" },
-  { path: "/chart_3.png" },
-  { path: "/chart_4.png" },
-  { path: "/chart_5.png" },
+  { path: "/chart1.png" },
+  { path: "/chart2.png" },
+  { path: "/chart3.png" },
+  { path: "/chart4.png" },
+  { path: "/chart5.png" },
 ];
 
 // const buttomList = [
