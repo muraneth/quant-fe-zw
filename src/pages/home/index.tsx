@@ -46,7 +46,7 @@ const LangingPage = () => {
             <h3>We mainly focus on meme coins that</h3>
             <h3>have 100% token in circulation</h3>
             <div>
-              <Button type="primary" href="https://studio.tokenalytic.com/explorer">
+              <Button type="primary" href="https://studio.tokenalytic.com/studio?tab=chart&symbol=NPC&handle_name=holder.all&chain=ethereum">
                 Get Started
               </Button>
             </div>
