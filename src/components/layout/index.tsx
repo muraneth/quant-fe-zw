@@ -20,8 +20,8 @@ const homeMenuList = [
     path: "https://docs.tokenalytic.com",
   },
   {
-    name: "Blog",
-    path: "/blog",
+    name: "Video",
+    path: "https://www.youtube.com/channel/UC6Dxbq79XoCv14vlvI2TdWg",
   },
   {
     name: "Pricing",
@@ -34,7 +34,7 @@ const footerLinks = {
     { name: "Contact", path: "https://tokenalytic.com/contact" },
   ],
   resources: [
-    { name: "Blog", path: "https://tokenalytic.com/blog" },
+    { name: "Video", path: "https://www.youtube.com/channel/UC6Dxbq79XoCv14vlvI2TdWg" },
     { name: "Documentation", path: "https://docs.tokenalytic.com" },
     { name: "Pricing", path: "https://tokenalytic.com/pricing" },
   ],
@@ -51,6 +51,10 @@ const studioMenuList = [
   {
     name: "Docs",
     path: "https://docs.tokenalytic.com",
+  },
+  {
+    name: "Video",
+    path: "https://www.youtube.com/channel/UC6Dxbq79XoCv14vlvI2TdWg",
   },
 ];
 
