@@ -14,7 +14,7 @@ export function yBarTransform({ indicatorDetailList, priceList, klineType }) {
       },
     },
     xAxis: [
-      getXAxis(indicatorDetailList),
+      getXAxis(priceList),
     ],
 
     yAxis: [],
