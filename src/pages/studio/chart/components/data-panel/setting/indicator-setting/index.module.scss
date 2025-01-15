@@ -76,6 +76,23 @@
         height: 23px;
         line-height: 23px;
       }
+      .fr-form .fr-inline-field .ant-form-item-control {
+        width: 120px;
+      }
+      .anticon{
+        color:rgba(182, 178, 178, 0.85);
+      }
+    }
+    :where(.css-1x0dypw).ant-form-item .ant-form-item-label >label {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      max-width: 100%;
+      height: 32px;
+      color: rgba(229, 226, 226, 0.88);
+      font-size: 14px;
     }
   }
+ 
+ 
 }

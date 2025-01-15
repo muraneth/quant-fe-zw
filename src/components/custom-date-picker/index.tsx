@@ -22,8 +22,8 @@ const CustomDatePicker = (props: WidgetProps) => {
     <MuiHOC>
       <div style={{ marginTop: 5, display: "flex" }}>
         {tooltip && (
-          <Tooltip title={tooltip}>
-            <QuestionCircleOutlined />
+          <Tooltip title={tooltip} >
+            <QuestionCircleOutlined  style={{color: "rgba(182, 178, 178, 0.85);"}}/>
           </Tooltip>
         )}
         <div className={styles.customDatePicker}>

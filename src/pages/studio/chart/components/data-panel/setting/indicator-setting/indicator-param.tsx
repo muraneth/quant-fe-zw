@@ -172,7 +172,7 @@ const IndicatorParam = () => {
                 handleExtraChange(allValues);
               },
             }}
-            style={{ marginLeft: 24 }}
+            style={{ marginLeft: 24,color: 'gray' }}
           />
           <Button
             className={styles.saveParam}
