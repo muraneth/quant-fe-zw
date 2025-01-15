@@ -4,6 +4,7 @@
   .setting {
     display: flex;
     align-items: center;
+    color: rgb(194, 118, 26);
 
     .baseSetting {
       display: flex;
@@ -76,6 +77,22 @@
         height: 23px;
         line-height: 23px;
       }
+      .fr-form .fr-inline-field .ant-form-item-control {
+        width: 120px;
+      }
+      .fr-form .fr-field input{
+        color: rgba(255, 255, 255, 0.85)!important;
+      }
+      .fr-form .fr-field label,
+      .fr-form .fr-field .ant-input ,
+      .ant-input-number-handler-up-inner,
+      .ant-input-number-handler-down-inner,
+      .ant-form-item-tooltip{
+        color:  rgba(182, 178, 178, 0.85)!important;
+      }
     }
+    
   }
+ 
+ 
 }

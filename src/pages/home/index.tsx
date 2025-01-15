@@ -45,12 +45,13 @@ const LangingPage = () => {
           <div className={styles.desc}>
             <h3>We mainly focus on meme coins that</h3>
             <h3>have 100% token in circulation</h3>
-            <div>
-              <Button type="primary" href="https://studio.tokenalytic.com/explorer">
+            
+          </div>
+          <div style={{marginTop: '20px'}}>
+              <Button type="primary" href="https://studio.tokenalytic.com/studio?tab=chart&symbol=NPC&handle_name=holder.all&chain=ethereum">
                 Get Started
               </Button>
             </div>
-          </div>
         </div>
         <Carousel className={styles.chartImgList} autoplay autoplaySpeed={3000}>
           {chartImgList.map((item, index) => {

@@ -144,8 +144,8 @@ export const formatNumber = (data: any) => {
     return (numData / 1000000000).toFixed(1) + "B";
   } else if (Math.abs(numData) > 1000000) {
     return (numData / 1000000).toFixed(1) + "M";
-  } else if (Math.abs(numData) > 1000) {
-    return (numData / 1000).toFixed(1) + "K";
+  // } else if (Math.abs(numData) > 1000) {
+  //   return (numData / 1000).toFixed(1) + "K";
   } else if (Math.abs(numData) > 1) {
     return numData.toFixed(2);
   } else if (Math.abs(numData) > 0.01) {
