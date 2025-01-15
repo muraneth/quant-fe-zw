@@ -25,21 +25,21 @@
       flex-direction: column;
       padding-right: 20px;
       cursor: pointer;
-  
+
       .skeleton {
         display: flex;
         flex-wrap: wrap;
       }
-  
+
       .leftTop {
         display: flex;
         align-items: center;
-  
+
         .logo {
           width: 16px;
           height: 16px;
         }
-  
+
         .name {
           margin: 0 0 0 8px;
           font-weight: 500;
@@ -48,12 +48,12 @@
           color: rgba(255, 255, 255, 0.85);
           font-family: "SF Pro Display";
         }
-  
+
         .arrow {
           margin-left: 8px;
         }
       }
-  
+
       .leftBottom {
         color: rgba(255, 255, 255, 0.45);
       }
@@ -71,7 +71,7 @@
       cursor: pointer; /* Changes the cursor to a pointer */
       transition: background-color 0.3s, transform 0.3s; /* Smooth hover effect */
     }
-    
+
     .itemInfo:hover {
       background-color: #393737; /* Light background on hover */
       transform: scale(1.05); /* Slight zoom effect */
@@ -114,7 +114,7 @@
   width: 400px;
   display: flex;
   flex-direction: column;
-  
+
   .content {
     overflow-y: auto;
     margin-top: 16px;
@@ -194,34 +194,34 @@
   }
   .chainTabs {
     margin-bottom: 16px;
-    
+
     :global {
       .ant-tabs-nav {
         margin-bottom: 0;
       }
-      
+
       .ant-tabs-tab {
         color: rgba(255, 255, 255, 0.65);
-        
+
         &.ant-tabs-tab-active {
           color: #fff;
         }
       }
       .ant-tabs-tab {
         color: rgba(255, 255, 255, 0.45); // Unselected tab color
-        
+
         &:hover {
           color: rgba(255, 255, 255, 0.85); // Hover color
         }
       }
-  
+
       // Selected tab text color
       .ant-tabs-tab-active {
         .ant-tabs-tab-btn {
           color: #1890ff !important; // Active tab color (Ant Design's primary blue)
         }
       }
-  
+
       // Tab ink bar color (the line under the selected tab)
       .ant-tabs-ink-bar {
         background: #1890ff; // Match the active text color

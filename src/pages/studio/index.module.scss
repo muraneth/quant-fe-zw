@@ -1,6 +1,6 @@
 .studio {
   width: 100%;
-  
+  padding-bottom: 20px;
 
   :global {
     .ant-tabs >.ant-tabs-nav .ant-tabs-nav-wrap {
@@ -11,9 +11,12 @@
     }
   }
 
-  .segmented {
-    height: 40px;
-    line-height: 40px;
+  .headerWrapper {
+    position: -webkit-sticky;
+    position: sticky;
+    top: 0px;
+    background: var(--primary-content-color);
+    z-index: 999;
   }
 }
 .custom-tabs {

@@ -18,7 +18,7 @@ const Charts = () => {
     <div className={styles.charts}>
       <div className={styles.content}>
         <Search />
-        <Divider type="vertical" style={{ height: "100vh", margin: 0 }} />
+        <Divider type="vertical" style={{ height: "calc(100% + 20px)", margin: 0 }} />
         <DataPanel />
       </div>
     </div>
