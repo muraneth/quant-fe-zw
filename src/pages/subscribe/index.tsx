@@ -27,7 +27,9 @@ interface PaymentProps {
 }
 
 const Subscribe = () => {
-  const [plans, setPlans] = useImmer([{}] as Array<Plan>);
+  // const [plans, setPlans] = useImmer([{}] as Array<Plan>);
+  const [basePlans, setBasePlans] = useImmer([] as Plan[]);
+  const [advPlans, setAdvPlans] = useImmer([] as Plan[]);
   const [isModalVisible, setIsModalVisible] = useImmer(false);
   const [selectedPlanId, setSelectedPlanId] = useImmer<number | null>(null);
   const [selectedPlan, setSelectedPlan] = useImmer<Plan | null>(null);
@@ -46,7 +48,11 @@ const Subscribe = () => {
 
   useRequest(() => getPlans(), {
     onSuccess: (res) => {
-      setPlans(res);
+      // setPlans(res);
+      // first 3 plans are base plans
+      setBasePlans(res.slice(0, 3));
+      // the rest are advanced plans
+      setAdvPlans(res.slice(3));
     },
   });
 
@@ -104,6 +110,10 @@ const Subscribe = () => {
     setSelectedPlanId(planId);
     setIsModalVisible(true);
   };
+  const handleContactClick = () => {
+
+    window.open(`https://t.me/mura202211`, '_blank');
+  };
 
   const handleModalClose = () => {
     setIsModalVisible(false);
@@ -152,6 +162,14 @@ const Subscribe = () => {
         </div>
       );
     }
+    if (plan.type==='custom') {
+      return (
+        <div className={styles.btn} onClick={() => handleContactClick()}>
+          Contact
+        </div>
+      );
+    }
+
     return (
       <div className={styles.btn} onClick={() => handleSubscribeClick(plan.id)}>
         Subscribe
@@ -242,6 +260,30 @@ const Subscribe = () => {
       calculateTotal,
     ]
   );
+  const renderPlans = (plans: Plan[]) => {
+    return plans.map((plan) => (
+      <div key={plan.id} className={styles.item}>
+        <div className={styles.header}>
+          <span className={styles.headerTitle}>{plan.title}</span>
+          {plan.isPopolar && (
+            <span className={styles.popolar}>MOST POPULAR</span>
+          )}
+        </div>
+        <div className={styles.priceInfo}>
+          <span>${plan.price}</span>
+          <span>/{plan.util}</span>
+        </div>
+        <div className={styles.descList}>
+          {plan.desc?.map((Idesc) => (
+            <p key={Idesc.id}>
+            <span className={styles.bullet}>•</span> {Idesc.title}
+          </p>
+          ))}
+        </div>
+        {renderSubscribeButton(plan)}
+      </div>
+    ));
+  }
 
   return (
     <div className={styles.subscribe}>
@@ -250,27 +292,14 @@ const Subscribe = () => {
           {/* <div>{svgMap["price"]}</div> */}
           <div className={styles.title}>Easy pay in USDT using Layer2</div>
         </div>
-        <div className={styles.subscribeList}>
-          {plans?.map((plan) => (
-            <div key={plan.id} className={styles.item}>
-              <div className={styles.header}>
-                <span className={styles.headerTitle}>{plan.title}</span>
-                {plan.isPopolar && (
-                  <span className={styles.popolar}>MOST POPULAR</span>
-                )}
-              </div>
-              <div className={styles.priceInfo}>
-                <span>${plan.price}</span>
-                <span>/{plan.util}</span>
-              </div>
-              <div className={styles.descList}>
-                {plan.desc?.map((Idesc) => (
-                  <p key={Idesc.id}>{Idesc.title}</p>
-                ))}
-              </div>
-              {renderSubscribeButton(plan)}
-            </div>
-          ))}
+        <div >
+          <div className={styles.subscribeList}>
+            {basePlans&&basePlans.length>0 &&(renderPlans(basePlans))}
+          </div>
+          <Divider style={{ background: "rgba(0, 0, 0, 0.8)" }} />
+          <div className={styles.subscribeList}>
+            {advPlans&&advPlans.length>0 &&(renderPlans(advPlans))}
+        </div>
         </div>
       </div>
       <Modal

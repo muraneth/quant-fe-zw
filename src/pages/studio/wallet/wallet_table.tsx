@@ -12,11 +12,14 @@ const TOP_OPTIONS = {
   TOP_50: 50,
   TOP_100: 100,
   TOP_500: 500,
+  TOP_1000: 1000,
 };
+const CELL_WIDTH = 80;
 const TOP_OPTIONS2 = [
   { label: 'TOP_50', value: "TOP_50", requiredLevel: 0,disabled:false }, // Free tier
   { label: 'TOP_100', value: "TOP_100", requiredLevel: 2,disabled:true }, // Paid tier
-  { label: 'TOP_500', value: "TOP_500", requiredLevel: 3,disabled:true }  // Premium tier
+  { label: 'TOP_500', value: "TOP_500", requiredLevel: 3,disabled:true },  // Advance tier
+  { label: 'TOP_1000', value: "TOP_1000", requiredLevel: 4,disabled:true } // Pro tier
 ];
 const getOptions = (userLevel:number) => {
   if (!userLevel) {
@@ -88,7 +91,7 @@ const WalletTable = () => {
       title: "Balance",
       dataIndex: "balance",
       key: "balance",
-      width: 80,
+      width: CELL_WIDTH,
       render: (value: number) => formatNumber(value),
       sorter: (a, b) => a.balance - b.balance,
     },
@@ -96,7 +99,7 @@ const WalletTable = () => {
       title: "%",
       dataIndex: "percentage",
       key: "percentage",
-      width: 80,
+      width: CELL_WIDTH,
       render: (value: number) => `${formatNumber(value)}%`,
       sorter: (a, b) => a.percentage - b.percentage,
     },
@@ -104,7 +107,7 @@ const WalletTable = () => {
       title: "Balance USD",
       dataIndex: "balance_usd",
       key: "balance_usd",
-      width: 80,
+      width: CELL_WIDTH,
       render: (value: number) => formatNumber(value),
       sorter: (a, b) => a.balance_usd - b.balance_usd,
     },
@@ -113,7 +116,7 @@ const WalletTable = () => {
       title: "Avg Token/Day",
       dataIndex: "avg_token_day",
       key: "avg_token_day",
-      width: 80,
+      width: CELL_WIDTH,
       render: (value: number) => formatNumber(value),
       sorter: (a, b) => a.avg_token_day - b.avg_token_day,
     },
@@ -121,7 +124,7 @@ const WalletTable = () => {
       title: "Avg Cost",
       dataIndex: "avg_cost",
       key: "avg_cost",
-      width: 80,
+      width: CELL_WIDTH,
       render: (value: number) => formatNumber(value),
       sorter: (a, b) => a.avg_cost - b.avg_cost,
     },
@@ -129,7 +132,7 @@ const WalletTable = () => {
       title: "Total Cost",
       dataIndex: "total_cost",
       key: "total_cost",
-      width: 80,
+      width: CELL_WIDTH,
       render: (value: number) => formatNumber(value),
       sorter: (a, b) => a.total_cost - b.total_cost,
     },
@@ -137,7 +140,7 @@ const WalletTable = () => {
       title: "Total PNL",
       dataIndex: "total_pnl",
       key: "total_pnl",
-      width: 80,
+      width: CELL_WIDTH,
       render: (value: number) => (
         <Typography.Text type={value >= 0 ? "success" : "danger"}>
           {formatNumber(value)}
@@ -149,7 +152,7 @@ const WalletTable = () => {
       title: "Unrealized PNL",
       dataIndex: "unrealized_pnl",
       key: "unrealized_pnl",
-      width: 80,
+      width: CELL_WIDTH,
       render: (value: number) => (
         <Typography.Text type={value >= 0 ? "success" : "danger"}>
           {formatNumber(value)}
@@ -162,7 +165,7 @@ const WalletTable = () => {
       title: "Txs In",
       dataIndex: "tx_in_count",
       key: "tx_in_count",
-      width: 80,
+      width: CELL_WIDTH,
 
       render: (value: number) => value,
       sorter: (a, b) => a.tx_in_count - b.tx_in_count,
@@ -171,27 +174,29 @@ const WalletTable = () => {
       title: "Txs Out",
       dataIndex: "tx_out_count",
       key: "tx_out_count",
-      width: 80,
+      width: CELL_WIDTH,
       render: (value: number) => value,
       sorter: (a, b) => a.tx_out_count - b.tx_out_count,
     },
-    {
-      title: "Win Rate",
-      dataIndex: "win_rate",
-      key: "win_rate",
-      width: 80,
-      render: (value: number) => `${formatNumber(value * 100)}%`,
-      sorter: (a, b) => a.win_rate - b.win_rate,
-    },
+    
 
     {
       title: "Txs",
       dataIndex: "total_txs",
       key: "total_txs",
-      width: 80,
-      fixed: "right",
+      width: CELL_WIDTH,
+     
       render: (value: number) => value,
       sorter: (a, b) => a.total_txs - b.total_txs,
+    },
+    {
+      title: "Win Rate",
+      dataIndex: "win_rate",
+      key: "win_rate",
+      width: 50,
+      fixed: "right",
+      render: (value: number) => `${formatNumber(value * 100)}%`,
+      sorter: (a, b) => a.win_rate - b.win_rate,
     },
   ];
   const handleSizeChange = (value: TopOption) => {

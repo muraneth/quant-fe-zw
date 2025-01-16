@@ -69,7 +69,17 @@
         align-items: center;
         border-radius: 2px;
       }
+      .rightConer{
+        display: flex;
+        align-items: center;
+        flex-direction: row;
+        justify-content: center;
+        gap: 8px;
+        .upgradeButton{
+          font-size: 12px;
 
+        }
+      }
       .personalInfo {
         display: flex;
         align-items: center;
@@ -86,6 +96,7 @@
           margin-right: 8px;
         }
       }
+      
     }
   }
 

@@ -10,17 +10,19 @@ interface IFetchParams {
 enum ResponseCode {
   // 成功
   SUCCESS = 0,
-  NOT_SIGN_IN_1 = 1008,
-  // 未登录
-  NOT_SIGN_IN_2 = 1009,
-  USER_EMAIL_EXIST = 1013,
-  USER_NAME_EXIST = 1014,
-  // token 校验失败
-  TOKEN_ERROR = 1010,
-  // 无权限
-  NO_PERMISSION = 3025,
+  USER_ERROR = 1008,
+  USER_ERROR_1 = 1009,
+  USER_ERROR_2 = 1010,
+
+  USER_ERROR_3 = 1011,
+  TOKEN_ERROR = 1012,
+  TOKEN_ERROR_2 = 1013,
+
+  USER_EMAIL_EXIST = 2022,
+  USER_NAME_EXIST = 2023,
+
   // 无 level 权限
-  NO_LEVEL_AUTH = 3027,
+  NO_LEVEL_AUTH = 3026,
 }
 
 const serverUrl = import.meta.env.VITE_SERVER_URL;
@@ -55,16 +57,16 @@ const request = ({ url, method, params = {} }: IFetchParams) => {
     .then((res) => res.json())
     .then((res) => {
       switch (res.code) {
-        case ResponseCode.NO_PERMISSION:
         case ResponseCode.SUCCESS:
-          // setAuth({ indicatorLevelAuth: true });
           return Promise.resolve(res.data);
         case ResponseCode.NO_LEVEL_AUTH:
-          // setAuth({ indicatorLevelAuth: false });
           return Promise.resolve(null);
-        case ResponseCode.NOT_SIGN_IN_1:
-        case ResponseCode.NOT_SIGN_IN_2:
+        case ResponseCode.USER_ERROR:
+        case ResponseCode.USER_ERROR_1:
+        case ResponseCode.USER_ERROR_2:
+        case ResponseCode.USER_ERROR_3:
         case ResponseCode.TOKEN_ERROR:
+        case ResponseCode.TOKEN_ERROR_2:        
           deleteUserInfo();
           window.location.href = "/sign-in";
           return Promise.reject();

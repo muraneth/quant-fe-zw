@@ -29,6 +29,7 @@
     .subscribeList {
       margin-top: 30px;
       display: flex;
+      justify-content: center;
 
       .item:not(:last-child) {
         margin-right: 24px;
@@ -37,7 +38,7 @@
       .item {
         background-color: var(--primary-content-color);
         width: 250px;
-        height: 450px;
+        height: 400px;
         padding: 24px;
         display: flex;
         flex-direction: column;
@@ -115,6 +116,9 @@
 
           p:not(:last-child) {
             margin-bottom: 8px;
+          }
+          .bullet{
+            margin-right: 8px;
           }
 
         }
