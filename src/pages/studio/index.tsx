@@ -38,8 +38,10 @@ const Studio = () => {
 
   return (
     <div className={styles.studio}>
-      <Header />
-      <Divider style={{ margin: 0 }} />
+      <div className={styles.headerWrapper}>
+        <Header />
+        <Divider style={{ margin: 0 }} />
+      </div>
       <Tabs
         className={styles.customTabs}
         type="line"

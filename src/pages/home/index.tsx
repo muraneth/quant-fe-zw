@@ -6,9 +6,11 @@ import { coinImgList } from "./coinlist";
 // 走请求拿图片效果不好
 // 需要提供 svg 的图，目前的 figma 导出的 svg 有问题
 const chartImgList = [
-  { path: "/chart_1.png" },
-  { path: "/chart_2.png" },
-  { path: "/chart_3.png" },
+  { path: "/chart1.png" },
+  { path: "/chart2.png" },
+  { path: "/chart3.png" },
+  { path: "/chart4.png" },
+  { path: "/chart5.png" },
 ];
 
 // const buttomList = [
@@ -45,13 +47,15 @@ const LangingPage = () => {
           <div className={styles.desc}>
             <h3>We mainly focus on meme coins that</h3>
             <h3>have 100% token in circulation</h3>
-            
           </div>
-          <div style={{marginTop: '20px'}}>
-              <Button type="primary" href="https://studio.tokenalytic.com/studio?tab=chart&symbol=NPC&handle_name=holder.all&chain=ethereum">
-                Get Started
-              </Button>
-            </div>
+          <div style={{ marginTop: "20px" }}>
+            <Button
+              type="primary"
+              href="https://studio.tokenalytic.com/studio?tab=chart&symbol=NPC&handle_name=holder.all&chain=ethereum"
+            >
+              Get Started
+            </Button>
+          </div>
         </div>
         <Carousel className={styles.chartImgList} autoplay autoplaySpeed={3000}>
           {chartImgList.map((item, index) => {

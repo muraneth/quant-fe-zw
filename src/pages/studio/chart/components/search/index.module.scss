@@ -7,7 +7,7 @@
       background: transparent;
     }
     .ant-tabs .ant-tabs-tab.ant-tabs-tab-active .ant-tabs-tab-btn {
-      color: #FFF;
+      color: #fff;
     }
     .ant-tabs .ant-tabs-tab-btn {
       color: #949099;
@@ -25,11 +25,21 @@
 
     .category {
       width: 212px;
-      height: calc(100vh - 130px);
+      height: calc(100vh - 240px);
       margin-top: 0px;
       padding: 12px 8px 40px 8px;
       background: var(--primary-content-color);
       overflow-y: auto;
+
+      // &::-webkit-scrollbar {
+      //   width: 5px;
+      // }
+
+      // &::-webkit-scrollbar-thumb {
+      //   background: blue;
+      //   border-radius: 10px;
+      //   height: 2px;
+      // }
 
       .categoryItem {
         position: relative;
@@ -110,9 +120,7 @@
       }
 
       .groupList {
-        height: calc(100vh - 190px);
-        margin-top: 1px;
-        // padding-top: 12px;
+        height: calc(100vh - 240px);
         padding-bottom: 100px;
         background: var(--primary-content-color);
         overflow-y: hidden;
@@ -152,7 +160,7 @@
       }
 
       .resultIndicatorWrapper {
-        height: calc(100vh - 220px);
+        height: calc(100vh - 270px);
         background: var(--primary-content-color);
         overflow-y: auto;
         padding-bottom: 40px;

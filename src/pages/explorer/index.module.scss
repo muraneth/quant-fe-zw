@@ -1,13 +1,9 @@
-.layout {
-  height: "90vh" ;
-  background: var(--primary-content-color);
+.explorer {
+  min-height: calc(100vh - 40px);
 
-}
-.header {
-  width: 100%;
-  background: var(--primary-content-color);
-  color: #FFF;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+  :global {
+    .ant-tabs {
+      min-height: calc(100vh - 40px);;
+    }
+  }
 }
