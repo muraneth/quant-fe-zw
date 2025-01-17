@@ -5,21 +5,23 @@ import styles from "./index.module.scss";
 import { Button } from "antd";
 
 const PersonalInfo = () => {
-  const { username, pic_url,level } = getUserInfo();
+  const { username, pic_url, level } = getUserInfo();
 
   return (
-    <div  className={styles.rightConer}>
+    <div className={styles.rightConer}>
       <div>
-        { level < 4 && (
-        <Button 
-        type="primary" 
-        size="small" 
-        href="/pricing"
-        className={styles.upgradeButton}>
-          Upgrade Plan
-        </Button>)} 
+        {(!level || level < 4) && (
+          <Button
+            type="primary"
+            size="small"
+            href="/pricing"
+            className={styles.upgradeButton}
+          >
+            Upgrade Plan
+          </Button>
+        )}
       </div>
-    
+
       <div className={styles.personalInfo}>
         <div className={classNames(styles.name, ["common-ellipsis-1"])}>
           {username}
