@@ -45,10 +45,10 @@ const IndicatorItem: React.FC<IndicatorItemProps> = (indicatorInfoItem) => {
     >
       <span
         className={classNames(styles.indicatorItemLevel, {
-          [styles[`indicatorItemLevel${required_level - 1}`]]: true,
+          [styles[`indicatorItemLevel${required_level}`]]: true,
         })}
       >
-        {`L${required_level - 1}`}
+        {`L${required_level}`}
       </span>
       <span className={styles.indicatorName}>{name}</span>
       {/* <div className={classNames(styles.indicatorItemLevel, {

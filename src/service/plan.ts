@@ -5,6 +5,10 @@ interface Des {
     id: string;
     title: string;
 }
+export interface DiscountStrategy{
+    threshold_months:number;
+    discount_rate:number;
+}
 export interface Plan {
     id: number;
     type: string;
@@ -13,7 +17,8 @@ export interface Plan {
     price : number;
     util: string;
     desc: Des[];
-    isPopolar: boolean;
+    is_popular: boolean;
+    discount_strategies: DiscountStrategy[];
 }
 
 export interface SendPayRequest{

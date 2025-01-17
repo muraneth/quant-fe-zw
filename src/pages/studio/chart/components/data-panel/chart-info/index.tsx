@@ -24,11 +24,11 @@ const ChartInfo = () => {
       <div className={styles.info}>
         <span
           className={classNames(styles.indicatorItemLevel, {
-            [styles[`indicatorItemLevel${indicatorInfo.required_level - 1}`]]:
+            [styles[`indicatorItemLevel${indicatorInfo.required_level}`]]:
               true,
           })}
         >
-          {`L${indicatorInfo.required_level - 1}`}
+          {`L${indicatorInfo.required_level}`}
         </span>
         <span className={styles.title}>{indicatorInfo.name}</span>
       

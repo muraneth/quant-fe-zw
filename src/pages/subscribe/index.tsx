@@ -1,5 +1,5 @@
 
-import { Button, Divider, InputNumber, Radio, Typography, Modal } from "antd";
+import { Button, Divider, InputNumber, Radio, Typography, Modal, Input,Form } from "antd";
 import { QRCodeSVG } from "qrcode.react";
 import { useImmer } from "use-immer";
 import {
@@ -15,6 +15,7 @@ import styles from "./index.module.scss";
 import { getUserInfo, updateUserInfo } from "@/utils/common";
 import { useEffect, useMemo } from "react";
 import { CheckCircleFilled } from "@ant-design/icons";
+
 const { Paragraph, Text } = Typography;
 
 interface Payment {
@@ -37,13 +38,18 @@ const Subscribe = () => {
   const [paymentMethods, setPaymentMethods] = useImmer([] as PaymentProps[]);
   const [selectedChain, setSelectedChain] = useImmer("");
   const [selectedAddress, setSelectedAddress] = useImmer("");
+  const [txHash , setTxHash] = useImmer("");
   const [currentPlan, setCurrentPlan] = useImmer(1);
+  const [discountRate, setDiscountRate] = useImmer(1);
+  const [originalPrice, setOriginalPrice] = useImmer(0);
+  const [totalPrice, setTotalPrice] = useImmer(0);
   const userInfo = getUserInfo();
-
+  const [form] = Form.useForm();
   useEffect(() => {
     if (userInfo) {
       setCurrentPlan(userInfo.level);
     }
+   
   }, []);
 
   useRequest(() => getPlans(), {
@@ -97,11 +103,32 @@ const Subscribe = () => {
     setSelectedChain(selectedValue);
     setSelectedAddress(method.value.address);
   };
+  useEffect(() => {
+
+    const { discountRate,originalPrice, totalPrice } = calculateTotal();
+    setDiscountRate(discountRate);
+    setOriginalPrice(originalPrice);
+    setTotalPrice(totalPrice);
+
+  }, [currentMonth,selectedPlan]);
 
   const calculateTotal = () => {
-    if (!selectedPlan?.price || typeof selectedPlan.price !== "number")
-      return 0;
-    return (selectedPlan.price * currentMonth).toFixed(2);
+    if (!selectedPlan?.price || typeof selectedPlan.price !== "number") {
+      return { discountRate: 1,originalPrice:0 , totalPrice: 0};
+    }
+
+    let discountStrategies = selectedPlan.discount_strategies;
+    let discountRate = 1;
+  
+    for (let i = 0; i < discountStrategies.length; i++) {
+      if (currentMonth >= discountStrategies[i].threshold_months) {
+        // find the last discount strategy that is less than or equal to currentMonth
+        discountRate = discountStrategies[i].discount_rate;
+      }
+    }
+    const originalPrice = selectedPlan.price * currentMonth;
+    const totalPrice = (selectedPlan.price * currentMonth * discountRate);
+    return { discountRate,originalPrice, totalPrice };
   };
 
   const handleSubscribeClick = async (planId: number) => {
@@ -121,7 +148,7 @@ const Subscribe = () => {
     setSelectedPlan(null);
     setCurrentMonth(3);
   };
-
+  
   const { runAsync: runPostPaid, loading: runPostPaidLoading } = useRequest(
     () =>
       postPaid({
@@ -129,8 +156,8 @@ const Subscribe = () => {
         duration: currentMonth,
         chain: selectedChain,
         address: selectedAddress,
-        tx_hash: "",
-        amount: Number(calculateTotal()),
+        tx_hash: txHash,
+        amount: totalPrice,
       }),
     {
       manual: true,
@@ -140,9 +167,30 @@ const Subscribe = () => {
       },
       onError: (err) => {
         console.log(err);
+        if (err.message === "TX_ERROR") {
+          form.setFields([
+            {
+              name: "txhash",
+              errors: ["Invalid tx hash"],
+            },
+          ]);
+        }
       },
     }
   );
+  const handlePostPaid = () => {
+
+    if (!txHash  ||txHash.trim().length !== 66) {
+      form.setFields([
+        {
+          name: "txhash",
+          errors: ["Tx hash is required"],
+        },
+      ]);
+      return;
+    }
+    runPostPaid();
+  }
 
   const renderSubscribeButton = (plan: Plan) => {
     const isCurrentPlan = plan.level === currentPlan;
@@ -155,7 +203,7 @@ const Subscribe = () => {
         </div>
       );
     }
-    if (plan.isPopolar) {
+    if (plan.is_popular) {
       return (
         <div className={`${styles.btn} ${styles.popolarPlan}`} onClick={() => handleSubscribeClick(plan.id)}>
           Subscribe
@@ -176,7 +224,9 @@ const Subscribe = () => {
       </div>
     );
   };
-
+  const testTxHash = (txHash: string) => {
+    return txHash.trim().length === 66;
+  }
   // Memoize the payment modal content
   const paymentModalContent = useMemo(
     () => (
@@ -193,15 +243,15 @@ const Subscribe = () => {
             <span>months</span>
           </div>
           <div className={styles.totalInfo}>
-            <div className={styles.total}>{calculateTotal()}</div>
+            <div className={styles.total}>{totalPrice.toFixed(2)}</div>
             <span>USDT in total</span>
           </div>
           <div className={styles.tips}>
             Original price{" "}
             <Text delete style={{ color: "#2255FF" }}>
-              150
+            {originalPrice}
             </Text>{" "}
-            USDT, save <span style={{ color: "#2255FF" }}>10%</span>
+            USDT, save <span style={{ color: "#2255FF" }}>{((1-discountRate)*100).toFixed(2)}%</span>
           </div>
           <Divider style={{ background: "rgba(0, 0, 0, 0.8)" }} />
           <div className={styles.network}>
@@ -232,20 +282,50 @@ const Subscribe = () => {
           <Paragraph style={{ marginTop: 12 }} copyable>
             {selectedAddress || "Loading..."}
           </Paragraph>
+          <Form  form={form} style={{width: "100%",display: "flex", flexDirection: "column", alignItems: "center"}}>
+          <Form.Item
+            style={{width: "60%"}}
+            name="txhash"
+            label="Tx Hash"
+            // tooltip="Must contain 66 characters, including 0x prefix"
+            rules={[
+              { required: true },
+              () => ({
+                validator(_, value) {
+                  if (testTxHash(value)) {
+                    return Promise.resolve();
+                  }
+                  return Promise.reject(
+                    new Error(
+                      "Tx hash must be 66 characters, including 0x prefix"
+                    )
+                  );
+                },
+              }),
+            ]}
+          >
+
+          <Input
+            placeholder="Enter your tx hash"
+            value={txHash}
+            onChange={(e) => setTxHash(e.target.value)} />
+
+          </Form.Item>
           <Button
             style={{ width: 224 }}
             type="primary"
             shape="round"
             size="large"
             loading={planLoading || methodsLoading || runPostPaidLoading}
-            onClick={runPostPaid}
+            onClick={handlePostPaid}
           >
             Done
           </Button>
+          </Form>
           <div style={{ color: "gray", paddingBottom: 16 }}>
             You can transfer USDT from personal wallet or CEX. We will check the
             balance of the target wallet automatically. Transfer from CEX always
-            takes longer. If you meet any issue, get in touch with us
+            takes longer. If you meet any issue, get in touch with me  <a href="https://t.me/mura202211">Telegram</a>
           </div>
         </div>
       </div>
@@ -265,7 +345,7 @@ const Subscribe = () => {
       <div key={plan.id} className={styles.item}>
         <div className={styles.header}>
           <span className={styles.headerTitle}>{plan.title}</span>
-          {plan.isPopolar && (
+          {plan.is_popular && (
             <span className={styles.popolar}>MOST POPULAR</span>
           )}
         </div>

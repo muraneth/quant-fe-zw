@@ -13,7 +13,6 @@ enum ResponseCode {
   USER_ERROR = 1008,
   USER_ERROR_1 = 1009,
   USER_ERROR_2 = 1010,
-
   USER_ERROR_3 = 1011,
   TOKEN_ERROR = 1012,
   TOKEN_ERROR_2 = 1013,
@@ -21,8 +20,16 @@ enum ResponseCode {
   USER_EMAIL_EXIST = 2022,
   USER_NAME_EXIST = 2023,
 
+
   // 无 level 权限
   NO_LEVEL_AUTH = 3026,
+
+  CodeBalanceNotEnough = 4030,
+	CodeTxInvalid = 4031,
+	CodeTxNotFound = 4032,
+	CodeCheckTxFailed = 4033,
+	CodeTxWrongValue = 4034,
+	CodeWrongTx = 4035
 }
 
 const serverUrl = import.meta.env.VITE_SERVER_URL;
@@ -74,6 +81,15 @@ const request = ({ url, method, params = {} }: IFetchParams) => {
           return Promise.reject(new Error("USER_EMAIL_EXIST"));
         case ResponseCode.USER_NAME_EXIST:
           return Promise.reject(new Error("USER_NAME_EXIST"));
+       
+        case ResponseCode.CodeTxInvalid:
+        case ResponseCode.CodeTxNotFound:
+        case ResponseCode.CodeCheckTxFailed:
+        case ResponseCode.CodeTxWrongValue:
+        case ResponseCode.CodeWrongTx:
+          return Promise.reject(new Error("TX_ERROR"));
+        case ResponseCode.CodeBalanceNotEnough:
+          return Promise.reject(new Error("BALANCE_NOT_ENOUGH"));
       }
       return Promise.reject(res.msg || "fetch error");
     })

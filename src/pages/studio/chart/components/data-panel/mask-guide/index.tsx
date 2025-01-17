@@ -27,7 +27,7 @@ const MaskGuide = () => {
               Upgrade your plan to view the chart
             </Typography.Paragraph>
           <div>
-            {(!userInfo||!userInfo.level)?(
+            {(!userInfo||!userInfo.uid)?(
                 <div style={{display:"flex", gap:'12px'}}>
                     <Button  
                      className={styles.upgradeBtn}
