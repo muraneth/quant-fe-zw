@@ -10,7 +10,7 @@ const PersonalInfo = () => {
   return (
     <div className={styles.rightConer}>
       <div>
-        {(!level || level < 4) && (
+        {(!level || level < 3) && (
           <Button
             type="primary"
             size="small"

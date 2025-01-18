@@ -6,7 +6,7 @@ import dayjs from "dayjs";
 import styles from "./index.module.scss";
 import { useChartStore } from "@/store/charts";
 import { getUserInfo } from "@/utils/common";
-import AlertModal,{AlertType} from "@/components/common/alter-model";
+import AlertModal, { AlertType } from "@/components/common/alter-model";
 
 const { RangePicker } = DatePicker;
 
@@ -54,10 +54,10 @@ const CalendarComponent: React.FC = () => {
           setAlertVisible(true);
           return;
         }
-        if (!userInfo.level || userInfo.level < 2) {
+        if (!userInfo.level || userInfo.level < 1) {
           setAlertType("upgrade");
           setAlertVisible(true);
-          return; 
+          return;
         }
         start_time = dayjs().subtract(1, "year").format("YYYY-MM-DD 00:00:00");
         break;
@@ -70,7 +70,7 @@ const CalendarComponent: React.FC = () => {
           setAlertVisible(true);
           return;
         }
-        if (!userInfo.level || userInfo.level < 3) {
+        if (!userInfo.level || userInfo.level < 2) {
           setAlertType("upgrade");
           setAlertVisible(true);
           return; // Do not set the time range if level is insufficient

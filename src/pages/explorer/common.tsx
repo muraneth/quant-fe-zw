@@ -32,7 +32,7 @@ export function createDynamicColumns(tokenDetailList: Array<TokenDetailInfo>) {
           return null;
         }
         if (
-          snap.required_level > 1 &&
+          snap.required_level > 0 &&
           (!userInfo || userInfo.level < snap.required_level)
         ) {
           return (

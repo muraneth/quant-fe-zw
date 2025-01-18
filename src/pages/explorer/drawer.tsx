@@ -135,7 +135,7 @@ const MyDrawer: React.FC = () => {
   const upgradeHit = () => {
     return (
       <div>
-        {userInfo.level <= 2 ? (
+        {userInfo.level < 2 ? (
           <div>
             If you want more indicators, you can upgrade your plan
             <a href="/pricing">Upgrade plan</a>

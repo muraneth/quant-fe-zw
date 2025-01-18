@@ -39,7 +39,7 @@ const Explorer: React.FC = () => {
             }}
           >
             <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-              {(!userInfo || userInfo.level <= 2) && (
+              {(!userInfo || userInfo.level < 2) && (
                 <>
                   <span>
                     Advance Subscribe user will get more tokens and more
