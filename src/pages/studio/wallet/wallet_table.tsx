@@ -16,12 +16,12 @@ const TOP_OPTIONS = {
 };
 const CELL_WIDTH = 80;
 const TOP_OPTIONS2 = [
-  { label: 'TOP_50', value: "TOP_50", requiredLevel: 0,disabled:false }, // Free tier
-  { label: 'TOP_100', value: "TOP_100", requiredLevel: 2,disabled:true }, // Paid tier
-  { label: 'TOP_500', value: "TOP_500", requiredLevel: 3,disabled:true },  // Advance tier
-  { label: 'TOP_1000', value: "TOP_1000", requiredLevel: 4,disabled:true } // Pro tier
+  { label: "TOP_50", value: "TOP_50", requiredLevel: 0, disabled: false }, // Free tier
+  { label: "TOP_100", value: "TOP_100", requiredLevel: 1, disabled: true }, // Paid tier
+  { label: "TOP_500", value: "TOP_500", requiredLevel: 2, disabled: true }, // Advance tier
+  { label: "TOP_1000", value: "TOP_1000", requiredLevel: 3, disabled: true }, // Pro tier
 ];
-const getOptions = (userLevel:number) => {
+const getOptions = (userLevel: number) => {
   if (!userLevel) {
     return TOP_OPTIONS2;
   }
@@ -33,7 +33,7 @@ const getOptions = (userLevel:number) => {
     }
   }
   return TOP_OPTIONS2;
-}
+};
 
 type TopOption = keyof typeof TOP_OPTIONS;
 
@@ -44,9 +44,9 @@ const WalletTable = () => {
   const userInfo = getUserInfo();
 
   const [selectedSize, setSelectedSize] = useImmer<TopOption>("TOP_50");
-  const options =getOptions(userInfo.level);
+  const options = getOptions(userInfo.level);
   const { loading: walleTableLoading } = useRequest(
-    () =>  {
+    () => {
       if (!tokenInfo || !tokenInfo.symbol || !tokenInfo.chain) {
         return Promise.resolve([]);
       }
@@ -55,10 +55,9 @@ const WalletTable = () => {
         chain: tokenInfo.chain,
         order_by: "balance",
         start_time: getTimeBefore(1),
-        top_count:TOP_OPTIONS[selectedSize]
-      })
-    }         
-      ,
+        top_count: TOP_OPTIONS[selectedSize],
+      });
+    },
     {
       refreshDeps: [tokenInfo, selectedSize],
       onSuccess: (data) => {
@@ -73,8 +72,8 @@ const WalletTable = () => {
     );
   };
   const checkIfUserPaid = () => {
-     return userInfo.level > 1;
-  }
+    return userInfo.level > 0;
+  };
   const columns: ColumnsType<WalletBaseInfo> = [
     {
       title: "Wallet Address",
@@ -84,7 +83,11 @@ const WalletTable = () => {
       width: 100,
       render: (text: string) => {
         const shortenedAddress = `${text.slice(0, 6)}...${text.slice(-6)}`;
-        return <Typography.Text copyable={{ text: text }}>{shortenedAddress}</Typography.Text>;
+        return (
+          <Typography.Text copyable={{ text: text }}>
+            {shortenedAddress}
+          </Typography.Text>
+        );
       },
     },
     {
@@ -111,7 +114,7 @@ const WalletTable = () => {
       render: (value: number) => formatNumber(value),
       sorter: (a, b) => a.balance_usd - b.balance_usd,
     },
-  
+
     {
       title: "Avg Token/Day",
       dataIndex: "avg_token_day",
@@ -178,14 +181,13 @@ const WalletTable = () => {
       render: (value: number) => value,
       sorter: (a, b) => a.tx_out_count - b.tx_out_count,
     },
-    
 
     {
       title: "Txs",
       dataIndex: "total_txs",
       key: "total_txs",
       width: CELL_WIDTH,
-     
+
       render: (value: number) => value,
       sorter: (a, b) => a.total_txs - b.total_txs,
     },
@@ -204,16 +206,16 @@ const WalletTable = () => {
   };
   return (
     <div>
-      <div  style={{display:"flex", justifyContent:"flex-end"}}>
+      <div style={{ display: "flex", justifyContent: "flex-end" }}>
         <Segmented
-            options={options}
-            value={selectedSize}
-            onChange={(value) => handleSizeChange(value as TopOption)}
-            disabled={walleTableLoading}
-          />
+          options={options}
+          value={selectedSize}
+          onChange={(value) => handleSizeChange(value as TopOption)}
+          disabled={walleTableLoading}
+        />
       </div>
       <style>
-      {`
+        {`
           .ant-table-cell {
             white-space: nowrap;
             padding: 8px 16px !important;
@@ -245,7 +247,7 @@ const WalletTable = () => {
         dataSource={walletList}
         rowKey="wallet_address"
         scroll={{ x: 1600, y: 600 }}
-        pagination={false}  
+        pagination={false}
         // pagination={{
         //   pageSize: 10,
         //   showSizeChanger: true,
@@ -257,9 +259,7 @@ const WalletTable = () => {
         })}
         sticky
       />
-      {!checkIfUserPaid() && (
-        <MaskGuide type="table"/>
-      )}
+      {!checkIfUserPaid() && <MaskGuide type="table" />}
     </div>
   );
 };

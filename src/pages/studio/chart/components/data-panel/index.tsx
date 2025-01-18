@@ -28,7 +28,7 @@ const DataPanel = () => {
     <div className={styles.dataPanel}>
       <div className={styles.echartsPanel}>
         <ChartInfo />
-        {indicatorInfo.required_level <= 1
+        {indicatorInfo.required_level < 1
           ? chartArea
           : !userInfo.level || userInfo.level < indicatorInfo.required_level
           ? maskGuide

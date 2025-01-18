@@ -93,7 +93,7 @@ const IndicatorParam = () => {
     );
 
   function checkIfAvailableForParam() {
-    return userInfo?.level >= 3;
+    return userInfo?.level >= 2;
   }
   return (
     <div className={styles.setting}>
@@ -162,7 +162,7 @@ const IndicatorParam = () => {
         Smooth
       </Button> */}
       {extra_params_schema ? (
-        <div style={{ alignItems: "center", display: "flex",color:"red" }}>
+        <div style={{ alignItems: "center", display: "flex", color: "red" }}>
           <FormRender
             form={form}
             schema={extra_params_schema}
@@ -172,7 +172,7 @@ const IndicatorParam = () => {
                 handleExtraChange(allValues);
               },
             }}
-            style={{ marginLeft: 24, color:"red"}}
+            style={{ marginLeft: 24, color: "red" }}
           />
           <Button
             className={styles.saveParam}

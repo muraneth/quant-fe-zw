@@ -59,14 +59,14 @@ const initialState = {
     symbol: "",
     chain: "",
     create_time: "",
-    collected:false
+    collected: false
   },
   selectedTimeRange: {
     start_time: "",
     end_time: "",
   },
   indicatorInfo: {
-    required_level: 1,
+    required_level: 0,
     handle_name: "",
     name: "",
     description: "",

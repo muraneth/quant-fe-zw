@@ -17,8 +17,8 @@ interface WalletDetailProps {
 
 const TOP_OPTIONS = [
   { label: "3M", value: "3M", requiredLevel: 0, disabled: false }, // Free tier
-  { label: "1Y", value: "1Y", requiredLevel: 2, disabled: true }, // Paid tier
-  { label: "ALL", value: "ALL", requiredLevel: 3, disabled: true }, // Premium tier
+  { label: "1Y", value: "1Y", requiredLevel: 1, disabled: true }, // Paid tier
+  { label: "ALL", value: "ALL", requiredLevel: 2, disabled: true }, // Premium tier
 ];
 
 // Get the available options based on the user level
@@ -61,7 +61,7 @@ const WalletDetail: React.FC<WalletDetailProps> = ({ wallet_address }) => {
     }
   };
   const checkIfUserPaid = () => {
-    return userInfo.level > 1;
+    return userInfo.level > 0;
   };
   useRequest(
     () => {
